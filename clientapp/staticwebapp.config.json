@@ -1,0 +1,36 @@
+{
+    "navigationFallback": {
+        "rewrite": "/index.html"
+    },
+    "routes": [
+        {
+            "route": "/spending",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/budget/*",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/accounts",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/users",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/products",
+            "allowedRoles": ["authenticated"]
+        }
+    ],
+    "responseOverrides": {
+        "401": {
+            "statusCode": 302,
+            "redirect": "/.auth/login/aad"
+        }
+    },
+    "platform": {
+        "apiRuntime": "node:18"
+    }
+}

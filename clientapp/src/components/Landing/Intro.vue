@@ -1,0 +1,86 @@
+<template>
+  <v-container class="py-16 py-md-16">
+    <v-row align="center">
+      <v-col cols="12" md="5" order="2" order-md="1" class="mt-10 mt-md-0">
+        <v-img
+          :src="portfolioPhoto('aspenPortrait', 900, 1150)"
+          aspect-ratio="0.8"
+          cover
+          class="intro-portrait"
+        ></v-img>
+      </v-col>
+
+      <v-col cols="12" md="6" offset-md="1" order="1" order-md="2">
+        <span class="font-nav tracking-widest text-caption text-blush">The Photographer</span>
+
+        <h2 class="font-display text-charcoal intro-heading my-4">Hello, I'm Aspen.</h2>
+
+        <p class="font-display font-italic text-charcoal intro-copy mb-8">
+          I'm here to capture life's fleeting, unrepeatable moments — the way he looks at her,
+          the hand resting on a growing belly, a child's laugh caught mid-air. Take a tour,
+          stay awhile, and let's make something beautiful together.
+        </p>
+
+        <div class="intro-list">
+          <div v-for="point in points" :key="point" class="d-flex align-start ga-4 mb-4">
+            <span class="font-display font-italic text-blush intro-list-mark">&mdash;</span>
+            <span class="font-display font-italic text-charcoal intro-list-copy">{{ point }}</span>
+          </div>
+        </div>
+
+        <router-link to="/about-me" class="font-nav tracking-wide text-caption text-charcoal intro-link d-inline-flex align-center ga-2 mt-4">
+          Learn more about me
+          <v-icon size="16">mdi-arrow-right</v-icon>
+        </router-link>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script setup lang="ts">
+import { portfolioPhoto } from '@/utils/portfolioPhotos'
+
+const points = [
+  'reflect your authentic self and personality',
+  'tell a captivating story',
+  'elicit emotions such as joy, love, and nostalgia',
+]
+</script>
+
+<style scoped>
+.intro-portrait {
+  box-shadow: 0 24px 60px -20px rgba(33, 31, 28, 0.35);
+}
+
+.intro-heading {
+  font-size: clamp(2.5rem, 3vw + 1.5rem, 3.5rem);
+  line-height: 1.05;
+}
+
+.intro-copy {
+  font-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
+  line-height: 1.55;
+  max-width: 560px;
+}
+
+.intro-list-mark {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.intro-list-copy {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.intro-link {
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  transition: border-color 0.2s ease;
+}
+
+.intro-link:hover {
+  border-color: rgb(var(--v-theme-charcoal));
+}
+</style>

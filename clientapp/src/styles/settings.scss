@@ -1,0 +1,88 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+@use 'vuetify/settings' with (
+  $body-font-family: ('Inter', 'Roboto', sans-serif),
+  $heading-font-family: ('Inter', 'Roboto', sans-serif)
+);
+
+:root {
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-nav: 'Jost', sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+// Light-weight editorial display serif used for the Aspen Smitha
+// Photography landing page headings and pull quotes.
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+}
+
+// Clean geometric sans used for the Aspen Smitha Photography landing page
+// nav, labels and buttons — always paired with generous letter-spacing.
+.font-nav {
+  font-family: var(--font-nav);
+  font-weight: 400;
+}
+
+// Letter-spacing steps for the small-caps/uppercase labels that thread
+// through the Aspen Smitha Photography landing page (eyebrows, nav, buttons).
+.tracking-wide {
+  letter-spacing: 0.08em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.2em;
+}
+
+// Shared color grade for every placeholder photo on the Aspen Smitha
+// Photography landing page. The stock/placeholder images are sourced
+// independently and vary wildly in color and light, so a single light,
+// airy grade — bright, only lightly desaturated, no sepia/earth-tone cast —
+// is applied across all of them to make the page read as one cohesive,
+// bridal-feeling shoot rather than a moody/rustic stock-photo grab bag.
+.editorial-photo {
+  filter: grayscale(0.08) contrast(1.02) brightness(1.06) saturate(1.05);
+}
+
+::selection {
+  background-color: rgba(var(--v-theme-primary), 0.2);
+  color: rgb(var(--v-theme-lightest-slate));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--v-theme-background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--v-theme-lightest-navy));
+  border-radius: 10px;
+}
+
+// Shared code-preview treatment for every <highlightjs> block on the site
+// (repo file preview, code generation output, etc).
+pre {
+  margin: 0;
+  background: transparent !important;
+}
+
+.hljs {
+  background: transparent !important;
+  padding: 1.5rem !important;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
