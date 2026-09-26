@@ -2,12 +2,12 @@
   <v-container class="py-16 py-md-16">
     <v-row align="center">
       <v-col cols="12" md="5" order="2" order-md="1" class="mt-10 mt-md-0">
-        <v-img
-          :src="portfolioPhoto('aspenPortrait', 900, 1150)"
+        <ResponsivePhoto
+          :photo="photos.forPlacement('home-intro')"
+          :sizes="PHOTO_SIZES.fiveTwelfths"
           aspect-ratio="0.8"
-          cover
           class="intro-portrait"
-        ></v-img>
+        />
       </v-col>
 
       <v-col cols="12" md="6" offset-md="1" order="1" order-md="2">
@@ -38,7 +38,11 @@
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 
 const points = [
   'reflect your authentic self and personality',

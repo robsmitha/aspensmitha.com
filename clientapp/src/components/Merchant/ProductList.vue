@@ -1,30 +1,26 @@
 <template>
-    <v-sheet color="background">
-    <v-container>
-        <v-row class="mt-3">
-            <v-col>
-                <ContentHeader
-                    overline="Merchant"
-                    title="Products"
-                    :subtitle="`${items?.length ?? 0} product${(items?.length ?? 0) === 1 ? '' : 's'} in catalog`"
-                />
-            </v-col>
-            <v-col class="text-right">
+    <v-container class="py-10 py-md-14">
+        <AdminPageHeader
+            eyebrow="Merchant"
+            title="Products"
+            :subtitle="`${items?.length ?? 0} product${(items?.length ?? 0) === 1 ? '' : 's'} in catalog`"
+        >
+            <template #actions>
                 <v-btn
                     variant="outlined"
-                    color="primary"
-                    class="font-mono text-none"
-                    :icon="$vuetify.display.mobile"
+                    color="charcoal"
+                    rounded="0"
+                    class="font-nav tracking-wide text-caption"
+                    prepend-icon="mdi-plus"
                     @click="$emit('create')"
                 >
-                    <v-icon>mdi-plus</v-icon> <span v-if="!$vuetify.display.mobile">New</span>
+                    New Product
                 </v-btn>
-            </v-col>
-        </v-row>
-        <v-divider class="mt-4 mb-8" thickness="4" length="48" color="primary" />
+            </template>
+        </AdminPageHeader>
         <v-row>
             <v-col>
-                <v-card color="surface" rounded="lg" class="bordered-card">
+                <v-card color="surface" rounded="0" flat class="bordered-card">
                     <v-data-table
                         :custom-filter="filter"
                         :headers="headers"
@@ -44,9 +40,8 @@
                                             clearable
                                             variant="outlined"
                                             color="primary"
-                                            base-color="slate"
-                                            class="font-mono"
-                                            rounded="lg"
+                                            base-color="stone"
+                                            rounded="0"
                                         >
                                         </v-text-field>
                                     </v-col>
@@ -58,20 +53,20 @@
                         </template>
                         <template v-slot:no-data>
                             <div class="d-flex flex-column align-center py-10">
-                                <v-icon size="40" class="mb-3 text-lightest-navy">mdi-package-variant</v-icon>
-                                <p class="text-body-2 text-slate">No products to display.</p>
+                                <v-icon size="40" class="mb-3 text-stone-light">mdi-package-variant</v-icon>
+                                <p class="text-body-2 text-stone">No products to display.</p>
                             </div>
                         </template>
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td v-for="header in headers" :key="header.key">
                                     <template v-if="header.key === ''">
-                                        <v-btn variant="text" size="small" color="primary" icon @click="$emit('view', item?.serialNumber)">
+                                        <v-btn variant="text" size="small" color="charcoal" icon @click="$emit('view', item?.serialNumber)">
                                             <v-icon>
                                                 mdi-eye
                                             </v-icon>
                                         </v-btn>
-                                        <v-btn variant="text" size="small" color="primary" icon @click="$emit('edit', item?.productId)">
+                                        <v-btn variant="text" size="small" color="charcoal" icon @click="$emit('edit', item?.productId)">
                                             <v-icon>
                                                 mdi-pencil
                                             </v-icon>
@@ -83,15 +78,15 @@
                                         </v-btn>
                                     </template>
                                     <template v-else-if="header.key === 'grade'">
-                                        <v-chip v-if="item.grade" size="small" variant="outlined" color="violet" class="font-mono">
+                                        <v-chip v-if="item.grade" size="small" variant="outlined" color="blush" class="font-nav">
                                             {{ item.grade }}
                                         </v-chip>
                                     </template>
                                     <template v-else-if="header.key === 'serialNumber'">
-                                        <span class="font-mono text-slate">{{ item.serialNumber }}</span>
+                                        <span class="font-mono text-stone">{{ item.serialNumber }}</span>
                                     </template>
                                     <template v-else-if="header.key === 'createdAt'">
-                                        <span class="font-mono text-caption text-slate">{{ dateFilter(getNestedValue(item, header.key)) }}</span>
+                                        <span class="font-mono text-caption text-stone">{{ dateFilter(getNestedValue(item, header.key)) }}</span>
                                     </template>
                                     <template v-else>
                                         {{ getNestedValue(item, header.key!.toString()) }}
@@ -104,7 +99,6 @@
             </v-col>
         </v-row>
     </v-container>
-    </v-sheet>
 </template>
 
 <script setup lang="ts">
@@ -114,6 +108,7 @@ import { useDisplay } from 'vuetify'
 
 const { mobile } = useDisplay()
 import { useDateFilter } from '@/filters/dateFilter'
+import AdminPageHeader from '@/components/Admin/AdminPageHeader.vue'
 
 const { dateFilter } = useDateFilter()
 
@@ -188,6 +183,6 @@ function getNestedValue(obj: any, key: string) {
 
 <style scoped>
 .bordered-card {
-    border: 1px solid rgb(var(--v-theme-lightest-navy));
+    border: 1px solid rgba(var(--v-theme-charcoal), 0.1);
 }
 </style>

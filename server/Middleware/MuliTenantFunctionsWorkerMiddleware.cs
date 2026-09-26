@@ -1,4 +1,5 @@
 ﻿using Elysian.Application.Exceptions;
+using Elysian.Domain.Data;
 using Finbuckle.MultiTenant;
 using Finbuckle.MultiTenant.Abstractions;
 using Microsoft.Azure.Functions.Worker;
@@ -22,11 +23,32 @@ namespace ElysianFunctions.Middleware
             context.InstanceServices.GetRequiredService<IMultiTenantContextAccessor>();
             var multiTenantContextSetter = context.InstanceServices.GetRequiredService<IMultiTenantContextSetter>();
 
-            var value = (multiTenantContextSetter.MultiTenantContext = 
-                await context.InstanceServices.GetRequiredService<ITenantResolver>().ResolveAsync(requestData)) ?? throw new NotFoundException();
+            var resolved = requestData != null
+                ? await context.InstanceServices.GetRequiredService<ITenantResolver>().ResolveAsync(requestData)
+                : await ResolveFromBindingDataAsync(context);
+
+            var value = (multiTenantContextSetter.MultiTenantContext = resolved) ?? throw new NotFoundException();
 
             context.Items[typeof(IMultiTenantContext)] = value;
             await next(context);
+        }
+
+        /// <summary>
+        /// Non-HTTP triggers have no tenant header, so they carry the tenant identifier as a
+        /// {tenant} trigger path parameter instead, e.g. "photo-originals/{tenant}/{photoId}/{name}"
+        /// </summary>
+        private static async Task<IMultiTenantContext?> ResolveFromBindingDataAsync(FunctionContext context)
+        {
+            if (!context.BindingContext.BindingData.TryGetValue("tenant", out var tenant)
+                || tenant?.ToString() is not { Length: > 0 } identifier)
+            {
+                return null;
+            }
+
+            var store = context.InstanceServices.GetRequiredService<IMultiTenantStore<ElysianTenantInfo>>();
+            var tenantInfo = await store.TryGetByIdentifierAsync(identifier);
+
+            return tenantInfo == null ? null : new MultiTenantContext<ElysianTenantInfo> { TenantInfo = tenantInfo };
         }
     }
 

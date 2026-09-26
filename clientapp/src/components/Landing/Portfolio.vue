@@ -19,34 +19,38 @@
 
     <v-row>
       <v-col cols="12" md="7">
-        <v-img
-          :src="portfolioPhoto('coupleJump', 1200, 1500)"
+        <ResponsivePhoto
+          :photo="photos.forPlacement('home-recent-large')"
+          :sizes="PHOTO_SIZES.sevenTwelfths"
           aspect-ratio="0.8"
-          cover
           class="portfolio-image"
-        ></v-img>
+        />
       </v-col>
 
       <v-col cols="12" md="5" class="d-flex flex-column ga-4 mt-4 mt-md-0">
-        <v-img
-          :src="portfolioPhoto('coupleCloseUp', 900, 700)"
+        <ResponsivePhoto
+          :photo="photos.forPlacement('home-recent-top')"
+          :sizes="PHOTO_SIZES.fiveTwelfths"
           aspect-ratio="1.3333"
-          cover
           class="portfolio-image flex-grow-1"
-        ></v-img>
-        <v-img
-          :src="portfolioPhoto('maternityAnnouncement', 900, 700)"
+        />
+        <ResponsivePhoto
+          :photo="photos.forPlacement('home-recent-bottom')"
+          :sizes="PHOTO_SIZES.fiveTwelfths"
           aspect-ratio="1.3333"
-          cover
           class="portfolio-image flex-grow-1"
-        ></v-img>
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 </script>
 
 <style scoped>

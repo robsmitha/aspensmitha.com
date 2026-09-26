@@ -4,13 +4,16 @@
       <v-icon color="blush" size="28" class="mb-6">mdi-format-quote-open</v-icon>
 
       <p class="font-display font-italic text-charcoal testimonial-quote mx-auto mb-8">
-        Aspen made us feel like ourselves in front of the camera. Every image tells the truth
-        of that day &mdash; the nerves, the joy, the quiet in-between moments we would have
-        otherwise forgotten.
+        Aspen is so wonderful at what she does!! She made
+        our experience everything and more than we wanted
+        it to be! The photos came out AMAZING! She is very
+        helpful when it comes to advice on anything you want
+        your photos to be like. I would 100% recommend
+        Aspen for any special memories you want to capture.
       </p>
 
       <span class="font-nav tracking-widest text-caption text-stone">
-        Emily &amp; James &middot; Married in April
+        Abbey &middot; Engagement 
       </span>
     </v-container>
   </v-sheet>

@@ -8,20 +8,22 @@
 
       <v-row>
         <v-col v-for="(item, i) in specialties" :key="item.title" cols="12" md="4">
-          <v-img
-            :src="item.image"
-            aspect-ratio="0.8"
-            cover
-            class="specialty-image mb-6"
-          ></v-img>
+          <router-link :to="`/portfolio/${item.slug}`" class="text-decoration-none specialty-link">
+            <ResponsivePhoto
+              :photo="photos.forPlacement(item.placement)"
+              :sizes="PHOTO_SIZES.third"
+              aspect-ratio="0.8"
+              class="specialty-image mb-6"
+            />
 
-          <div class="text-center">
-            <span class="font-display font-italic text-blush specialty-index">
-              {{ String(i + 1).padStart(2, '0') }}
-            </span>
-            <h3 class="font-display text-charcoal specialty-title my-2">{{ item.title }}</h3>
-            <p class="font-display font-italic text-stone specialty-copy">{{ item.copy }}</p>
-          </div>
+            <div class="text-center">
+              <span class="font-display font-italic text-blush specialty-index">
+                {{ String(i + 1).padStart(2, '0') }}
+              </span>
+              <h3 class="font-display text-charcoal specialty-title my-2">{{ item.title }}</h3>
+              <p class="font-display font-italic text-stone specialty-copy">{{ item.copy }}</p>
+            </div>
+          </router-link>
         </v-col>
       </v-row>
     </v-container>
@@ -29,23 +31,30 @@
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 
 const specialties = [
   {
     title: 'Weddings',
+    slug: 'weddings',
     copy: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
-    image: portfolioPhoto('bridePortrait', 700, 875),
+    placement: 'home-specialty-weddings',
   },
   {
     title: 'Maternity',
+    slug: 'maternity',
     copy: 'Soft, timeless portraits that honor the season of waiting and becoming.',
-    image: portfolioPhoto('maternityAnnouncement', 700, 875),
+    placement: 'home-specialty-maternity',
   },
   {
     title: 'Family',
+    slug: 'family',
     copy: 'Candid, unposed connection between the people who matter most to you.',
-    image: portfolioPhoto('familyLittleBrother', 700, 875),
+    placement: 'home-specialty-family',
   },
 ]
 </script>
@@ -53,6 +62,10 @@ const specialties = [
 <style scoped>
 .specialties-heading {
   font-size: clamp(2.25rem, 2.5vw + 1.25rem, 3rem);
+}
+
+.specialty-link {
+  display: block;
 }
 
 .specialty-image {

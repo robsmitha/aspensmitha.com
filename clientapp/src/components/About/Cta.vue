@@ -1,13 +1,20 @@
 <template>
   <section class="cta">
-    <v-img
-      :src="portfolioPhoto('bridePortrait', 1800, 900)"
-      cover
+    <ResponsivePhoto
+      :photo="photos.forPlacement('about-cta')"
+      :sizes="PHOTO_SIZES.fullBleed"
+      aspect-ratio="2.2"
       class="cta-image"
     >
       <div class="cta-scrim"></div>
 
       <div class="cta-content d-flex flex-column align-center justify-center text-center h-100 px-6">
+        <span class="font-nav tracking-widest text-caption text-ivory cta-text-shadow mb-4">Let's Work Together</span>
+
+        <h2 class="font-display text-ivory cta-heading cta-text-shadow mb-8">
+          I'd love to tell<br class="d-none d-sm-block" /> your story next.
+        </h2>
+
         <v-btn
           color="ivory"
           size="large"
@@ -18,17 +25,25 @@
           Let's chat!
         </v-btn>
       </div>
-    </v-img>
+    </ResponsivePhoto>
   </section>
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 </script>
 
 <style scoped>
+/* Explicit aspect-ratio above gives this its normal shape; the clamp here
+   is just a hard backstop so it can never grow taller than the viewport on
+   an unusual screen size or a differently-shaped photo. */
 .cta-image {
   min-height: 360px;
+  max-height: 85vh;
 }
 
 .cta-scrim {
@@ -40,5 +55,14 @@ import { portfolioPhoto } from '@/utils/portfolioPhotos'
 .cta-content {
   position: relative;
   z-index: 1;
+}
+
+.cta-text-shadow {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+.cta-heading {
+  font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
+  line-height: 1.2;
 }
 </style>

@@ -26,8 +26,15 @@
     <!-- A wide, edge-to-edge carousel of standout session frames — the
          "hook" for the page, kept well short of a full-viewport hero. -->
     <v-slide-group show-arrows class="hero-showcase">
-      <v-slide-group-item v-for="src in showcase" :key="src">
-        <v-img :src="src" :width="imgWidth" aspect-ratio="0.75" cover class="showcase-image"></v-img>
+      <v-slide-group-item v-for="(key, i) in HERO_SHOWCASE_PLACEMENTS" :key="key">
+        <ResponsivePhoto
+          :photo="photos.forPlacement(key)"
+          :sizes="PHOTO_SIZES.showcase"
+          :width="imgWidth"
+          aspect-ratio="0.75"
+          :eager="i < 3"
+          class="showcase-image"
+        />
       </v-slide-group-item>
     </v-slide-group>
   </section>
@@ -36,20 +43,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { HERO_SHOWCASE_PLACEMENTS } from '@/utils/sitePlacements'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const { mobile } = useDisplay()
 const imgWidth = computed(() => (mobile.value ? 240 : 340))
 
 // The real gallery strip from the live site's homepage, in its original
-// order.
-const showcase = [
-  portfolioPhoto('maternityAnnouncement', 700, 933),
-  portfolioPhoto('bridePortrait', 700, 933),
-  portfolioPhoto('coupleJump', 700, 933),
-  portfolioPhoto('familyLittleBrother', 700, 933),
-  portfolioPhoto('coupleCloseUp', 700, 933),
-]
+// order. Only the first few are visible on load, so only those load eagerly.
+const photos = usePhotoStore()
 </script>
 
 <style scoped>

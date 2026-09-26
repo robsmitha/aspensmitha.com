@@ -1,5 +1,9 @@
+<route lang="yaml">
+meta:
+  layout: admin
+</route>
+
 <template>
-    <v-breadcrumbs :items="breadcrumbs" class="px-4 pt-4 font-mono text-caption"></v-breadcrumbs>
     <ProductList
         :items="products"
         @view="viewProduct"
@@ -20,22 +24,22 @@
         v-model="snackbar"
         :max-width="500"
     >
-        <v-card color="surface">
+        <v-card color="surface" rounded="0">
             <v-card-title class="d-flex justify-space-between align-center">
-                <div>
+                <div class="font-display">
                     <v-icon color="error" size="small">mdi-alert</v-icon>
-                    <span class="ml-2 text-lightest-slate">Request Failed</span>
+                    <span class="ml-2 text-charcoal">Request Failed</span>
                 </div>
 
                 <v-btn
                   icon="mdi-close"
                   variant="text"
-                  color="slate"
+                  color="stone"
                   @click="snackbar = false"
                 ></v-btn>
               </v-card-title>
-              <v-divider color="lightest-navy" />
-              <v-card-text class="pt-2 text-slate">
+              <v-divider color="stone-light" />
+              <v-card-text class="pt-2 text-stone">
                 {{ errorMessage }}
               </v-card-text>
         </v-card>
@@ -48,17 +52,6 @@ import { useRouter } from 'vue-router'
 import { BlobServiceClient } from '@azure/storage-blob'
 import apiClient from '@/api/elysianClient'
 
-const breadcrumbs = [
-    {
-    title: 'HOME',
-    disabled: false,
-    to: '/',
-  },
-  {
-    title: 'PRODUCTS',
-    disabled: true
-  }
-]
 
 const router = useRouter()
 const dialog = ref(false)

@@ -30,15 +30,30 @@
         <span class="font-nav text-caption text-stone">
           &copy;{{ new Date().getFullYear() }} Aspen Smitha Photography
         </span>
-        <a href="mailto:aspensmithaphotography@gmail.com" class="font-nav text-caption text-stone text-decoration-none">
-          aspensmithaphotography@gmail.com
-        </a>
+        <div class="d-flex flex-wrap justify-center align-center ga-3">
+          <a href="mailto:aspensmithaphotography@gmail.com" class="font-nav text-caption text-stone text-decoration-none">
+            aspensmithaphotography@gmail.com
+          </a>
+
+          <span class="text-stone-light" aria-hidden="true">&middot;</span>
+
+          <template v-if="signedIn">
+            <router-link :to="ADMIN_HOME" class="font-nav text-caption text-blush footer-utility">Admin</router-link>
+            <span class="text-stone-light" aria-hidden="true">&middot;</span>
+            <a :href="SIGN_OUT_URL" class="font-nav text-caption text-stone footer-utility">Sign out</a>
+          </template>
+          <a v-else :href="SIGN_IN_URL" class="font-nav text-caption text-stone footer-utility">Sign in</a>
+        </div>
       </div>
     </v-container>
   </v-footer>
 </template>
 
 <script setup lang="ts">
+import { ADMIN_HOME, SIGN_IN_URL, SIGN_OUT_URL, useSignedInUser } from '@/utils/signedInUser'
+
+const { signedIn } = useSignedInUser()
+
 const navLinks = [
   { title: 'Home', to: '/' },
   { title: 'Portfolio', to: '/portfolio' },
@@ -64,6 +79,16 @@ const navLinks = [
 
 .footer-link:hover {
   opacity: 1;
+  border-color: currentColor;
+}
+
+.footer-utility {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.footer-utility:hover {
   border-color: currentColor;
 }
 </style>

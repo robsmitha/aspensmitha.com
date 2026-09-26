@@ -1,23 +1,24 @@
 <template>
   <v-container class="py-14 py-md-18">
     <v-row>
-      <v-col v-for="id in images" :key="id" cols="12" sm="6" md="4">
-        <v-img
-          :src="wixImage(id, 700, 875)"
+      <v-col v-for="photo in photos" :key="photo.id" cols="12" sm="6" md="4">
+        <ResponsivePhoto
+          :photo="photo"
+          :sizes="PHOTO_SIZES.gallery"
           aspect-ratio="0.8"
-          cover
           class="gallery-image"
-        ></v-img>
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { wixImage } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { PHOTO_SIZES, type PortfolioPhoto } from '@/utils/photoUrls'
 
 defineProps<{
-  images: string[]
+  photos: PortfolioPhoto[]
 }>()
 </script>
 

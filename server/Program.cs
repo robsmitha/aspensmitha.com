@@ -2,6 +2,7 @@ using Elysian.Application;
 using Elysian.Infrastructure;
 using Elysian.Infrastructure.Context;
 using ElysianFunctions.Middleware;
+using ElysianFunctions.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,11 @@ var host = new HostBuilder()
         services.AddFinancialFeatures(hostContext.Configuration);
 
         services.AddAzureStorageFeatures(hostContext.Configuration);
+
+        services.AddPhotoFeatures(hostContext.Configuration);
+
+        services.AddMemoryCache();
+        services.AddSingleton<PortfolioCache>();
 
         services.AddApplication();
     })

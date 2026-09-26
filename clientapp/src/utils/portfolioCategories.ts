@@ -1,15 +1,16 @@
 /**
- * The Portfolio dropdown categories from the live site, each with real
- * gallery photos pulled from that category's own page on aspensmitha.com.
- * "Events" has no published gallery yet on the live site — just an inquiry
- * prompt — so it's flagged accordingly and rendered without a photo grid.
+ * The Portfolio dropdown categories from the live site. Gallery photos come
+ * from the photo store (uploaded via /admin/photos, filed under the slug).
+ * `hasGallery: false` (Events) means no placeholder gallery and an inquiry
+ * prompt instead; once photos are uploaded to it, they show above the prompt.
  */
 export interface PortfolioCategory {
   slug: string
   name: string
   description: string
   hasGallery: boolean
-  images: string[]
+  /** TEMPORARY: Wix POC ids shown until the category has uploaded photos (see legacyPhotos.ts) */
+  legacyImages: string[]
 }
 
 export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
@@ -18,7 +19,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Couples',
     description: 'Candid, unposed connection between two people building a life together.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_4e5a45e501cb430d8df369129089f465',
       '6fbe05_e569b629df9845dcad043e7d1217d7b4',
       '6fbe05_878aae64d7be40a8880d750631d2c837',
@@ -38,7 +39,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Engagements',
     description: "Celebrating the season between 'yes' and 'I do'.",
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_8a443d4d2c2c415bab09af8c41718e38',
       '6fbe05_559f507623244dedb54f98f28f89b462',
       '6fbe05_931f3ddfcb6747edac37899210c8da20',
@@ -58,7 +59,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Weddings',
     description: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_de9a3dfe1d1b404f828c8130b99e8c94',
       '6fbe05_ceed89b57ca64d328f61d1d785ad89e2',
       '6fbe05_c29df6d4f1344ff995145451562b425e',
@@ -78,7 +79,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Maternity',
     description: 'Soft, timeless portraits that honor the season of waiting and becoming.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_a4fd0f80537845caa5be07bccd87256b',
       '6fbe05_c4df86b2a036458f92eea5287fd65ba1',
       '6fbe05_0001652a7c354f9f9ccb8ce8c0358033',
@@ -98,7 +99,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Family',
     description: 'Candid, unposed connection between the people who matter most to you.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_fdc0019e1a8c4b1ca791900281b04dd0',
       '6fbe05_cdf3cd89d9e544838f0721fa54cc24ea',
       '6fbe05_f3e0065c088e44d49143c031416e6924',
@@ -118,7 +119,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Seniors',
     description: 'Confident, editorial portraits to mark the milestone.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_aae8b8f8a5a1464e87f93d9bfd70dbe0',
       '6fbe05_60c9a3b5c81f407a8f38c21ad0460e78',
       '6fbe05_0e36a0a99553452b9d5046e6cd49a232',
@@ -138,7 +139,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Grads',
     description: 'Celebrating the achievement, in the places that made it happen.',
     hasGallery: true,
-    images: [
+    legacyImages: [
       '6fbe05_00e49855785a4a5bbe259e133315bc8b',
       '6fbe05_790ac33004364bc19a95a451b00962bc',
       '6fbe05_88c4a8b1fbb9435c824b777c655cd825',
@@ -158,9 +159,16 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     name: 'Events',
     description: 'Every gathering worth remembering, documented as it unfolds.',
     hasGallery: false,
-    images: ['6fbe05_ceed89b57ca64d328f61d1d785ad89e2'],
+    legacyImages: ['6fbe05_ceed89b57ca64d328f61d1d785ad89e2'],
   },
 ]
+
+/**
+ * Category for photos used only in featured placements (e.g. Aspen's own
+ * portrait). Not in PORTFOLIO_CATEGORIES, so these never appear in a gallery
+ * or category tile.
+ */
+export const SITE_ONLY_CATEGORY = { slug: 'site', name: 'Site only (not in portfolio)' } as const
 
 export function getPortfolioCategory(slug: string): PortfolioCategory | undefined {
   return PORTFOLIO_CATEGORIES.find(c => c.slug === slug)

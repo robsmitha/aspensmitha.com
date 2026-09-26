@@ -1,24 +1,13 @@
 <template>
-    <v-sheet color="background">
-    <v-container>
-        <v-row class="mt-3">
-            <v-col>
-                <ContentHeader
-                    overline="Access Control"
-                    title="Users"
-                    :subtitle="`${items?.length ?? 0} user${(items?.length ?? 0) === 1 ? '' : 's'}`"
-                />
-            </v-col>
-            <v-col class="text-right">
-                <v-btn variant="outlined" color="primary" class="font-mono text-none" disabled @click="dialog = true" :icon="$vuetify.display.mobile">
-                    <v-icon>mdi-plus</v-icon> <span v-if="!$vuetify.display.mobile">New</span>
-                </v-btn>
-            </v-col>
-        </v-row>
-        <v-divider class="mt-4 mb-8" thickness="4" length="48" color="primary" />
+    <v-container class="py-10 py-md-14">
+        <AdminPageHeader
+            eyebrow="Access Control"
+            title="Users"
+            :subtitle="`${items?.length ?? 0} user${(items?.length ?? 0) === 1 ? '' : 's'}`"
+        />
         <v-row>
             <v-col>
-                <v-card color="surface" rounded="lg" class="bordered-card">
+                <v-card color="surface" rounded="0" flat class="bordered-card">
                     <v-data-table
                         :headers="headers"
                         :items="items"
@@ -39,9 +28,8 @@
                                             clearable
                                             variant="outlined"
                                             color="primary"
-                                            base-color="slate"
-                                            class="font-mono"
-                                            rounded="lg"
+                                            base-color="stone"
+                                            rounded="0"
                                         >
                                         </v-text-field>
                                     </v-col>
@@ -53,15 +41,35 @@
                         </template>
                         <template v-slot:no-data>
                             <div class="d-flex flex-column align-center py-10">
-                                <v-icon size="40" class="mb-3 text-lightest-navy">mdi-account-group-outline</v-icon>
-                                <p class="text-body-2 text-slate">No users to display.</p>
+                                <v-icon size="40" class="mb-3 text-stone-light">mdi-account-group-outline</v-icon>
+                                <p class="text-body-2 text-stone">No users to display.</p>
                             </div>
                         </template>
                         <template v-slot:[`item.identityProvider`]="{ item }">
-                            <v-chip size="small" variant="outlined" color="slate" class="font-mono">{{ item.identityProvider }}</v-chip>
+                            <v-chip size="small" variant="outlined" color="stone" class="font-nav">{{ item.identityProvider }}</v-chip>
+                        </template>
+                        <template v-slot:[`item.accessControl.roles`]="{ item }">
+                            <div class="d-flex flex-wrap ga-1 py-2">
+                                <v-chip
+                                    v-for="role in item.accessControl.roles"
+                                    :key="role"
+                                    size="small"
+                                    variant="tonal"
+                                    color="blush"
+                                    class="font-nav"
+                                >{{ role }}</v-chip>
+                            </div>
+                        </template>
+                        <template v-slot:[`item.accessControl.policies`]="{ item }">
+                            <div class="py-2">
+                                <div v-for="group in groupPolicies(item.accessControl.policies)" :key="group.resource" class="policy-line">
+                                    <span class="font-nav tracking-wide text-caption text-charcoal text-uppercase policy-resource">{{ group.resource }}</span>
+                                    <span class="text-caption text-stone text-no-wrap">{{ group.actions.join(' · ') }}</span>
+                                </div>
+                            </div>
                         </template>
                         <template v-slot:[`item.actions`]="{ item }">
-                            <v-btn size="small" color="primary" icon variant="text" @click="editUser(item)">
+                            <v-btn size="small" color="charcoal" icon variant="text" @click="editUser(item)">
                                 <v-icon>mdi-key-variant</v-icon>
                             </v-btn>
                         </template>
@@ -70,31 +78,30 @@
             </v-col>
         </v-row>
     </v-container>
-    </v-sheet>
     <v-dialog v-model="dialog" persistent max-width="800">
-        <v-card color="surface">
+        <v-card color="surface" rounded="0">
             <v-card-title class="d-flex justify-space-between align-center">
-                <div class="text-h5 text-lightest-slate ps-2">
-                    {{ selectedUser?.userName }} <span class="font-mono text-body-2 text-slate">({{ selectedUser?.identityProvider }})</span>
+                <div class="font-display text-h5 text-charcoal ps-2">
+                    {{ selectedUser?.userName }} <span class="font-nav text-body-2 text-stone">({{ selectedUser?.identityProvider }})</span>
                 </div>
 
                 <v-btn
                     icon="mdi-close"
                     variant="text"
-                    color="slate"
+                    color="stone"
                     @click="dialog = false"
                 ></v-btn>
             </v-card-title>
-            <v-divider color="lightest-navy" />
+            <v-divider color="stone-light" />
             <v-card-text>
                 <v-row>
                     <v-col v-for="resource in resources" :key="resource" md="6" cols="12" class="mb-2">
-                        <p class="font-mono text-primary text-caption text-uppercase mb-2">{{ resource[0].toUpperCase() + resource.slice(1) }}</p>
+                        <p class="font-nav tracking-widest text-blush text-caption text-uppercase mb-2">{{ resource[0].toUpperCase() + resource.slice(1) }}</p>
                         <v-switch
                             v-for="action in actions"
                             :key="action"
                             :label="capitalize(action)"
-                            color="primary"
+                            color="blush"
                             :model-value="getPolicy(resource, action)"
                             @update:model-value="val => setPolicy(resource, action, val)"
                             hide-details
@@ -103,19 +110,20 @@
                     </v-col>
                 </v-row>
             </v-card-text>
-            <v-divider color="lightest-navy" />
+            <v-divider color="stone-light" />
             <v-card-actions class="my-2 d-flex justify-end">
                 <v-btn
-                  class="font-mono text-none"
+                  class="font-nav tracking-wide text-caption" rounded="0"
                   variant="text"
-                  color="slate"
+                  color="stone"
                   @click="dialog = false"
                 >
                   Cancel
                 </v-btn>
 
                 <v-btn
-                  class="font-mono text-none"
+                  class="font-nav tracking-wide text-caption"
+                  rounded="0"
                   color="primary"
                   variant="outlined"
                   @click="saveAccessPolicy"
@@ -129,22 +137,22 @@
         v-model="snackbar"
         :max-width="500"
     >
-        <v-card color="surface">
+        <v-card color="surface" rounded="0">
             <v-card-title class="d-flex justify-space-between align-center">
-                <div>
+                <div class="font-display">
                     <v-icon color="error" size="small">mdi-alert</v-icon>
-                    <span class="ml-2 text-lightest-slate">Request Failed</span>
+                    <span class="ml-2 text-charcoal">Request Failed</span>
                 </div>
 
                 <v-btn
                   icon="mdi-close"
                   variant="text"
-                  color="slate"
+                  color="stone"
                   @click="snackbar = false"
                 ></v-btn>
               </v-card-title>
-              <v-divider color="lightest-navy" />
-              <v-card-text class="pt-2 text-slate">
+              <v-divider color="stone-light" />
+              <v-card-text class="pt-2 text-stone">
                 {{ errorMessage }}
               </v-card-text>
         </v-card>
@@ -154,6 +162,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import elysianClient from '@/api/elysianClient'
+import AdminPageHeader from '@/components/Admin/AdminPageHeader.vue'
 
 interface User {
     userName: string,
@@ -168,6 +177,7 @@ interface SaveAccessPolicyCommand {
 }
 
 interface AccessControl {
+    roles?: string[]
     policies: string[]
 }
 
@@ -181,7 +191,7 @@ const headers = [
     { title: 'Permissions', key: 'accessControl.policies' },
     { title: '', sortable: false, key: 'actions' }
 ]
-const resources = ['user', 'product', 'budget', 'code', 'income'];
+const resources = ['photo', 'product', 'user', 'budget', 'code', 'income'];
 const actions = ['read', 'write', 'delete'];
 
 const loading = ref(false)
@@ -204,6 +214,22 @@ const setPolicy = (resource: string, action: string, value: boolean | null) => {
 };
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+/** "photo.read", "photo.write" -> [{ resource: 'photo', actions: ['read', 'write'] }], in actions order */
+function groupPolicies(policies: string[]) {
+    const groups = new Map<string, string[]>()
+    for (const policy of policies ?? []) {
+        const [resource, action] = policy.split('.')
+        if (!resource || !action) continue
+        groups.set(resource, [...(groups.get(resource) ?? []), action])
+    }
+    return [...groups.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([resource, list]) => ({
+            resource,
+            actions: [...list].sort((a, b) => actions.indexOf(a) - actions.indexOf(b)),
+        }))
+}
 
 function filter (value: string, query: string, item: any) {
     const upperCaseQuery = query.toLocaleUpperCase()
@@ -277,7 +303,17 @@ async function saveAccessPolicy(): Promise<void> {
 </script>
 
 <style scoped>
+.policy-line {
+    line-height: 1.7;
+    white-space: nowrap;
+}
+
+.policy-resource {
+    display: inline-block;
+    min-width: 72px;
+}
+
 .bordered-card {
-    border: 1px solid rgb(var(--v-theme-lightest-navy));
+    border: 1px solid rgba(var(--v-theme-charcoal), 0.1);
 }
 </style>

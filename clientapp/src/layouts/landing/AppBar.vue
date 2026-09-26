@@ -21,6 +21,17 @@
             >
               {{ link.title.toUpperCase() }}
             </router-link>
+
+            <!-- Only Aspen (signed in) ever sees this -->
+            <span v-if="signedIn" class="nav-divider" aria-hidden="true"></span>
+            <router-link
+              v-if="signedIn"
+              :to="ADMIN_HOME"
+              class="font-nav tracking-wide text-caption text-blush nav-link d-inline-flex align-center"
+            >
+              <v-icon size="12" class="mr-1">mdi-lock-outline</v-icon>
+              ADMIN
+            </router-link>
           </nav>
         </v-col>
 
@@ -43,8 +54,10 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { ADMIN_HOME, useSignedInUser } from '@/utils/signedInUser'
 
 const route = useRoute()
+const { signedIn } = useSignedInUser()
 
 const navLinks = [
   { title: 'Home', to: '/' },
@@ -76,6 +89,12 @@ const navLinks = [
 .nav-link--active {
   opacity: 1;
   border-color: currentColor;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 14px;
+  background-color: rgba(var(--v-theme-charcoal), 0.18);
 }
 
 .inquire-btn {

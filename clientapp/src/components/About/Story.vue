@@ -2,12 +2,12 @@
   <v-container class="py-10 py-md-16">
     <v-row>
       <v-col cols="12" md="5">
-        <v-img
-          :src="portfolioPhoto('aspenFamily', 900, 1125)"
+        <ResponsivePhoto
+          :photo="photos.forPlacement('about-story')"
+          :sizes="PHOTO_SIZES.fiveTwelfths"
           aspect-ratio="0.8"
-          cover
           class="story-image"
-        ></v-img>
+        />
       </v-col>
 
       <v-col cols="12" md="6" offset-md="1">
@@ -44,11 +44,19 @@
       </v-col>
     </v-row>
 
-    <v-row justify="center" class="mt-14 mt-md-20">
-      <v-col cols="12" md="8">
-        <v-divider color="stone-light" opacity="0.6" class="mb-14 mb-md-20"></v-divider>
+  </v-container>
 
-        <p class="font-display text-charcoal story-copy story-copy--large text-center mb-8">
+  <!-- A wider, full-bleed pull-quote band for the most personal part of the
+       story. Wider than the old narrow centered column so the same text
+       takes less scroll, but kept as one flowing column — a left-to-right
+       reader's eye doesn't naturally split a screen into two texts to read
+       side by side, so two columns here felt disjointed rather than wide. -->
+  <v-sheet color="ivory-deep" class="py-14 py-md-20">
+    <v-container>
+      <div class="quote-block">
+        <v-icon color="blush" size="32" class="d-flex mb-8 mb-md-10">mdi-format-quote-open</v-icon>
+
+        <p class="font-display text-charcoal story-copy mb-6">
           The journey of motherhood has been both a profound and emotional one for me. Our
           eldest son, Beckham, was born prematurely at 24 weeks, and spent 105 days in the TMH
           NICU. Our second son, Lincoln, arrived even earlier at 21 weeks, and we were
@@ -61,7 +69,7 @@
           stories that matter most.
         </p>
 
-        <p class="font-display text-charcoal story-copy story-copy--large text-center">
+        <p class="font-display text-charcoal story-copy">
           I hope to have the opportunity to tell your story, whether it's filled with moments
           of profound joy or heart wrenching sadness. Life is woven with threads of varying
           shades and textures, and it's in the diverse experiences and emotions that our
@@ -70,13 +78,17 @@
           photograph becomes a chapter in your unique story, and I can't wait to help you tell
           it, one image at a time.
         </p>
-      </v-col>
-    </v-row>
-  </v-container>
+      </div>
+    </v-container>
+  </v-sheet>
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 </script>
 
 <style scoped>
@@ -94,10 +106,8 @@ import { portfolioPhoto } from '@/utils/portfolioPhotos'
   letter-spacing: 0.01em;
 }
 
-.story-copy--large {
-  font-size: clamp(1.1875rem, 0.4vw + 1rem, 1.375rem);
-  line-height: 1.75;
-  max-width: 680px;
+.quote-block {
+  max-width: 780px;
   margin-inline: auto;
 }
 </style>

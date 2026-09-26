@@ -1,8 +1,9 @@
 <template>
   <section class="cta">
-    <v-img
-      :src="portfolioPhoto('familyLittleBrother', 1800, 1000)"
-      cover
+    <ResponsivePhoto
+      :photo="photos.forPlacement('home-cta')"
+      :sizes="PHOTO_SIZES.fullBleed"
+      aspect-ratio="2.2"
       class="cta-image"
     >
       <div class="cta-scrim"></div>
@@ -24,17 +25,25 @@
           Inquire Now
         </v-btn>
       </div>
-    </v-img>
+    </ResponsivePhoto>
   </section>
 </template>
 
 <script setup lang="ts">
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 </script>
 
 <style scoped>
+/* Explicit aspect-ratio above gives this its normal shape; the clamp here
+   is just a hard backstop so it can never grow taller than the viewport on
+   an unusual screen size or a differently-shaped photo. */
 .cta-image {
-  min-height: 480px;
+  min-height: 400px;
+  max-height: 85vh;
 }
 
 .cta-scrim {

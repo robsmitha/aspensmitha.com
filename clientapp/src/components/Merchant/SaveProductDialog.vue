@@ -2,22 +2,23 @@
     <v-dialog
       v-model="dialog"
       scrollable
+      max-width="760"
       transition="dialog-bottom-transition"
       :fullscreen="false"
     >
-      <v-card color="surface">
-        <v-toolbar color="light-navy">
+      <v-card color="surface" rounded="0">
+        <v-toolbar color="ivory-deep">
             <v-toolbar-title>
-                <span class="font-weight-bold text-lightest-slate">{{ item?.productId ? 'Modify' : 'New' }} Product</span>
+                <span class="font-display text-h5 text-charcoal">{{ item?.productId ? 'Modify' : 'New' }} Product</span>
             </v-toolbar-title>
             <v-btn
                 icon="mdi-close"
-                color="slate"
+                color="stone"
                 :disabled="loading"
                 @click="dialog = false"
             ></v-btn>
         </v-toolbar>
-        <v-divider color="lightest-navy" />
+        <v-divider color="stone-light" />
         <v-card-text class="pa-0">
             <template v-if="loading">
               <v-container class="fill-height">
@@ -29,7 +30,7 @@
                       :size="70"
                       :width="5"
                     ></v-progress-circular>
-                    <div class="mt-5 text-h5 text-lightest-slate">
+                    <div class="mt-5 font-display text-h5 text-charcoal">
                       Loading, please wait..
                     </div>
                   </v-col>
@@ -46,8 +47,7 @@
                         required
                         variant="outlined"
                         color="primary"
-                        base-color="slate"
-                        class="font-mono"
+                        base-color="stone"
                         hint="Use a recognizable name for the product.">
                       </v-text-field>
                     </v-col>
@@ -59,8 +59,7 @@
                         label="Serial Number"
                         variant="outlined"
                         color="primary"
-                        base-color="slate"
-                        class="font-mono"
+                        base-color="stone"
                         hint="Products must have a unique serial number."
                         required>
                       </v-text-field>
@@ -71,8 +70,7 @@
                         label="Grade"
                         variant="outlined"
                         color="primary"
-                        base-color="slate"
-                        class="font-mono"
+                        base-color="stone"
                         hint="Enter the grade of the product.">
                       </v-text-field>
                     </v-col>
@@ -84,8 +82,7 @@
                         label="Enter note"
                         variant="outlined"
                         color="primary"
-                        base-color="slate"
-                        class="font-mono"
+                        base-color="stone"
                         auto-grow
                         rows="3"
                         hint="Generic notes about this product. You can add notes after the product is created.">
@@ -94,8 +91,8 @@
                   </v-row>
                   <v-row>
                     <v-col class="pt-0">
-                      <span class="font-mono text-primary text-caption text-uppercase d-block mb-2">Images</span>
-                      <v-divider color="lightest-navy" />
+                      <span class="font-nav tracking-widest text-blush text-caption text-uppercase d-block mb-2">Images</span>
+                      <v-divider color="stone-light" />
                     </v-col>
                   </v-row>
                   <v-row>
@@ -109,7 +106,7 @@
                         clearable
                         variant="outlined"
                         color="primary"
-                        base-color="slate"
+                        base-color="stone"
                         chips
                         hint="Add pictures of the product. These will display on the site when searched by serial number."
                         persistent-hint
@@ -121,7 +118,7 @@
                       <v-chip
                           v-for="i in form.images"
                           :key="i.productImageId"
-                          class="mr-2 mb-2 font-mono"
+                          class="mr-2 mb-2 font-nav"
                           closable
                           variant="outlined"
                           color="primary"
@@ -135,12 +132,12 @@
             </template>
         </v-card-text>
 
-        <v-divider color="lightest-navy" />
+        <v-divider color="stone-light" />
         <v-card-actions class="my-2 d-flex justify-end">
             <v-btn
-              class="font-mono text-none"
+              class="font-nav tracking-wide text-caption" rounded="0"
               variant="text"
-              color="slate"
+              color="stone"
               @click="dialog = false"
             >
               Cancel
@@ -148,7 +145,7 @@
 
             <v-btn
               color="primary"
-              class="font-mono text-none"
+              class="font-nav tracking-wide text-caption" rounded="0"
               variant="outlined"
               :disabled="loading"
               @click="onSave"

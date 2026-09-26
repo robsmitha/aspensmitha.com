@@ -22,6 +22,14 @@
         {
             "route": "/products",
             "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/admin/*",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/api/manage/*",
+            "allowedRoles": ["authenticated"]
         }
     ],
     "responseOverrides": {

@@ -2,12 +2,12 @@
   <v-container class="py-14 py-md-20">
     <v-row>
       <v-col cols="12" md="5" class="d-flex flex-column">
-        <v-img
-          :src="portfolioPhoto('aspenPortrait', 900, 1150)"
+        <ResponsivePhoto
+          :photo="photos.forPlacement('contact-portrait')"
+          :sizes="PHOTO_SIZES.fiveTwelfths"
           aspect-ratio="0.8"
-          cover
           class="contact-image mb-8"
-        ></v-img>
+        />
 
         <div>
           <h2 class="font-display text-charcoal contact-heading mb-3">Prefer to reach out directly?</h2>
@@ -108,7 +108,11 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { portfolioPhoto } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
 
 // Front-end only for now — no submission wiring yet.
 const form = reactive({

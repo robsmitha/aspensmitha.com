@@ -33,6 +33,12 @@ namespace ElysianFunctions.Middleware
 
                 var httpReqData = await context.GetHttpRequestDataAsync();
 
+                // Non-HTTP triggers (blob) must see the failure so the host retries / poisons the message
+                if (httpReqData == null)
+                {
+                    throw;
+                }
+
                 if (httpReqData != null)
                 {
                     var code = HttpStatusCode.InternalServerError;

@@ -9,12 +9,12 @@
       >
         <router-link :to="`/portfolio/${category.slug}`" class="text-decoration-none">
           <div class="category-tile">
-            <v-img
-              :src="wixImage(category.images[0], 700, 875)"
+            <ResponsivePhoto
+              :photo="photos.coverFor(category.slug)"
+              :sizes="PHOTO_SIZES.tile"
               aspect-ratio="0.8"
-              cover
               class="category-tile-image"
-            ></v-img>
+            />
             <div class="category-tile-scrim"></div>
             <div class="category-tile-content">
               <h2 class="font-display text-ivory category-tile-name">{{ category.name }}</h2>
@@ -32,9 +32,12 @@
 
 <script setup lang="ts">
 import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
-import { wixImage } from '@/utils/portfolioPhotos'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
+import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const categories = PORTFOLIO_CATEGORIES
+const photos = usePhotoStore()
 </script>
 
 <style scoped>
