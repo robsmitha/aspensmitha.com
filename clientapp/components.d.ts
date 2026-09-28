@@ -35,6 +35,7 @@ declare module 'vue' {
     Specialties: typeof import('./src/components/Landing/Specialties.vue')['default']
     Story: typeof import('./src/components/About/Story.vue')['default']
     Testimonial: typeof import('./src/components/Landing/Testimonial.vue')['default']
+    TurnstileWidget: typeof import('./src/components/_helpers/TurnstileWidget.vue')['default']
     UnDraw: typeof import('./src/components/_helpers/UnDraw/UnDraw.vue')['default']
     UserList: typeof import('./src/components/Merchant/UserList.vue')['default']
     ViewProduct: typeof import('./src/components/Merchant/ViewProduct.vue')['default']

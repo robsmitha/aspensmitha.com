@@ -33,8 +33,11 @@ var host = new HostBuilder()
 
         services.AddPhotoFeatures(hostContext.Configuration);
 
+        services.AddContactFeatures(hostContext.Configuration);
+
         services.AddMemoryCache();
         services.AddSingleton<PortfolioCache>();
+        services.AddSingleton<ContactRateLimiter>();
 
         services.AddApplication();
     })
