@@ -11,8 +11,12 @@
 </template>
 
 <script setup lang="ts">
+// Anniversary is September 1, 2022.
+const marriedYear = 2022
+const yearsMarriedThisSeptember = new Date().getFullYear() - marriedYear
+
 const facts = [
-  { icon: 'mdi-heart-outline', label: 'Married', value: '5 Years This December' },
+  { icon: 'mdi-heart-outline', label: 'Married', value: `${yearsMarriedThisSeptember} Years` },
   { icon: 'mdi-home-heart', label: 'Role', value: 'Stay-at-Home Mom' },
   { icon: 'mdi-paw-outline', label: 'Pets', value: 'Zeus, Jasper, Athena & Hazel' },
   { icon: 'mdi-map-marker-outline', label: 'Based Near', value: 'Tallahassee, FL' },

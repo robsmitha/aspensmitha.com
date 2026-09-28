@@ -17,8 +17,8 @@
           </p>
 
           <div class="d-flex ga-2">
-            <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://instagram.com" target="_blank"></v-btn>
-            <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://facebook.com" target="_blank"></v-btn>
+            <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://www.instagram.com/aspensmitha.photography" target="_blank"></v-btn>
+            <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://www.facebook.com/aspensage.photography" target="_blank"></v-btn>
           </div>
         </div>
       </v-col>

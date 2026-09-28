@@ -12,8 +12,9 @@
 
       <v-col cols="12" md="6" offset-md="1">
         <p class="font-display text-charcoal story-copy mb-6">
-          Hey there! My name is Aspen, and I'm a 23 year-old stay-at-home mom, caring for my 3
-          year-old snack bandit. My husband and I will celebrate our fifth year together in
+          Hey there! My name is Aspen, and I'm a {{ aspenAge }} year-old stay-at-home mom,
+          caring for my {{ sonAge }} year-old snack bandit. My husband and I will celebrate our
+          {{ yearsTogetherOrdinal }} year together in
           December. We have three cats; Zeus, Jasper, and Athena, and a French Bulldog named
           Hazel. When I'm not working on my photography business, we're most likely to be
           walking as a family around the nearby park or completing tasks on the ever-growing
@@ -89,6 +90,25 @@ import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const photos = usePhotoStore()
+
+function calculateAge(birthYear: number, birthMonth: number, birthDay: number): number {
+  const now = new Date()
+  let age = now.getFullYear() - birthYear
+  if (now.getMonth() < birthMonth - 1 || (now.getMonth() === birthMonth - 1 && now.getDate() < birthDay)) {
+    age -= 1
+  }
+  return age
+}
+
+const aspenAge = calculateAge(2002, 2, 25)
+const sonAge = calculateAge(2021, 11, 18)
+
+// Dating started December 1, 2020; each December marks another year together.
+const ordinalWords = [
+  'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
+]
+const yearsTogether = new Date().getFullYear() - 2020
+const yearsTogetherOrdinal = ordinalWords[yearsTogether - 1] ?? `${yearsTogether}th`
 </script>
 
 <style scoped>

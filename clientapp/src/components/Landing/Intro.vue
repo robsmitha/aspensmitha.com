@@ -15,16 +15,23 @@
 
         <h2 class="font-display text-charcoal intro-heading my-4">Hello, I'm Aspen.</h2>
 
-        <p class="font-display font-italic text-charcoal intro-copy mb-8">
-          I'm here to capture life's fleeting, unrepeatable moments — the way he looks at her,
-          the hand resting on a growing belly, a child's laugh caught mid-air. Take a tour,
-          stay awhile, and let's make something beautiful together.
+        <div class="intro-quote">
+          <v-icon color="blush" size="28" class="d-flex mb-3">mdi-format-quote-open</v-icon>
+          <p class="font-display font-italic text-charcoal intro-copy mb-0">
+            I'm here to capture life's fleeting, unrepeatable moments — the way he looks at her,
+            the hand resting on a growing belly, a child's laugh caught mid-air. Take a tour,
+            stay awhile, and let's make something beautiful together.
+          </p>
+        </div>
+
+        <p class="font-nav tracking-wide text-caption text-stone intro-list-label mt-8 mb-4">
+          Every session is crafted to
         </p>
 
         <div class="intro-list">
-          <div v-for="point in points" :key="point" class="d-flex align-start ga-4 mb-4">
-            <span class="font-display font-italic text-blush intro-list-mark">&mdash;</span>
-            <span class="font-display font-italic text-charcoal intro-list-copy">{{ point }}</span>
+          <div v-for="point in points" :key="point" class="d-flex align-start ga-3 mb-3">
+            <v-icon color="blush" size="14" class="intro-list-mark">mdi-check</v-icon>
+            <span class="font-display text-charcoal intro-list-copy">{{ point }}</span>
           </div>
         </div>
 
@@ -45,9 +52,9 @@ import { PHOTO_SIZES } from '@/utils/photoUrls'
 const photos = usePhotoStore()
 
 const points = [
-  'reflect your authentic self and personality',
-  'tell a captivating story',
-  'elicit emotions such as joy, love, and nostalgia',
+  'Reflect your authentic self and personality',
+  'Tell a captivating story',
+  'Elicit emotions such as joy, love, and nostalgia',
 ]
 </script>
 
@@ -61,20 +68,30 @@ const points = [
   line-height: 1.05;
 }
 
+.intro-quote {
+  max-width: 560px;
+  padding-left: 4px;
+  border-left: 2px solid rgba(var(--v-theme-blush), 0.4);
+}
+
 .intro-copy {
   font-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
   line-height: 1.55;
-  max-width: 560px;
+  padding-left: 20px;
+}
+
+.intro-list-label {
+  font-style: italic;
 }
 
 .intro-list-mark {
-  font-size: 1.25rem;
-  line-height: 1.5;
+  margin-top: 6px;
 }
 
 .intro-list-copy {
   font-size: 1.125rem;
   line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 .intro-link {

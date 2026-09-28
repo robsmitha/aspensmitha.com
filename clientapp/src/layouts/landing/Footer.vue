@@ -20,8 +20,8 @@
       </nav>
 
       <div class="d-flex justify-center ga-2 mb-10">
-        <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://instagram.com" target="_blank"></v-btn>
-        <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://facebook.com" target="_blank"></v-btn>
+        <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://www.instagram.com/aspensmitha.photography" target="_blank"></v-btn>
+        <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://www.facebook.com/aspensage.photography" target="_blank"></v-btn>
       </div>
 
       <v-divider color="stone-light" opacity="0.6" class="mb-6"></v-divider>
