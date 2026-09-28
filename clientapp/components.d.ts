@@ -23,6 +23,7 @@ declare module 'vue' {
     Hero: typeof import('./src/components/About/Hero.vue')['default']
     Intro: typeof import('./src/components/Landing/Intro.vue')['default']
     OAuthCallback: typeof import('./src/components/OAuthCallback.vue')['default']
+    PhotoLightbox: typeof import('./src/components/Photo/PhotoLightbox.vue')['default']
     PlacementMap: typeof import('./src/components/Admin/PlacementMap.vue')['default']
     Portfolio: typeof import('./src/components/Landing/Portfolio.vue')['default']
     PricingSection: typeof import('./src/components/Investment/PricingSection.vue')['default']

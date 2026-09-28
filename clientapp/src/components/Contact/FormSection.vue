@@ -84,19 +84,38 @@
           <label for="contact-subject" class="font-nav tracking-wide text-caption text-stone field-label">
             What type of session are you interested in? *
           </label>
-          <v-text-field
+          <v-select
             id="contact-subject"
             v-model="form.subject"
+            :items="sessionTypes"
             :rules="rules.subject"
             :error-messages="fieldErrors.subject"
             variant="outlined"
             color="blush"
             rounded="0"
-            placeholder="Engagement, Senior, Family, Maternity, etc."
-            maxlength="200"
+            placeholder="Select a session type"
             class="font-display mb-4"
             @update:model-value="fieldErrors.subject = []"
-          ></v-text-field>
+          ></v-select>
+
+          <template v-if="form.subject === OTHER_SESSION_TYPE">
+            <label for="contact-subject-other" class="font-nav tracking-wide text-caption text-stone field-label">
+              Please specify *
+            </label>
+            <v-text-field
+              id="contact-subject-other"
+              v-model="form.subjectOther"
+              :rules="rules.subjectOther"
+              :error-messages="fieldErrors.subjectOther"
+              variant="outlined"
+              color="blush"
+              rounded="0"
+              placeholder="Tell me what kind of session you have in mind"
+              maxlength="200"
+              class="font-display mb-4"
+              @update:model-value="fieldErrors.subjectOther = []"
+            ></v-text-field>
+          </template>
 
           <label for="contact-message" class="font-nav tracking-wide text-caption text-stone field-label">
             Tell me about you &amp; what your ideal photoshoot would include!
@@ -167,8 +186,12 @@ import TurnstileWidget from '@/components/_helpers/TurnstileWidget.vue'
 import apiClient from '@/api/elysianClient'
 import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
+import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
 
 const photos = usePhotoStore()
+
+const OTHER_SESSION_TYPE = 'Other - Please specify'
+const sessionTypes = [...PORTFOLIO_CATEGORIES.map(category => category.name), OTHER_SESSION_TYPE]
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 /** Error key (after camelCasing) for a missing or failed Turnstile token, see Elysian's SendContactMessageCommand */
@@ -177,7 +200,7 @@ const MESSAGE_MAX = 5000
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_PATTERN = /^[0-9+()\-.\s]{7,30}$/
 
-type FieldName = 'name' | 'email' | 'phone' | 'subject' | 'message'
+type FieldName = 'name' | 'email' | 'phone' | 'subject' | 'subjectOther' | 'message'
 type Rule = (value: string) => true | string
 
 const emptyForm = () => ({
@@ -185,6 +208,7 @@ const emptyForm = () => ({
   email: '',
   phone: '',
   subject: '',
+  subjectOther: '',
   message: '',
   website: '',
 })
@@ -202,7 +226,11 @@ const rules: Record<FieldName, Rule[]> = {
     maxLength(320, 'Email'),
   ],
   phone: [value => !value?.trim() || PHONE_PATTERN.test(value.trim()) || 'Please enter a valid phone number.'],
-  subject: [required("Please tell me what type of session you're interested in."), maxLength(200, 'Session type')],
+  subject: [required("Please tell me what type of session you're interested in.")],
+  subjectOther: [
+    value => form.subject !== OTHER_SESSION_TYPE || !!value?.trim() || 'Please specify the type of session.',
+    maxLength(200, 'Session details'),
+  ],
   message: [maxLength(MESSAGE_MAX, 'Message')],
 }
 
@@ -220,6 +248,7 @@ const fieldErrors = reactive<Record<FieldName, string[]>>({
   email: [],
   phone: [],
   subject: [],
+  subjectOther: [],
   message: [],
 })
 
@@ -266,7 +295,7 @@ async function submit() {
     name: form.name.trim(),
     email: form.email.trim(),
     phone: form.phone.trim(),
-    subject: form.subject.trim(),
+    subject: (form.subject === OTHER_SESSION_TYPE ? form.subjectOther : form.subject).trim(),
     message: form.message.trim(),
     website: form.website,
     turnstileToken: turnstileToken.value,
