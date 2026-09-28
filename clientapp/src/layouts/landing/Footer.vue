@@ -31,9 +31,10 @@
           &copy;{{ new Date().getFullYear() }} Aspen Smitha Photography
         </span>
         <div class="d-flex flex-wrap justify-center align-center ga-3">
-          <a href="mailto:aspensmithaphotography@gmail.com" class="font-nav text-caption text-stone text-decoration-none">
-            aspensmithaphotography@gmail.com
-          </a>
+          <span class="font-nav text-caption text-stone">
+            Website design by
+            <a href="https://robsmitha.com" target="_blank" rel="noopener" class="text-stone footer-utility">robsmitha.com</a>
+          </span>
 
           <span class="text-stone-light" aria-hidden="true">&middot;</span>
 
