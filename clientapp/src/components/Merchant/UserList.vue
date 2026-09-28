@@ -78,37 +78,87 @@
             </v-col>
         </v-row>
     </v-container>
-    <v-dialog v-model="dialog" persistent max-width="800">
+    <v-dialog v-model="dialog" persistent max-width="640" scrollable>
         <v-card color="surface" rounded="0">
-            <v-card-title class="d-flex justify-space-between align-center">
-                <div class="font-display text-h5 text-charcoal ps-2">
-                    {{ selectedUser?.userName }} <span class="font-nav text-body-2 text-stone">({{ selectedUser?.identityProvider }})</span>
-                </div>
-
+            <v-toolbar color="ivory-deep" density="comfortable">
+                <template v-slot:prepend>
+                    <v-avatar color="blush" variant="tonal" size="40" class="me-3">
+                        <v-icon color="blush-dark">mdi-account-key-outline</v-icon>
+                    </v-avatar>
+                </template>
+                <v-toolbar-title>
+                    <div class="font-display text-h6 text-charcoal">{{ selectedUser?.userName }}</div>
+                    <div class="font-nav text-caption text-stone">{{ selectedUser?.identityProvider }}</div>
+                </v-toolbar-title>
                 <v-btn
                     icon="mdi-close"
                     variant="text"
                     color="stone"
                     @click="dialog = false"
                 ></v-btn>
-            </v-card-title>
+            </v-toolbar>
             <v-divider color="stone-light" />
-            <v-card-text>
-                <v-row>
-                    <v-col v-for="resource in resources" :key="resource" md="6" cols="12" class="mb-2">
-                        <p class="font-nav tracking-widest text-blush text-caption text-uppercase mb-2">{{ resource[0].toUpperCase() + resource.slice(1) }}</p>
-                        <v-switch
-                            v-for="action in actions"
-                            :key="action"
-                            :label="capitalize(action)"
-                            color="blush"
-                            :model-value="getPolicy(resource, action)"
-                            @update:model-value="val => setPolicy(resource, action, val)"
-                            hide-details
-                            density="compact"
-                        />
-                    </v-col>
-                </v-row>
+            <v-card-text class="pa-0">
+                <div v-if="selectedUser?.accessControl.roles?.length" class="px-6 pt-5 pb-1">
+                    <span class="font-nav tracking-widest text-blush text-caption text-uppercase d-block mb-2">Roles</span>
+                    <v-chip
+                        v-for="role in selectedUser.accessControl.roles"
+                        :key="role"
+                        size="small"
+                        variant="tonal"
+                        color="blush"
+                        class="font-nav me-1 mb-1"
+                    >{{ role }}</v-chip>
+                </div>
+
+                <div class="px-6 pt-4 pb-2 d-flex align-center justify-space-between">
+                    <span class="font-nav tracking-widest text-blush text-caption text-uppercase">Permissions</span>
+                    <span class="font-nav text-caption text-stone">{{ grantedCount }} of {{ totalCount }} granted</span>
+                </div>
+
+                <v-table density="comfortable" class="permission-matrix">
+                    <thead>
+                        <tr>
+                            <th class="font-nav text-caption text-uppercase text-stone text-left">Resource</th>
+                            <th
+                                v-for="action in actions"
+                                :key="action"
+                                class="font-nav text-caption text-uppercase text-stone"
+                            >
+                                <div class="d-flex flex-column justify-center">
+                                    <span>{{ capitalize(action) }}</span>
+                                    <v-checkbox-btn
+                                        :model-value="isColumnGranted(action)"
+                                        :indeterminate="isColumnPartial(action)"
+                                        color="blush"
+                                        density="compact"
+                                        @update:model-value="val => setColumn(action, !!val)"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="resource in resources" :key="resource">
+                            <td>
+                                <div class="d-flex align-center ga-2">
+                                    <v-icon size="18" color="stone">{{ resourceIcon(resource) }}</v-icon>
+                                    <span class="font-nav text-body-2 text-charcoal">{{ capitalize(resource) }}</span>
+                                </div>
+                            </td>
+                            <td v-for="action in actions" :key="action">
+                                <div class="d-flex justify-center">
+                                    <v-checkbox-btn
+                                        :model-value="getPolicy(resource, action)"
+                                        color="blush"
+                                        density="compact"
+                                        @update:model-value="val => setPolicy(resource, action, !!val)"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </v-table>
             </v-card-text>
             <v-divider color="stone-light" />
             <v-card-actions class="my-2 d-flex justify-end">
@@ -191,8 +241,14 @@ const headers = [
     { title: 'Permissions', key: 'accessControl.policies' },
     { title: '', sortable: false, key: 'actions' }
 ]
-const resources = ['photo', 'product', 'user', 'budget', 'code', 'income'];
+const resources = ['photo', 'product', 'user'];
 const actions = ['read', 'write', 'delete'];
+const resourceIcons: Record<string, string> = {
+    photo: 'mdi-image-outline',
+    product: 'mdi-package-variant-closed',
+    user: 'mdi-account-outline',
+}
+const resourceIcon = (resource: string) => resourceIcons[resource] ?? 'mdi-shape-outline'
 
 const loading = ref(false)
 const dialog = ref(false)
@@ -213,6 +269,26 @@ const setPolicy = (resource: string, action: string, value: boolean | null) => {
   setPolicies(value, `${resource}.${action}`);
 };
 
+const totalCount = computed(() => resources.length * actions.length)
+
+const grantedCount = computed(() =>
+  selectedUser.value?.accessControl.policies.filter(p => {
+    const [resource, action] = p.split('.')
+    return resources.includes(resource) && actions.includes(action)
+  }).length ?? 0
+)
+
+const isColumnGranted = (action: string) => resources.every(resource => getPolicy(resource, action));
+
+const isColumnPartial = (action: string) => {
+  const granted = resources.filter(resource => getPolicy(resource, action)).length
+  return granted > 0 && granted < resources.length
+}
+
+const setColumn = (action: string, value: boolean) => {
+  resources.forEach(resource => setPolicy(resource, action, value))
+};
+
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 /** "photo.read", "photo.write" -> [{ resource: 'photo', actions: ['read', 'write'] }], in actions order */
@@ -220,7 +296,7 @@ function groupPolicies(policies: string[]) {
     const groups = new Map<string, string[]>()
     for (const policy of policies ?? []) {
         const [resource, action] = policy.split('.')
-        if (!resource || !action) continue
+        if (!resource || !action || !resources.includes(resource)) continue
         groups.set(resource, [...(groups.get(resource) ?? []), action])
     }
     return [...groups.entries()]
@@ -315,5 +391,19 @@ async function saveAccessPolicy(): Promise<void> {
 
 .bordered-card {
     border: 1px solid rgba(var(--v-theme-charcoal), 0.1);
+}
+
+.permission-matrix :deep(th),
+.permission-matrix :deep(td) {
+    border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.08) !important;
+}
+
+.permission-matrix :deep(tbody tr:hover) {
+    background: rgba(var(--v-theme-blush), 0.06);
+}
+
+.permission-matrix :deep(td:first-child),
+.permission-matrix :deep(th:first-child) {
+    padding-inline-start: 24px;
 }
 </style>

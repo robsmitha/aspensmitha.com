@@ -96,16 +96,23 @@ meta:
           No photos in {{ currentCollection.name }} yet.
         </p>
 
-        <v-row dense>
+        <p v-if="photosIn(tab).length > 1" class="text-caption text-stone mb-2">
+          Press and hold a photo, then drag to reorder. Click to edit.
+        </p>
+
+        <!-- Plain element rather than v-row so Sortable can own it; press and hold a tile to drag -->
+        <div ref="grid" class="v-row v-row--dense">
           <v-col v-for="(photo, index) in photosIn(tab)" :key="photo.id" cols="6" sm="4" lg="3">
             <div
               class="tile"
               :class="{ 'tile--selected': editingId === photo.id }"
               role="button"
               tabindex="0"
-              :aria-label="`Edit ${photo.originalFileName}`"
-              @click="openEditor(photo)"
+              :aria-label="`Edit ${photo.originalFileName}. Alt plus arrow keys to reorder`"
+              @click="onTileClick(photo)"
               @keydown.enter="openEditor(photo)"
+              @keydown.alt.left.prevent="index > 0 && reorder(tab, index, index - 1)"
+              @keydown.alt.right.prevent="index < photosIn(tab).length - 1 && reorder(tab, index, index + 1)"
             >
               <v-img
                 v-if="photo.srcBase"
@@ -158,26 +165,7 @@ meta:
 
               <!-- Hover tools (always visible on touch screens) -->
               <div class="tile__tools" @click.stop>
-                <v-btn
-                  icon="mdi-chevron-left"
-                  size="x-small"
-                  variant="flat"
-                  color="ivory"
-                  rounded="0"
-                  :disabled="index === 0"
-                  aria-label="Move earlier"
-                  @click="move(photo, -1)"
-                ></v-btn>
-                <v-btn
-                  icon="mdi-chevron-right"
-                  size="x-small"
-                  variant="flat"
-                  color="ivory"
-                  rounded="0"
-                  :disabled="index === photosIn(tab).length - 1"
-                  aria-label="Move later"
-                  @click="move(photo, 1)"
-                ></v-btn>
+                <v-icon size="18" color="ivory" class="tile__grip" aria-hidden="true">mdi-drag</v-icon>
                 <v-spacer></v-spacer>
                 <v-btn
                   icon="mdi-pencil-outline"
@@ -195,7 +183,7 @@ meta:
               <span v-else class="text-stone">{{ photo.originalFileName }}</span>
             </p>
           </v-col>
-        </v-row>
+        </div>
       </v-col>
     </v-row>
 
@@ -482,6 +470,7 @@ meta:
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import { BlockBlobClient } from '@azure/storage-blob'
+import Sortable from 'sortablejs'
 import apiClient from '@/api/elysianClient'
 import AdminPageHeader from '@/components/Admin/AdminPageHeader.vue'
 import { PORTFOLIO_CATEGORIES, SITE_ONLY_CATEGORY } from '@/utils/portfolioCategories'
@@ -772,7 +761,8 @@ watch(shouldPoll, poll => {
 
 function schedulePoll() {
   pollTimer = setTimeout(async () => {
-    await refresh()
+    // Re-rendering the grid mid-drag would pull tiles out from under Sortable
+    if (!sorting.value) await refresh()
     if (shouldPoll.value) schedulePoll()
   }, POLL_MS)
 }
@@ -883,11 +873,54 @@ async function save(photo: ManagedPhoto) {
   }
 }
 
-async function move(photo: ManagedPhoto, direction: -1 | 1) {
-  const ordered = photosIn(photo.category)
-  const from = ordered.findIndex(p => p.id === photo.id)
+// ---- Drag to reorder
+const grid = ref<HTMLElement>()
+const sorting = ref(false)
+/** A drag ends with a mouseup, which the browser follows with a click; this swallows it */
+let suppressClick = false
+let sortable: Sortable | undefined
+let restoreBefore: Node | null = null
+
+function onTileClick(photo: ManagedPhoto) {
+  if (!suppressClick) openEditor(photo)
+}
+
+function initSortable() {
+  sortable = Sortable.create(grid.value!, {
+    // Press and hold starts a drag, so a quick click still opens the editor
+    delay: 200,
+    touchStartThreshold: 6,
+    animation: 150,
+    // Our own pointer handling: native drag-and-drop would light up the upload drop zone
+    forceFallback: true,
+    fallbackTolerance: 3,
+    filter: '.v-btn',
+    preventOnFilter: false,
+    chosenClass: 'tile-col--chosen',
+    ghostClass: 'tile-col--ghost',
+    dragClass: 'tile-col--drag',
+    onStart: e => {
+      sorting.value = true
+      restoreBefore = e.item.nextSibling
+    },
+    onEnd: e => {
+      sorting.value = false
+      suppressClick = true
+      setTimeout(() => { suppressClick = false })
+      // Put the DOM back where Vue left it and let the re-render do the move
+      e.from.insertBefore(e.item, restoreBefore)
+      restoreBefore = null
+      if (e.oldIndex !== undefined && e.newIndex !== undefined && e.oldIndex !== e.newIndex) {
+        reorder(tab.value, e.oldIndex, e.newIndex)
+      }
+    },
+  })
+}
+
+async function reorder(category: string, from: number, to: number) {
+  const ordered = photosIn(category)
   const [item] = ordered.splice(from, 1)
-  ordered.splice(from + direction, 0, item)
+  ordered.splice(to, 0, item)
   ordered.forEach((p, i) => { p.sortOrder = i })
 
   const response = await apiClient.postData('/api/manage/photos/reorder', { photoIds: ordered.map(p => p.id) })
@@ -921,8 +954,12 @@ async function remove(photo: ManagedPhoto) {
   if (editingId.value === photo.id) editingId.value = null
 }
 
-onMounted(refresh)
+onMounted(() => {
+  initSortable()
+  refresh()
+})
 onBeforeUnmount(() => {
+  sortable?.destroy()
   clearTimeout(pollTimer)
   clearTimeout(trayTimer)
 })
@@ -1077,6 +1114,45 @@ onBeforeUnmount(() => {
 .tile:focus-visible,
 .tile--selected {
   outline-color: rgb(var(--v-theme-blush));
+}
+
+.tile,
+.tile * {
+  /* Press-and-hold drags; don't select text or pop the iOS image menu */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+/* Held long enough to pick up */
+.tile-col--chosen .tile {
+  cursor: grabbing;
+  outline-color: rgb(var(--v-theme-blush));
+}
+
+/* The gap where the photo will land */
+.tile-col--ghost .tile {
+  opacity: 0.35;
+}
+
+.tile-col--ghost .tile__caption {
+  visibility: hidden;
+}
+
+/* The copy following the pointer */
+.tile-col--drag {
+  opacity: 1 !important;
+}
+
+.tile-col--drag .tile {
+  box-shadow: 0 18px 48px -16px rgba(33, 31, 28, 0.5);
+  transform: scale(1.03);
+}
+
+.tile__grip {
+  align-self: center;
+  opacity: 0.9;
 }
 
 .tile__pending {

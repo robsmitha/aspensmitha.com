@@ -60,32 +60,36 @@ const portfolio: ThemeDefinition = {
 
 // Light, airy bridal theme for the Aspen Smitha Photography landing page —
 // soft near-white paper tones, ink used only for text/line-work (never as a
-// section background) and a single dusty-blush accent, in the spirit of a
-// wedding studio site rather than an earthy/rustic one. Scoped on to that
-// page only via `theme="aspen"` so the rest of the (unrelated, dark) site
-// is untouched.
+// section background) and a single muted sage-green accent ("Soft Sage",
+// built from seed #63725b), in the spirit of a wedding studio site rather
+// than an earthy/rustic one. Custom keys (ivory / charcoal / blush etc.)
+// still render as Vuetify utility classes at runtime, e.g. `bg-ivory`,
+// `text-blush`, `border-charcoal` — only the hex values shifted from blush
+// to sage, so every component that already consumes these tokens picks up
+// the new palette automatically. Scoped on to that page only via
+// `theme="aspen"` so the rest of the (unrelated, dark) site is untouched.
 const aspen: ThemeDefinition = {
   dark: false,
   colors: {
-    background: '#fdfaf6',
+    background: '#f9faf6',
     surface: '#ffffff',
-    primary: '#221f1c',
-    secondary: '#c48f8a',
-    'on-background': '#221f1c',
-    'on-surface': '#221f1c',
-    'on-primary': '#fdfaf6',
+    primary: '#2c3126',
+    secondary: '#8b9880',
+    'on-background': '#2c3126',
+    'on-surface': '#2c3126',
+    'on-primary': '#f9faf6',
 
-    ivory: '#fdfaf6',
-    'ivory-deep': '#f8f2ef',
-    charcoal: '#221f1c',
-    'charcoal-light': '#3a3733',
-    stone: '#948b83',
-    'stone-light': '#d8d0c9',
-    blush: '#c48f8a',
-    'blush-dark': '#a86f6a',
+    ivory: '#f9faf6',
+    'ivory-deep': '#f0f2e9',
+    charcoal: '#2c3126',
+    'charcoal-light': '#474d3d',
+    stone: '#a7b09a',
+    'stone-light': '#e0e4d5',
+    blush: '#8b9880',
+    'blush-dark': '#6d7a63',
   },
   variables: {
-    'border-color': '#221f1c',
+    'border-color': '#2c3126',
     'border-opacity': 0.1,
     'high-emphasis-opacity': 1,
     'medium-emphasis-opacity': 0.8,
