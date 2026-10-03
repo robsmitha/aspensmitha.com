@@ -18,8 +18,6 @@ export interface PortfolioPhoto {
   placeholder: string | null
   srcBase: string
   widths: number[]
-  /** Temporary: Wix POC image standing in until a real upload exists (see legacyPhotos.ts) */
-  legacyWixId?: string
 }
 
 /**
@@ -44,10 +42,6 @@ export const PHOTO_SIZES = {
 } as const
 
 export function photoUrl(photo: PortfolioPhoto, width: number): string {
-  if (photo.legacyWixId) {
-    const id = photo.legacyWixId
-    return `https://static.wixstatic.com/media/${id}~mv2.jpg/v1/fit/w_${width},h_${width * 3},q_85,enc_auto/${id}~mv2.jpg`
-  }
   return `${photo.srcBase}/${width}.webp`
 }
 

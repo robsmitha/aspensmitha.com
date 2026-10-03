@@ -1,35 +1,121 @@
 {
     "navigationFallback": {
-        "rewrite": "/index.html"
+        "rewrite": "/index.html",
+        "exclude": [
+            "/robots.txt",
+            "/sitemap.xml",
+            "/favicon.*",
+            "/assets/*",
+            "/og-image.jpg"
+        ]
     },
     "routes": [
         {
+            "route": "/weddings",
+            "redirect": "/portfolio/weddings",
+            "statusCode": 301
+        },
+        {
+            "route": "/family",
+            "redirect": "/portfolio/family",
+            "statusCode": 301
+        },
+        {
+            "route": "/maternity",
+            "redirect": "/portfolio/maternity",
+            "statusCode": 301
+        },
+        {
+            "route": "/seniors",
+            "redirect": "/portfolio/seniors",
+            "statusCode": 301
+        },
+        {
+            "route": "/grads",
+            "redirect": "/portfolio/grads",
+            "statusCode": 301
+        },
+        {
+            "route": "/events",
+            "redirect": "/portfolio/events",
+            "statusCode": 301
+        },
+        {
+            "route": "/couples",
+            "redirect": "/portfolio/couples",
+            "statusCode": 301
+        },
+        {
+            "route": "/couples-1",
+            "redirect": "/portfolio/couples",
+            "statusCode": 301
+        },
+        {
+            "route": "/couples-portfolio",
+            "redirect": "/portfolio/engagements",
+            "statusCode": 301
+        },
+        {
+            "route": "/blank-2",
+            "redirect": "/contact",
+            "statusCode": 301
+        },
+        {
+            "route": "/blank-3",
+            "redirect": "/investment",
+            "statusCode": 301
+        },
+        {
+            "route": "/blog",
+            "redirect": "/",
+            "statusCode": 301
+        },
+        {
+            "route": "/portfolio-4/*",
+            "redirect": "/portfolio",
+            "statusCode": 301
+        },
+        {
             "route": "/spending",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/budget/*",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/accounts",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/users",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/products",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/admin/*",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         },
         {
             "route": "/api/manage/*",
-            "allowedRoles": ["authenticated"]
+            "allowedRoles": [
+                "authenticated"
+            ]
         }
     ],
     "responseOverrides": {

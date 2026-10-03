@@ -5,10 +5,78 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aspen Smitha Photography</title>
+    <meta name="theme-color" content="#f9faf6" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Defaults for the home page; src/utils/seo.ts updates these per route -->
+    <title>Tallahassee Wedding, Maternity &amp; Family Photographer | Aspen Smitha Photography</title>
+    <meta name="description" content="Aspen Smitha Photography is a wedding, maternity, family and portrait photographer based in Tallahassee, Florida, serving North Florida and beyond." />
+    <link rel="canonical" href="https://www.aspensmitha.com/" />
+
+    <!-- Google Search Console ownership verification -->
+    <meta name="google-site-verification" content="t8KGBP4eWbRlnuw6uCen_2MdUraAmGY8U3Bf-Vqvgi8" />
+
+    <!-- Open Graph / social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aspen Smitha Photography" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://www.aspensmitha.com/" />
+    <meta property="og:title" content="Tallahassee Wedding, Maternity &amp; Family Photographer | Aspen Smitha Photography" />
+    <meta property="og:description" content="Aspen Smitha Photography is a wedding, maternity, family and portrait photographer based in Tallahassee, Florida, serving North Florida and beyond." />
+    <meta property="og:image" content="https://www.aspensmitha.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A bride holding a burgundy and blush bouquet, photographed by Aspen Smitha" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tallahassee Wedding, Maternity &amp; Family Photographer | Aspen Smitha Photography" />
+    <meta name="twitter:description" content="Aspen Smitha Photography is a wedding, maternity, family and portrait photographer based in Tallahassee, Florida, serving North Florida and beyond." />
+    <meta name="twitter:image" content="https://www.aspensmitha.com/og-image.jpg" />
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://www.aspensmitha.com/#website",
+                "url": "https://www.aspensmitha.com/",
+                "name": "Aspen Smitha Photography",
+                "publisher": { "@id": "https://www.aspensmitha.com/#business" }
+            },
+            {
+                "@type": "ProfessionalService",
+                "@id": "https://www.aspensmitha.com/#business",
+                "name": "Aspen Smitha Photography",
+                "description": "Wedding, maternity, family and portrait photographer based in Tallahassee, Florida.",
+                "url": "https://www.aspensmitha.com/",
+                "image": "https://www.aspensmitha.com/og-image.jpg",
+                "founder": { "@type": "Person", "name": "Aspen Smitha", "jobTitle": "Photographer" },
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Tallahassee",
+                    "addressRegion": "FL",
+                    "addressCountry": "US"
+                },
+                "areaServed": [
+                    { "@type": "City", "name": "Tallahassee" },
+                    { "@type": "State", "name": "Florida" }
+                ],
+                "knowsAbout": ["Wedding photography", "Engagement photography", "Maternity photography", "Family photography", "Senior portraits", "Graduation photography", "Event photography"],
+                "sameAs": [
+                    "https://www.instagram.com/aspensmitha.photography",
+                    "https://www.facebook.com/aspensage.photography"
+                ]
+            }
+        ]
+    }
+    </script>
 </head>
 
 <body>
+    <noscript>
+        <h1>Aspen Smitha Photography</h1>
+        <p>Wedding, maternity, family and portrait photographer based in Tallahassee, Florida. Please enable JavaScript to view the portfolio.</p>
+    </noscript>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
 </body>

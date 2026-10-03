@@ -183,6 +183,7 @@
 import { reactive, ref } from 'vue'
 import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
 import TurnstileWidget from '@/components/_helpers/TurnstileWidget.vue'
+import { event } from 'vue-gtag'
 import apiClient from '@/api/elysianClient'
 import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
@@ -291,11 +292,12 @@ async function submit() {
   }
 
   submitting.value = true
+  const subject = (form.subject === OTHER_SESSION_TYPE ? form.subjectOther : form.subject).trim()
   const response = await apiClient.postData('/api/contact', {
     name: form.name.trim(),
     email: form.email.trim(),
     phone: form.phone.trim(),
-    subject: (form.subject === OTHER_SESSION_TYPE ? form.subjectOther : form.subject).trim(),
+    subject,
     message: form.message.trim(),
     website: form.website,
     turnstileToken: turnstileToken.value,
@@ -306,6 +308,8 @@ async function submit() {
   turnstileRef.value?.reset()
 
   if (response.success) {
+    // GA4 recommended lead event; mark it as a key event in GA to count inquiries as conversions
+    event('generate_lead', { lead_source: 'contact_form', session_type: form.subject })
     Object.assign(form, emptyForm())
     formRef.value!.resetValidation()
     submitted.value = true

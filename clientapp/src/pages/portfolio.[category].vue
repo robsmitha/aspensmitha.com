@@ -36,8 +36,9 @@ const route = useRoute()
 const photos = usePhotoStore()
 const category = computed(() => getPortfolioCategory(String((route.params as Record<string, string>).category)))
 const galleryPhotos = computed(() => category.value && photos.byCategory(category.value.slug))
-// Any category with uploaded photos gets a gallery, even one without a placeholder gallery (Events)
-const showGallery = computed(() => !!category.value && (category.value.hasGallery || photos.hasUploads(category.value.slug)))
+// Only categories with uploaded photos get a gallery; gallery categories hold their space while loading
+const showGallery = computed(() => !!category.value &&
+  (photos.hasUploads(category.value.slug) || (category.value.hasGallery && !photos.loaded)))
 </script>
 
 <style scoped>

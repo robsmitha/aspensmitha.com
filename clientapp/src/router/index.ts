@@ -8,6 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import search from '@/pages/search.vue'
+import { applySeo } from '@/utils/seo'
 
 import { RouteLocationNormalized } from 'vue-router';
 const routes = [
@@ -30,5 +31,7 @@ const router = createRouter({
     return { top: 0 }
   },
 })
+
+router.afterEach(to => applySeo(to))
 
 export default router

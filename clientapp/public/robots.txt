@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /products
+Disallow: /users
+Disallow: /search
+Disallow: /oauth
+Disallow: /.auth/
+Disallow: /api/
+
+Sitemap: https://www.aspensmitha.com/sitemap.xml

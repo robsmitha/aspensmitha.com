@@ -8,6 +8,7 @@
 import vuetify from './vuetify'
 import pinia from '../store'
 import router from '../router'
+import gtag from './gtag'
 
 import 'highlight.js/styles/night-owl.css'
 import 'highlight.js/lib/common';
@@ -22,4 +23,9 @@ export function registerPlugins (app: App) {
     .use(router)
     .use(pinia)
     .use(hljsVuePlugin)
+
+  // Only report production traffic to Google Analytics
+  if (import.meta.env.PROD) {
+    app.use(gtag)
+  }
 }

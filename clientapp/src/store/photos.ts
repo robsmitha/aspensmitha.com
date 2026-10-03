@@ -1,8 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
 import apiClient from '@/api/elysianClient'
-import { getPortfolioCategory } from '@/utils/portfolioCategories'
-import { legacyPhoto, legacyPlacementPhoto } from '@/utils/legacyPhotos'
 import { portfolioCoverKey } from '@/utils/sitePlacements'
 import type { PortfolioPhoto } from '@/utils/photoUrls'
 
@@ -27,15 +25,13 @@ export const usePhotoStore = defineStore('photos', {
      */
     forPlacement: (state: State) => (key: string): PortfolioPhoto | undefined => {
       if (!state.loaded) return undefined
-      return state.photos.find(p => p.placements.includes(key)) ?? legacyPlacementPhoto(key)
+      return state.photos.find(p => p.placements.includes(key))
     },
     /** Whether any real (uploaded) photo is filed under this category */
     hasUploads: (state: State) => (slug: string): boolean => state.photos.some(p => p.category === slug),
     byCategory: (state: State) => (slug: string): PortfolioPhoto[] | undefined => {
       if (!state.loaded) return undefined
-      const photos = state.photos.filter(p => p.category === slug)
-      if (photos.length) return photos
-      return getPortfolioCategory(slug)?.legacyImages.map(id => legacyPhoto(id, slug)) ?? []
+      return state.photos.filter(p => p.category === slug)
     },
     /** Tile cover for a category: its chosen cover photo, else its first photo by sort order */
     coverFor(): (slug: string) => PortfolioPhoto | undefined {
@@ -53,7 +49,6 @@ export const usePhotoStore = defineStore('photos', {
         if (response.success && Array.isArray(response.data)) {
           this.photos = response.data
         } else {
-          // Legacy fallbacks keep the site presentable if the API is unavailable
           console.error('Failed to load portfolio photos.', response.errorMessage)
           loading = null
         }
