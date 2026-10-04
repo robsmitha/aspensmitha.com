@@ -2,7 +2,7 @@
   <v-sheet color="ivory-deep">
     <v-container class="py-16 py-md-16">
       <div class="text-center mb-12 mb-md-16">
-        <span class="font-nav tracking-widest text-caption text-blush">What I Shoot</span>
+        <!-- <span class="font-nav tracking-widest text-caption text-blush">What I Shoot</span> -->
         <h2 class="font-display text-charcoal specialties-heading mt-4">Specialties</h2>
       </div>
 

@@ -5,7 +5,7 @@ meta:
 
 <template>
   <Hero />
-  <QuickFacts />
+  <!-- <QuickFacts /> -->
   <Story />
   <Cta />
 </template>

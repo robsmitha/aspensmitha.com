@@ -1,7 +1,7 @@
 <template>
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
-      <span class="font-nav tracking-widest text-caption text-blush">Portfolio</span>
+      <!-- <span class="font-nav tracking-widest text-caption text-blush">Portfolio</span> -->
       <h1 class="font-display text-charcoal hero-heading mt-4 mb-4">The Work</h1>
       <p class="font-display text-stone hero-subtitle mx-auto">
         Browse by session type, or explore the full story behind each one.
