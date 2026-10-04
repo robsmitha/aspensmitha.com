@@ -9,6 +9,9 @@ import { PORTFOLIO_CATEGORIES } from './portfolioCategories'
  * component starts showing a new spot, add it here so the admin can fill it
  * and draw it in PlacementMap.vue.
  */
+/** Photos in the landing hero strip */
+export const HERO_SHOWCASE_COUNT = 8
+
 export type SitePage = 'home' | 'about' | 'contact' | 'portfolio'
 
 export const SITE_PAGES: Record<SitePage, { name: string, path: string }> = {
@@ -27,7 +30,7 @@ export interface SitePlacement {
 }
 
 export const SITE_PLACEMENTS: readonly SitePlacement[] = [
-  ...[1, 2, 3, 4, 5].map(n => ({ key: `home-hero-${n}`, page: 'home' as const, area: `hero-${n}`, label: `Hero strip, photo ${n}` })),
+  ...heroNumbers().map(n => ({ key: `home-hero-${n}`, page: 'home' as const, area: `hero-${n}`, label: `Hero strip, photo ${n}` })),
   { key: 'home-intro', page: 'home', area: 'intro', label: 'Intro portrait ("Hello, I\'m Aspen")' },
   { key: 'home-specialty-weddings', page: 'home', area: 'specialty-weddings', label: 'Specialties: Weddings' },
   { key: 'home-specialty-maternity', page: 'home', area: 'specialty-maternity', label: 'Specialties: Maternity' },
@@ -48,7 +51,11 @@ export const SITE_PLACEMENTS: readonly SitePlacement[] = [
 ]
 
 /** Landing hero strip, in display order */
-export const HERO_SHOWCASE_PLACEMENTS = [1, 2, 3, 4, 5].map(n => `home-hero-${n}`)
+export const HERO_SHOWCASE_PLACEMENTS = heroNumbers().map(n => `home-hero-${n}`)
+
+function heroNumbers() {
+  return Array.from({ length: HERO_SHOWCASE_COUNT }, (_, i) => i + 1)
+}
 
 export function portfolioCoverKey(categorySlug: string) {
   return `portfolio-cover-${categorySlug}`

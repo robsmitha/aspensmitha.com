@@ -27,14 +27,14 @@
          "hook" for the page, kept well short of a full-viewport hero. -->
     <div class="hero-showcase" role="region" aria-roledescription="carousel" aria-label="Featured photos">
       <div ref="emblaRef" class="hero-showcase__viewport">
-        <div class="hero-showcase__track">
+        <div class="hero-showcase__track" :class="{ 'hero-showcase__track--centered': fits }">
           <div
-            v-for="(key, i) in HERO_SHOWCASE_PLACEMENTS"
+            v-for="(key, i) in slides"
             :key="key"
             class="hero-showcase__slide"
             role="group"
             aria-roledescription="slide"
-            :aria-label="`${i + 1} of ${HERO_SHOWCASE_PLACEMENTS.length}`"
+            :aria-label="`${i + 1} of ${slides.length}`"
           >
             <ResponsivePhoto
               :photo="photos.forPlacement(key)"
@@ -47,7 +47,7 @@
       </div>
 
       <v-btn
-        v-show="canScrollPrev"
+        v-show="!fits && canScrollPrev"
         icon="mdi-chevron-left"
         variant="flat"
         color="ivory"
@@ -57,7 +57,7 @@
         @click="emblaApi?.scrollPrev()"
       ></v-btn>
       <v-btn
-        v-show="canScrollNext"
+        v-show="!fits && canScrollNext"
         icon="mdi-chevron-right"
         variant="flat"
         color="ivory"
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import emblaCarouselVue from 'embla-carousel-vue'
 import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
@@ -82,9 +82,12 @@ import { PHOTO_SIZES } from '@/utils/photoUrls'
 const { mobile } = useDisplay()
 
 // Centered with neighbours peeking in; every swipe or arrow press settles on a
-// whole photo. Loops when there's enough to fill the screen, which Embla works
-// out itself — on very wide screens the strip just sits still.
-const [emblaRef, emblaApi] = emblaCarouselVue({ loop: true, align: 'center' })
+// whole photo. On screens wider than the whole strip there's nothing to scroll,
+// so the carousel switches off and the photos sit centered instead of hugging
+// the left edge (Embla always aligns content that fits to the start).
+const fits = ref(false)
+const emblaOptions = computed(() => ({ loop: true, align: 'center' as const, active: !fits.value }))
+const [emblaRef, emblaApi] = emblaCarouselVue(emblaOptions)
 
 const canScrollPrev = ref(false)
 const canScrollNext = ref(false)
@@ -103,6 +106,31 @@ watch(emblaApi, api => {
 // The real gallery strip from the live site's homepage, in its original
 // order. Only the first few are visible on load, so only those load eagerly.
 const photos = usePhotoStore()
+
+function measureFit() {
+  const viewport = emblaRef.value
+  const track = viewport?.firstElementChild
+  if (!viewport || !track) return
+  const stripWidth = Array.from(track.children)
+    .reduce((sum, slide) => sum + (slide as HTMLElement).offsetWidth, 0)
+  fits.value = stripWidth <= viewport.clientWidth
+}
+
+let resizeObserver: ResizeObserver | undefined
+onMounted(() => {
+  measureFit()
+  resizeObserver = new ResizeObserver(measureFit)
+  if (emblaRef.value) resizeObserver.observe(emblaRef.value)
+})
+onBeforeUnmount(() => resizeObserver?.disconnect())
+
+// Hold every frame while photos load so nothing shifts; afterwards drop any
+// slot the admin hasn't filled yet rather than showing an empty frame.
+const slides = computed(() => photos.loaded
+  ? HERO_SHOWCASE_PLACEMENTS.filter(key => photos.forPlacement(key))
+  : HERO_SHOWCASE_PLACEMENTS)
+
+watch(() => slides.value.length, () => nextTick(measureFit))
 </script>
 
 <style scoped>
@@ -138,6 +166,10 @@ const photos = usePhotoStore()
   display: flex;
   /* Vertical swipes still scroll the page */
   touch-action: pan-y pinch-zoom;
+}
+
+.hero-showcase__track--centered {
+  justify-content: center;
 }
 
 /* Spacing via padding, not gap, so Embla's loop measures slides correctly */

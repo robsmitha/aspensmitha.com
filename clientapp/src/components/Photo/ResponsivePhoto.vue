@@ -8,7 +8,7 @@
     :lazy-src="photo?.placeholder ?? undefined"
     :aspect-ratio="ratio"
     :position="photo ? photoPosition(photo) : undefined"
-    :alt="alt ?? photo?.altText ?? ''"
+    :alt="alt ?? (photo ? photoAlt(photo) : '')"
     :eager="eager"
     cover
     class="responsive-photo"
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { photoPosition, photoSrc, photoSrcset, type PhotoSource } from '@/utils/photoUrls'
+import { photoAlt, photoPosition, photoSrc, photoSrcset, type PhotoSource } from '@/utils/photoUrls'
 
 const props = withDefaults(defineProps<{
   photo: PhotoSource | undefined

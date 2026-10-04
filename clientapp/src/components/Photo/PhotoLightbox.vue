@@ -32,7 +32,7 @@
           :src="photoSrc(currentPhoto, 1600)"
           :srcset="photoSrcset(currentPhoto)"
           sizes="92vw"
-          :alt="currentPhoto.altText ?? ''"
+          :alt="photoAlt(currentPhoto)"
           class="lightbox-image"
         >
       </figure>
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue'
-import { photoSrc, photoSrcset, type PortfolioPhoto } from '@/utils/photoUrls'
+import { photoAlt, photoSrc, photoSrcset, type PortfolioPhoto } from '@/utils/photoUrls'
 
 const props = defineProps<{
   modelValue: boolean

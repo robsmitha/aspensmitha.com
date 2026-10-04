@@ -4,7 +4,7 @@
       <v-col cols="12" md="5" order="2" order-md="1" class="mt-10 mt-md-0">
         <ResponsivePhoto
           :photo="photos.forPlacement('home-intro')"
-          :sizes="PHOTO_SIZES.fiveTwelfths"
+          :sizes="PHOTO_SIZES.portrait"
           aspect-ratio="0.8"
           class="intro-portrait"
         />
@@ -60,7 +60,17 @@ const points = [
 
 <style scoped>
 .intro-portrait {
+  /* Stops growing with the column on big screens; centered when stacked */
+  max-width: 500px;
+  margin-inline: auto;
   box-shadow: 0 24px 60px -20px rgba(33, 31, 28, 0.35);
+}
+
+/* Side by side: hug the text column instead of floating in the gutter */
+@media (min-width: 960px) {
+  .intro-portrait {
+    margin-right: 0;
+  }
 }
 
 .intro-heading {

@@ -6,12 +6,12 @@
         <h2 class="font-display text-charcoal specialties-heading mt-4">Specialties</h2>
       </div>
 
-      <v-row>
+      <v-row class="specialties-row">
         <v-col v-for="(item, i) in specialties" :key="item.title" cols="12" md="4">
           <router-link :to="`/portfolio/${item.slug}`" class="text-decoration-none specialty-link">
             <ResponsivePhoto
               :photo="photos.forPlacement(item.placement)"
-              :sizes="PHOTO_SIZES.third"
+              :sizes="PHOTO_SIZES.specialty"
               aspect-ratio="0.8"
               class="specialty-image mb-6"
             />
@@ -64,8 +64,20 @@ const specialties = [
   font-size: clamp(2.25rem, 2.5vw + 1.25rem, 3rem);
 }
 
+/* Keeps the three cards at a reasonable size on big screens, centered as a
+   group instead of stretching to the container's full width */
+@media (min-width: 1400px) {
+  .specialties-row {
+    max-width: 1320px;
+    margin-inline: auto;
+  }
+}
+
+/* Stacked on small screens: don't let one card fill a whole tablet */
 .specialty-link {
   display: block;
+  max-width: 420px;
+  margin-inline: auto;
 }
 
 .specialty-image {

@@ -1,19 +1,19 @@
 <template>
   <v-container class="py-14 py-md-20">
     <v-row>
-      <v-col cols="12" md="5" class="d-flex flex-column">
+      <v-col cols="12" md="5" class="d-flex flex-column contact-aside">
         <ResponsivePhoto
           :photo="photos.forPlacement('contact-portrait')"
-          :sizes="PHOTO_SIZES.fiveTwelfths"
+          :sizes="PHOTO_SIZES.portrait"
           aspect-ratio="0.8"
           class="contact-image mb-8"
         />
 
-        <div>
-          <h2 class="font-display text-charcoal contact-heading mb-3">Prefer to reach out directly?</h2>
+        <div class="contact-aside__text">
+          <h2 class="font-display text-charcoal contact-heading mb-3">Prefer to reach out on social?</h2>
           <p class="font-display text-stone contact-copy mb-6">
-            I'd love to hear from you. Send an email or find me on social &mdash; I try to
-            respond within a day or two.
+            I'd love to hear from you. Fill out the form or send me a message on Instagram or
+            Facebook &mdash; I try to respond within a day or two.
           </p>
 
           <div class="d-flex ga-2">
@@ -342,7 +342,23 @@ async function submit() {
 
 <style scoped>
 .contact-image {
+  /* Stops growing with the column on big screens */
+  width: 100%;
+  max-width: 500px;
   box-shadow: 0 24px 60px -20px rgba(33, 31, 28, 0.3);
+}
+
+.contact-aside__text {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Side by side: photo and copy hug the form side of the column, sharing a
+   left edge, instead of leaving a wide gap on big screens */
+@media (min-width: 960px) {
+  .contact-aside {
+    align-items: flex-end;
+  }
 }
 
 .contact-heading {

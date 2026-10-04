@@ -3,6 +3,8 @@
  * immutable WebP variants in blob storage (behind the CDN) at
  * `{srcBase}/{width}.webp`, one per entry in `widths`.
  */
+import { getPortfolioCategory } from './portfolioCategories'
+
 export interface PortfolioPhoto {
   id: string
   category: string
@@ -42,6 +44,10 @@ export const PHOTO_SIZES = {
   third: '(max-width: 959px) 100vw, 33vw',
   /** cols 12 / md 5 */
   fiveTwelfths: '(max-width: 959px) 100vw, 42vw',
+  /** Portrait in a cols 12 / md 5 column, capped at 500px wide (landing intro, contact, about) */
+  portrait: '(max-width: 499px) 100vw, (max-width: 959px) 500px, (max-width: 1190px) 42vw, 500px',
+  /** Landing specialties: cols 12 / md 4 in a row capped at 1320px, cards capped at 420px */
+  specialty: '(max-width: 419px) 100vw, (max-width: 959px) 420px, (max-width: 1319px) 33vw, 420px',
   /** cols 12 / md 7 */
   sevenTwelfths: '(max-width: 959px) 100vw, 58vw',
   /** Landing hero strip: fixed 240px on mobile, 340px otherwise */
@@ -63,6 +69,18 @@ export function photoSrc(photo: PhotoSource, width = 800): string {
 
 export function photoSrcset(photo: PhotoSource): string {
   return photo.widths.map(w => `${photoUrl(photo, w)} ${w}w`).join(', ')
+}
+
+/**
+ * Alt text: the admin-entered text when there is one, else a description from
+ * the category so no photo goes undescribed for screen readers or image search
+ */
+export function photoAlt(photo: Partial<Pick<PortfolioPhoto, 'altText' | 'category'>>): string {
+  if (photo.altText?.trim()) return photo.altText
+  const category = photo.category ? getPortfolioCategory(photo.category) : undefined
+  return category
+    ? `${category.name} photography by Aspen Smitha, Tallahassee photographer`
+    : 'Photo by Aspen Smitha Photography, Tallahassee'
 }
 
 /** CSS object-position from the admin-chosen focal point, so cover crops keep faces in frame */

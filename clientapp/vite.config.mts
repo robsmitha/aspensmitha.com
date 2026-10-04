@@ -8,14 +8,78 @@ import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // Utilities
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 import * as fs from 'fs';
+import * as path from 'node:path'
+import { INDEXABLE_PATHS, renderSeoBody, renderSeoHead, renderSitemap } from './src/utils/seo'
+
+/**
+ * Fills index.html's <!--seo-head--> / <!--seo-body--> placeholders from
+ * src/utils/seo.ts, then writes a copy per indexable page (dist/contact.html,
+ * dist/portfolio/weddings.html, ...) plus sitemap.xml. Crawlers and link
+ * previews that don't run JS get each page's own title, description, canonical
+ * and breadcrumbs; staticwebapp.config.json rewrites each route to its file.
+ */
+/**
+ * unplugin-fonts preloads every font file in the bundle, which for the MDI
+ * icon font means the eot/woff/ttf fallbacks too (~3MB nobody needs, competing
+ * with the hero photos). Every supported browser uses the woff2.
+ */
+function woff2PreloadsOnly(): Plugin {
+  return {
+    name: 'woff2-preloads-only',
+    transformIndexHtml: {
+      order: 'post',
+      handler: html => html.replace(/^\s*<link rel="preload" as="font" type="font\/(?!woff2")[^>]*>\r?\n/gm, ''),
+    },
+  }
+}
+
+function seoPages(): Plugin {
+  let outDir = 'dist'
+  // Matches the bare placeholder (source index.html) or a filled block (built
+  // index.html), so the same fill works for both
+  const block = (name: string) => new RegExp(`<!--${name}-->(?:[\\s\\S]*?<!--/${name}-->)?`)
+  const fill = (html: string, page: string) => html
+    .replace(block('seo-head'), () => `<!--seo-head-->\n    ${renderSeoHead(page)}\n    <!--/seo-head-->`)
+    .replace(block('seo-body'), () => `<!--seo-body-->${renderSeoBody(page)}<!--/seo-body-->`)
+
+  return {
+    name: 'seo-pages',
+    configResolved (config) {
+      outDir = path.resolve(config.root, config.build.outDir)
+    },
+    transformIndexHtml (html) {
+      return fill(html, '/')
+    },
+    closeBundle () {
+      const indexPath = path.join(outDir, 'index.html')
+      if (!fs.existsSync(indexPath)) return
+      const index = fs.readFileSync(indexPath, 'utf-8')
+      const swaConfig = JSON.parse(fs.readFileSync(path.resolve(outDir, '../staticwebapp.config.json'), 'utf-8'))
+      const rewrites = new Map((swaConfig.routes as { route: string, rewrite?: string }[]).map(r => [r.route, r.rewrite]))
+
+      for (const page of INDEXABLE_PATHS.filter(p => p !== '/')) {
+        const file = `${page}.html`
+        // Without the rewrite Azure would serve the SPA fallback (home page tags) instead
+        if (rewrites.get(page) !== file) {
+          throw new Error(`staticwebapp.config.json needs { "route": "${page}", "rewrite": "${file}" }`)
+        }
+        const target = path.join(outDir, file)
+        fs.mkdirSync(path.dirname(target), { recursive: true })
+        fs.writeFileSync(target, fill(index, page))
+      }
+      fs.writeFileSync(path.join(outDir, 'sitemap.xml'), renderSitemap())
+    },
+  }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     VueRouter(),
+    seoPages(),
     // Do not pass `layoutsDirs` even though it's just the default ('src/layouts'):
     // vite-plugin-vue-layouts@0.10's canEnableClientLayout() checks for a key named
     // "layoutDirs" (no "s"), so passing the real "layoutsDirs" option always fails
@@ -66,6 +130,7 @@ export default defineConfig({
         ],
       },
     }),
+    woff2PreloadsOnly(),
     AutoImport({
       imports: [
         'vue',

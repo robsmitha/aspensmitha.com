@@ -76,6 +76,107 @@
             "statusCode": 301
         },
         {
+            "route": "/about",
+            "redirect": "/about-me",
+            "statusCode": 301
+        },
+        {
+            "route": "/",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/index.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio",
+            "rewrite": "/portfolio.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/about-me",
+            "rewrite": "/about-me.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/investment",
+            "rewrite": "/investment.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/contact",
+            "rewrite": "/contact.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/couples",
+            "rewrite": "/portfolio/couples.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/engagements",
+            "rewrite": "/portfolio/engagements.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/weddings",
+            "rewrite": "/portfolio/weddings.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/maternity",
+            "rewrite": "/portfolio/maternity.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/family",
+            "rewrite": "/portfolio/family.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/seniors",
+            "rewrite": "/portfolio/seniors.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/grads",
+            "rewrite": "/portfolio/grads.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
+            "route": "/portfolio/events",
+            "rewrite": "/portfolio/events.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
             "route": "/spending",
             "allowedRoles": [
                 "authenticated"

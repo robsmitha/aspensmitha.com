@@ -7,7 +7,7 @@
     <template v-if="page === 'home'">
       <div class="pm__text pm__text--center"></div>
       <div class="pm__row pm__row--hero">
-        <div v-for="n in 5" :key="n" :class="block(`hero-${n}`)"></div>
+        <div v-for="n in HERO_SHOWCASE_COUNT" :key="n" :class="block(`hero-${n}`)"></div>
       </div>
       <div class="pm__row">
         <div :class="block('intro')" style="flex: 0.8; aspect-ratio: 0.8"></div>
@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
-import { SITE_PAGES, type SitePage } from '@/utils/sitePlacements'
+import { HERO_SHOWCASE_COUNT, SITE_PAGES, type SitePage } from '@/utils/sitePlacements'
 
 const props = defineProps<{
   page: SitePage

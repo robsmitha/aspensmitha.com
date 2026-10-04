@@ -4,7 +4,7 @@
       <v-col cols="12" md="5">
         <ResponsivePhoto
           :photo="photos.forPlacement('about-story')"
-          :sizes="PHOTO_SIZES.fiveTwelfths"
+          :sizes="PHOTO_SIZES.portrait"
           aspect-ratio="0.8"
           class="story-image"
         />
@@ -113,7 +113,17 @@ const yearsTogetherOrdinal = ordinalWords[yearsTogether - 1] ?? `${yearsTogether
 
 <style scoped>
 .story-image {
+  /* Stops growing with the column on big screens; centered when stacked */
+  max-width: 500px;
+  margin-inline: auto;
   box-shadow: 0 24px 60px -20px rgba(33, 31, 28, 0.3);
+}
+
+/* Side by side: hug the text column instead of floating in the gutter */
+@media (min-width: 960px) {
+  .story-image {
+    margin-right: 0;
+  }
 }
 
 /* Upright (not italic) serif at a standard reading size — long italic
