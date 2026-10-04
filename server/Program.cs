@@ -35,6 +35,8 @@ var host = new HostBuilder()
 
         services.AddContactFeatures(hostContext.Configuration);
 
+        services.AddInstagramFeatures(hostContext.Configuration);
+
         services.AddMemoryCache();
         services.AddSingleton<PortfolioCache>();
         services.AddSingleton<ContactRateLimiter>();

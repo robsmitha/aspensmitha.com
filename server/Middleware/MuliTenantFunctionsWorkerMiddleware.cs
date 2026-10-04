@@ -5,6 +5,7 @@ using Finbuckle.MultiTenant.Abstractions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ElysianFunctions.Middleware
@@ -25,13 +26,41 @@ namespace ElysianFunctions.Middleware
 
             var resolved = requestData != null
                 ? await context.InstanceServices.GetRequiredService<ITenantResolver>().ResolveAsync(requestData)
-                : await ResolveFromBindingDataAsync(context);
+                : context.BindingContext.BindingData.ContainsKey("tenant")
+                    ? await ResolveFromBindingDataAsync(context)
+                    : await ResolveFromConfigurationAsync(context);
 
-            var value = (multiTenantContextSetter.MultiTenantContext = resolved) ?? throw new NotFoundException();
+            // The resolver returns a context with no TenantInfo (not null) when the identifier isn't in the store
+            if (resolved?.TenantInfo == null)
+            {
+                throw new NotFoundException();
+            }
 
-            context.Items[typeof(IMultiTenantContext)] = value;
+            multiTenantContextSetter.MultiTenantContext = resolved;
+            context.Items[typeof(IMultiTenantContext)] = resolved;
             await next(context);
         }
+
+        /// <summary>
+        /// Triggers with neither a request nor a {tenant} path parameter (timers) run for the tenant this
+        /// Function App is deployed for, set by the TenantIdentifier app setting
+        /// </summary>
+        private static async Task<IMultiTenantContext?> ResolveFromConfigurationAsync(FunctionContext context)
+        {
+            var identifier = context.InstanceServices.GetRequiredService<IConfiguration>()[TenantIdentifierSetting];
+            if (string.IsNullOrWhiteSpace(identifier))
+            {
+                throw new InvalidOperationException(
+                    $"The {TenantIdentifierSetting} app setting is not configured, so {context.FunctionDefinition.Name} has no tenant to run for.");
+            }
+
+            var store = context.InstanceServices.GetRequiredService<IMultiTenantStore<ElysianTenantInfo>>();
+            var tenantInfo = await store.TryGetByIdentifierAsync(identifier);
+
+            return tenantInfo == null ? null : new MultiTenantContext<ElysianTenantInfo> { TenantInfo = tenantInfo };
+        }
+
+        private const string TenantIdentifierSetting = "TenantIdentifier";
 
         /// <summary>
         /// Non-HTTP triggers have no tenant header, so they carry the tenant identifier as a

@@ -7,7 +7,7 @@ meta:
   <Hero />
   <Intro />
   <Specialties />
-  <Portfolio />
+  <InstagramFeed />
   <Testimonial />
   <CallToAction />
 </template>
@@ -16,7 +16,7 @@ meta:
 import Hero from '@/components/Landing/Hero.vue'
 import Intro from '@/components/Landing/Intro.vue'
 import Specialties from '@/components/Landing/Specialties.vue'
-import Portfolio from '@/components/Landing/Portfolio.vue'
+import InstagramFeed from '@/components/Landing/InstagramFeed.vue'
 import Testimonial from '@/components/Landing/Testimonial.vue'
 import CallToAction from '@/components/Landing/CallToAction.vue'
 </script>

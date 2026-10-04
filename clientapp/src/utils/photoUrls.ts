@@ -21,6 +21,13 @@ export interface PortfolioPhoto {
 }
 
 /**
+ * The parts of a photo needed to render it from its WebP variants. Portfolio
+ * photos and Instagram thumbnails (same storage layout) both satisfy this.
+ */
+export type PhotoSource = Pick<PortfolioPhoto, 'srcBase' | 'widths' | 'width' | 'height' | 'placeholder'>
+  & Partial<Pick<PortfolioPhoto, 'altText' | 'focusX' | 'focusY'>>
+
+/**
  * `sizes` presets matching the layouts that use them, so the browser can pick
  * the right variant from `srcset` before layout. Vuetify breakpoints: sm 600,
  * md 960, lg 1280.
@@ -39,24 +46,26 @@ export const PHOTO_SIZES = {
   sevenTwelfths: '(max-width: 959px) 100vw, 58vw',
   /** Landing hero strip: fixed 240px on mobile, 340px otherwise */
   showcase: '(max-width: 1279px) 240px, 340px',
+  /** Instagram grid: three across in a section capped at 960px */
+  instagram: '(max-width: 959px) 33vw, 310px',
 } as const
 
-export function photoUrl(photo: PortfolioPhoto, width: number): string {
+export function photoUrl(photo: PhotoSource, width: number): string {
   return `${photo.srcBase}/${width}.webp`
 }
 
 /** Smallest variant at least `width` wide, else the largest there is */
-export function photoSrc(photo: PortfolioPhoto, width = 800): string {
+export function photoSrc(photo: PhotoSource, width = 800): string {
   const sorted = [...photo.widths].sort((a, b) => a - b)
   const pick = sorted.find(w => w >= width) ?? sorted[sorted.length - 1]
   return photoUrl(photo, pick)
 }
 
-export function photoSrcset(photo: PortfolioPhoto): string {
+export function photoSrcset(photo: PhotoSource): string {
   return photo.widths.map(w => `${photoUrl(photo, w)} ${w}w`).join(', ')
 }
 
 /** CSS object-position from the admin-chosen focal point, so cover crops keep faces in frame */
-export function photoPosition(photo: PortfolioPhoto): string {
-  return `${Math.round(photo.focusX * 100)}% ${Math.round(photo.focusY * 100)}%`
+export function photoPosition(photo: PhotoSource): string {
+  return `${Math.round((photo.focusX ?? 0.5) * 100)}% ${Math.round((photo.focusY ?? 0.5) * 100)}%`
 }

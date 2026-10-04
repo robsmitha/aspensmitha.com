@@ -19,10 +19,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { photoPosition, photoSrc, photoSrcset, type PortfolioPhoto } from '@/utils/photoUrls'
+import { photoPosition, photoSrc, photoSrcset, type PhotoSource } from '@/utils/photoUrls'
 
 const props = withDefaults(defineProps<{
-  photo: PortfolioPhoto | undefined
+  photo: PhotoSource | undefined
   /** One of PHOTO_SIZES — how wide the image renders at each breakpoint */
   sizes: string
   /** Crop for this placement; defaults to the photo's own shape */

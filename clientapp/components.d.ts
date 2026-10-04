@@ -21,6 +21,7 @@ declare module 'vue' {
     Gallery: typeof import('./src/components/Portfolio/Gallery.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Hero: typeof import('./src/components/About/Hero.vue')['default']
+    InstagramFeed: typeof import('./src/components/Landing/InstagramFeed.vue')['default']
     Intro: typeof import('./src/components/Landing/Intro.vue')['default']
     OAuthCallback: typeof import('./src/components/OAuthCallback.vue')['default']
     PhotoLightbox: typeof import('./src/components/Photo/PhotoLightbox.vue')['default']
