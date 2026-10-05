@@ -32,7 +32,9 @@ namespace ElysianFunctions
         [Function("GetProducts")]
         public async Task<HttpResponseData> GetProducts([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
-            var products = await mediator.Send(new GetProductsQuery());
+            // ?productTypeId=2 lists sessions only (see Elysian's ProductTypes)
+            int? productTypeId = int.TryParse(req.Query["productTypeId"], out var typeId) ? typeId : null;
+            var products = await mediator.Send(new GetProductsQuery(productTypeId));
             return await req.WriteJsonResponseAsync(products);
         }
 
@@ -44,14 +46,16 @@ namespace ElysianFunctions
                 throw new CustomValidationException();
             }
 
-            var (product, images) = await mediator.Send(new GetProductQuery(productId));
+            var response = await mediator.Send(new GetProductQuery(productId));
+            var (product, images) = response;
 
             return product == null
                 ? throw new NotFoundException()
                 : await req.WriteJsonResponseAsync(new
                 {
                     product,
-                    images
+                    images,
+                    session = response.Session
                 });
         }
 

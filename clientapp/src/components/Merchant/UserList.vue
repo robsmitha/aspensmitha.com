@@ -69,9 +69,23 @@
                             </div>
                         </template>
                         <template v-slot:[`item.actions`]="{ item }">
-                            <v-btn size="small" color="charcoal" icon variant="text" @click="editUser(item)">
-                                <v-icon>mdi-key-variant</v-icon>
-                            </v-btn>
+                            <v-menu location="bottom end">
+                                <template v-slot:activator="{ props: menuProps }">
+                                    <v-btn
+                                        v-bind="menuProps"
+                                        icon="mdi-dots-horizontal"
+                                        variant="text"
+                                        size="small"
+                                        color="stone"
+                                        :aria-label="`Actions for ${item.userName}`"
+                                    ></v-btn>
+                                </template>
+                                <v-list density="compact" rounded="0" min-width="200" class="py-1">
+                                    <v-list-item prepend-icon="mdi-key-variant" @click="editUser(item)">
+                                        <v-list-item-title class="font-nav text-body-2">Edit Permissions</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </template>
                     </v-data-table>
                 </v-card>

@@ -46,6 +46,7 @@ const CATEGORY_SEARCH_TERMS: Record<string, string> = {
 
 const HOME_CRUMB: Crumb = { name: 'Home', path: '/' }
 const PORTFOLIO_CRUMB: Crumb = { name: 'Portfolio', path: '/portfolio' }
+const BOOKING_CRUMB: Crumb = { name: 'Book', path: '/booking' }
 
 const HOME: PageSeo = {
   title: `Tallahassee Wedding, Maternity & Family Photographer | ${SITE_NAME}`,
@@ -74,6 +75,12 @@ const PAGES: Record<string, PageSeo> = {
     heading: 'Investment',
     breadcrumbs: [HOME_CRUMB, { name: 'Investment', path: '/investment' }],
   },
+  '/booking': {
+    title: `Book a Session | ${SITE_NAME}`,
+    description: 'View session details and availability, and book your portrait, maternity or senior session with Aspen Smitha Photography in Tallahassee, Florida.',
+    heading: 'Book Your Session',
+    breadcrumbs: [HOME_CRUMB, BOOKING_CRUMB],
+  },
   '/contact': {
     title: `Contact | ${SITE_NAME}`,
     description: 'Get in touch with Aspen Smitha Photography to check availability for your wedding, maternity, family or portrait session in Tallahassee, Florida.',
@@ -101,6 +108,14 @@ export function seoForPath(path: string): PageSeo {
         heading: `${term} Photography`,
         breadcrumbs: [HOME_CRUMB, PORTFOLIO_CRUMB, { name: category.name, path: normalized }],
       }
+    }
+  }
+  // Sessions live in the database, so their pages start from these generic tags and the
+  // page fills in the session's own (see applyPageSeo); they're found through /booking's links
+  if (/^\/booking\/[^/]+$/.test(normalized)) {
+    return {
+      ...PAGES['/booking'],
+      breadcrumbs: [HOME_CRUMB, BOOKING_CRUMB, { name: 'Session', path: normalized }],
     }
   }
   return PAGES[normalized] ?? { title: SITE_NAME, description: HOME.description, heading: SITE_NAME, breadcrumbs: [], noindex: true }
@@ -188,8 +203,22 @@ function meta(key: 'name' | 'property', name: string, content: string) {
 }
 
 export function applySeo(route: RouteLocationNormalized) {
-  const { title, description, noindex, breadcrumbs } = seoForPath(route.path)
-  const url = canonicalUrl(route.path)
+  applyPageSeo(route.path)
+}
+
+/**
+ * Tags for a path, with `overrides` for pages whose details load at runtime
+ * (e.g. a session's title once the session list arrives)
+ */
+export function applyPageSeo(path: string, overrides: Partial<Pick<PageSeo, 'title' | 'description'>> = {}) {
+  const page = seoForPath(path)
+  const title = overrides.title ?? page.title
+  const description = overrides.description ?? page.description
+  const { noindex } = page
+  const breadcrumbs = overrides.title && page.breadcrumbs.length
+    ? [...page.breadcrumbs.slice(0, -1), { ...page.breadcrumbs[page.breadcrumbs.length - 1], name: overrides.title.split(' | ')[0] }]
+    : page.breadcrumbs
+  const url = canonicalUrl(path)
 
   document.title = title
   meta('name', 'description', description)

@@ -6,9 +6,21 @@ meta:
 <template>
   <Hero />
 
-  <PricingSection title="Portraits" tone="ivory" :tiers="portraitTiers" />
-  <PricingSection title="Maternity" tone="ivory-deep" :tiers="maternityTiers" />
-  <PricingSection title="Seniors & Grads" tone="ivory" :tiers="seniorTiers" />
+  <template v-if="sessions.loaded">
+    <PricingSection
+      v-for="(collection, index) in sessions.collections"
+      :key="collection.name"
+      :title="collection.name"
+      :tone="index % 2 === 0 ? 'ivory' : 'ivory-deep'"
+      :tiers="collection.sessions.map(toTier)"
+    />
+  </template>
+
+  <!-- Holds the page while session pricing loads -->
+  <v-container v-else class="py-14 py-md-20">
+    <v-skeleton-loader type="heading, image" color="transparent" class="mb-10" />
+    <v-skeleton-loader type="heading, image" color="transparent" />
+  </v-container>
 
   <Cta />
 </template>
@@ -17,68 +29,20 @@ meta:
 import Hero from '@/components/Investment/Hero.vue'
 import PricingSection, { type PricingTier } from '@/components/Investment/PricingSection.vue'
 import Cta from '@/components/Investment/Cta.vue'
+import { useSessionStore, type BookingSession } from '@/store/sessions'
+import { formatPrice, paragraphs } from '@/utils/bookingFormat'
 
-const portraitTiers: PricingTier[] = [
-  {
-    name: 'Mini Portrait',
-    price: '$150',
-    description: 'Perfect for holiday cards, headshots, & small children.',
-    features: ['30 minutes', '1 location', '20 edited images', 'Online Gallery', '1 outfit'],
-  },
-  {
-    name: 'Classic Portrait',
-    price: '$250',
-    description: 'Includes couples, engagements, & family.',
-    features: ['60 minutes', '1 location', '50+ edited images', 'Online Gallery', '1 outfit'],
-  },
-]
+// Sessions are edited on the admin Products page (Sessions tab) and shared with the booking pages
+const sessions = useSessionStore()
+sessions.load()
 
-const maternityTiers: PricingTier[] = [
-  {
-    name: 'Classic Maternity',
-    price: '$300',
-    features: [
-      '90 minutes',
-      '1 location',
-      '50+ edited images',
-      'Online Gallery',
-      '2 outfits',
-      'Props at request',
-      'Client closet (if applicable)',
-    ],
-  },
-  {
-    name: 'Maternity Package',
-    price: '$500',
-    features: [
-      'Approximately 3 hours',
-      '2 locations',
-      '100+ edited images',
-      'Online Gallery',
-      '2-3 outfits',
-      'Classic Maternity & In-home Newborn',
-      'Client closet (if applicable)',
-    ],
-  },
-]
-
-const seniorTiers: PricingTier[] = [
-  {
-    name: 'Classic',
-    price: '$300',
-    features: ['60 minutes', '2 locations', '50+ edited images', 'Online Gallery', '2 outfits'],
-  },
-  {
-    name: 'Package',
-    price: '$400+',
-    description: 'Ideal for groups. Inquire for add-on options and pricing.',
-    features: [
-      'Minimum 2 hours',
-      'Minimum 2 locations',
-      '75+ edited images',
-      'Online Gallery',
-      'Minimum 2 outfits',
-    ],
-  },
-]
+function toTier(session: BookingSession): PricingTier {
+  return {
+    name: session.title,
+    price: formatPrice(session),
+    // The first paragraph is the short summary; the booking page shows the rest
+    description: paragraphs(session.description)[0],
+    features: session.features,
+  }
+}
 </script>

@@ -5,20 +5,38 @@ meta:
 
 <template>
     <ProductList
-        :items="products"
-        @view="viewProduct"
-        @edit="editProduct"
-        @delete="deleteProduct"
+        :items="sessions.sessions"
+        :loading="!sessions.loaded"
+        @view="viewSession"
+        @edit="editSession"
+        @delete="confirmDelete"
         @create="dialog = true"
     />
     <SaveProductDialog
         :open="dialog"
         :loading="loading"
         :item="selectedProduct"
+        :collections="collections"
         @close="dialog = false"
-        @save="saveProduct"
-        @delete-image="deleteProductImage"
+        @save="saveSession"
     />
+
+    <v-dialog v-model="deleteDialog" max-width="460">
+        <v-card color="surface" rounded="0">
+            <v-card-title class="font-display text-h5 text-charcoal pt-6 px-6">Delete {{ sessionToDelete?.title }}?</v-card-title>
+            <v-card-text class="px-6 text-body-2 text-charcoal-light">
+                It will be removed from the Investment and booking pages. Bookings already on your calendar aren't affected.
+            </v-card-text>
+            <v-card-actions class="px-6 pb-5 d-flex justify-end">
+                <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="text" color="stone" :disabled="deleting" @click="deleteDialog = false">
+                    Cancel
+                </v-btn>
+                <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="flat" color="error" :loading="deleting" @click="deleteSession">
+                    Delete
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 
     <v-dialog
         v-model="snackbar"
@@ -47,24 +65,31 @@ meta:
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { BlobServiceClient } from '@azure/storage-blob'
+import { computed, ref, onMounted, watch } from 'vue'
 import apiClient from '@/api/elysianClient'
+import ProductList from '@/components/Merchant/ProductList.vue'
+import SaveProductDialog from '@/components/Merchant/SaveProductDialog.vue'
+import { useSessionStore, type BookingSession } from '@/store/sessions'
 
+/** Elysian's ProductTypes and PriceTypes: every product on this site is a bookable session */
+const SESSION_PRODUCT_TYPE = 2
+const PRICE_TYPE = { fixed: 1, variable: 2 } as const
 
-const router = useRouter()
+const sessions = useSessionStore()
+const collections = computed(() => sessions.collections.map(c => c.name))
+
 const dialog = ref(false)
 const loading = ref(false)
 const selectedProduct = ref<any | undefined>()
 const snackbar = ref(false)
 const errorMessage = ref('')
 
-const products = ref([])
+const deleteDialog = ref(false)
+const deleting = ref(false)
+const sessionToDelete = ref<BookingSession | null>(null)
 
-onMounted(() => {
-    getProducts()
-})
+// Always fresh here, so edits show up straight away
+onMounted(() => sessions.reload())
 
 watch(dialog, (newValue) => {
     if(!newValue){
@@ -72,37 +97,25 @@ watch(dialog, (newValue) => {
     }
 })
 
-async function getProducts(){
-    const response = await apiClient.getData('/api/GetProducts')
-    
-    if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
-        }
-        snackbar.value = true
-    }
-
-    products.value = response.data
+function showError(message: string | undefined) {
+    errorMessage.value = message || 'An error occurred. Please try again later.'
+    snackbar.value = true
 }
 
-function viewProduct(serialNumber: string) {
-    router.push(`/search/${serialNumber}`)
+function viewSession(slug: string) {
+    window.open(`/booking/${encodeURIComponent(slug)}`, '_blank', 'noopener')
 }
 
-async function editProduct(productId: number) {
+async function editSession(productId: number) {
     loading.value = true
     dialog.value = true
 
     const response = await apiClient.getData(`/api/GetProduct?productId=${productId}`)
     if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
-        }
-        snackbar.value = true
+        loading.value = false
+        dialog.value = false
+        showError(response.errorMessage)
+        return
     }
 
     const data = response.data
@@ -111,110 +124,65 @@ async function editProduct(productId: number) {
         name: data.product.name,
         description: data.product.description,
         serialNumber: data.product.serialNumber,
-        grade: data.product.grade,
-        images: data.images
+        price: data.product.price,
+        priceTypeId: data.product.priceTypeId,
+        session: data.session
     }
     loading.value = false
 }
 
-async function deleteProduct(productId: number) {
-    const response = await apiClient.postData('/api/DeleteProduct', { productId })
-    
-    if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
-        }
-        snackbar.value = true
-    }
-
-    if (response.data.success) {
-        await getProducts()
-    }
+function confirmDelete(session: BookingSession) {
+    sessionToDelete.value = session
+    deleteDialog.value = true
 }
 
-async function deleteProductImage(productImageId: number){
+async function deleteSession() {
+    if (!sessionToDelete.value) return
+    deleting.value = true
+    const response = await apiClient.postData('/api/DeleteProduct', { productId: sessionToDelete.value.productId })
+    deleting.value = false
+    deleteDialog.value = false
+
+    if(!response.success || !response.data?.success){
+        showError(response.errorMessage ?? 'Could not delete the session.')
+        return
+    }
+    await sessions.reload()
+}
+
+async function saveSession(form: any) {
     loading.value = true
-    const response = await apiClient.postData('/api/DeleteProductImage', { productImageId })
-    
-    if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
-        }
-        snackbar.value = true
-    }
-    loading.value = false
-
-    if (!response.data.success) {
-        errorMessage.value = 'Could not delete product'
-        snackbar.value = true
-    }
-}
-
-async function uploadFile(file: File) {
-    const response = await apiClient.getData(`/api/GenerateSasToken?fileName=${file.name}`)
-    
-    if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
-        }
-        snackbar.value = true
-        return null
-    }
-
-    const data = response.data
-
-    const blobServiceClient = new BlobServiceClient(`https://${data.accountName}.blob.core.windows.net?${data.sasToken}`);
-    
-    const containerClient = blobServiceClient.getContainerClient(data.containerName);
-    
-    const blockBlobClient = containerClient.getBlockBlobClient(data.blobName);
-    await blockBlobClient.uploadData(file);
-    return {
-        fileName: file.name,
-        fileSize: file.size,
-        storageId: data.folderId
-    }
-}
-
-async function saveProduct(form: any) {
-    loading.value = true
-    const images: any = []
-    for(let i = 0; i < form.files.length; i++) {
-        const image = await uploadFile(form.files[i])
-        image && images.push(image)
-    }
     const response = await apiClient.postData('/api/SaveProduct', {
         productId: form.productId,
         name: form.name,
-        description: form.description,
-        serialNumber: form.serialNumber,
-        grade: form.grade,
-        addImages: images
-    })
-    
-    if(!response.success){
-        if(response.errorMessage){
-            errorMessage.value = response.errorMessage
-        } else {
-            errorMessage.value = 'An error occurred. Please try again later.'
+        description: form.description ?? '',
+        serialNumber: form.serialNumber.trim(),
+        grade: '',
+        addImages: [],
+        productTypeId: SESSION_PRODUCT_TYPE,
+        priceTypeId: form.priceFrom ? PRICE_TYPE.variable : PRICE_TYPE.fixed,
+        price: typeof form.price === 'number' ? form.price : null,
+        session: {
+            durationMinutes: form.durationMinutes,
+            location: form.location,
+            collection: form.collection ?? '',
+            features: form.features,
+            portfolioCategory: form.portfolioCategory,
+            coverPhotoId: form.coverPhotoId,
+            sortOrder: Number(form.sortOrder) || 0,
+            isBookable: form.isBookable,
         }
-        snackbar.value = true
+    })
+
+    if(!response.success){
         loading.value = false
+        showError(response.errorMessage)
         return
     }
     selectedProduct.value = undefined
     loading.value = false
     dialog.value = false
 
-    if (response.data.productId) {
-        await getProducts()
-    }
+    await sessions.reload()
 }
 </script>
-  
