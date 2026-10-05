@@ -114,6 +114,13 @@
             }
         },
         {
+            "route": "/booking",
+            "rewrite": "/booking.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
             "route": "/contact",
             "rewrite": "/contact.html",
             "headers": {

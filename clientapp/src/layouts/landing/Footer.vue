@@ -60,6 +60,7 @@ const navLinks = [
   { title: 'Portfolio', to: '/portfolio' },
   { title: 'About', to: '/about-me' },
   { title: 'Investment', to: '/investment' },
+  { title: 'Book', to: '/booking' },
   { title: 'Contact', to: '/contact' },
 ]
 </script>

@@ -45,6 +45,26 @@ namespace ElysianFunctions.Middleware
             });
         }
 
+        /// <summary>
+        /// Static Web Apps and the Functions front end pass the caller's address in X-Forwarded-For,
+        /// sometimes with a port attached
+        /// </summary>
+        public static string? GetClientIp(this HttpRequestData req)
+        {
+            if (!req.Headers.TryGetValues("X-Forwarded-For", out var values))
+            {
+                return null;
+            }
+
+            var first = values.FirstOrDefault()?.Split(',')[0].Trim();
+            if (string.IsNullOrEmpty(first))
+            {
+                return null;
+            }
+
+            return IPEndPoint.TryParse(first, out var endpoint) ? endpoint.Address.ToString() : first;
+        }
+
         public static bool TryGetEnumValue<T>(this HttpRequestData req, string name, out T result) where T : struct
         {
             return Enum.TryParse(req.Query[name], true, out result);

@@ -33,6 +33,10 @@ class ApiClient {
   }
 
   private handleErrorResponse(status: number, data: any): Map<string, string[]> {
+    // Conflict, rate limit and unavailable responses carry their own { KEY: [messages] } explanation
+    if ([409, 429, 503].includes(status) && data && typeof data === 'object' && !Array.isArray(data)) {
+      return new Map(Object.entries(data as ValidationResponse));
+    }
     switch (status) {
       case 400:
         if (data) {

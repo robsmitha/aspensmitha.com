@@ -10,7 +10,7 @@
       size="large"
       rounded="0"
       class="font-nav tracking-wide text-caption"
-      to="/contact"
+      to="/booking"
     >
       Let's book!
     </v-btn>

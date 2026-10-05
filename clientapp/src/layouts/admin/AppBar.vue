@@ -100,7 +100,8 @@ const route = useRoute()
 const navLinks = [
   { title: 'Photos', to: '/admin/photos', icon: 'mdi-image-multiple-outline' },
   { title: 'Instagram', to: '/admin/instagram', icon: 'mdi-instagram' },
-  { title: 'Products', to: '/products', icon: 'mdi-tag-multiple-outline' },
+  { title: 'Calendar', to: '/admin/calendar', icon: 'mdi-calendar-month-outline' },
+  { title: 'Sessions', to: '/products', icon: 'mdi-camera-outline' },
   { title: 'Users', to: '/users', icon: 'mdi-account-group-outline' },
 ]
 

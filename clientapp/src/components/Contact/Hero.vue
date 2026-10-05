@@ -1,7 +1,7 @@
 <template>
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
-      <span class="font-nav tracking-widest text-caption text-blush">Contact</span>
+      <!-- <span class="font-nav tracking-widest text-caption text-blush">Contact</span> -->
       <h1 class="font-display text-charcoal hero-heading mt-4 mb-4">Let's Connect</h1>
       <p class="font-display text-stone hero-subtitle mx-auto">
         Please fill out the form below to inquire about booking.

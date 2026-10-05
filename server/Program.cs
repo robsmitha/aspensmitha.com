@@ -37,9 +37,12 @@ var host = new HostBuilder()
 
         services.AddInstagramFeatures(hostContext.Configuration);
 
+        services.AddBookingFeatures(hostContext.Configuration);
+
         services.AddMemoryCache();
         services.AddSingleton<PortfolioCache>();
         services.AddSingleton<ContactRateLimiter>();
+        services.AddSingleton<BookingRateLimiter>();
 
         services.AddApplication();
     })

@@ -10,16 +10,26 @@
         />
 
         <div class="contact-aside__text">
-          <h2 class="font-display text-charcoal contact-heading mb-3">Prefer to reach out on social?</h2>
+          <h2 class="font-display text-charcoal contact-heading mb-3">Ready to book?</h2>
+          <p class="font-display text-stone contact-copy mb-4">
+            If you're looking to book a wedding or event, please use this page to inquire about my
+            availability. You can also contact me if you are unsure about what session type works
+            best for you.
+          </p>
           <p class="font-display text-stone contact-copy mb-6">
-            I'd love to hear from you. Fill out the form or send me a message on Instagram or
-            Facebook &mdash; I try to respond within a day or two.
+            Most sessions can be booked online. View session details, check my availability, and
+            reserve your photoshoot in just a few steps.
           </p>
 
-          <div class="d-flex ga-2">
-            <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://www.instagram.com/aspensmitha.photography" target="_blank"></v-btn>
-            <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://www.facebook.com/aspensage.photography" target="_blank"></v-btn>
-          </div>
+          <v-btn
+            variant="outlined"
+            color="charcoal"
+            rounded="0"
+            class="font-nav tracking-wide text-caption"
+            to="/booking"
+          >
+            Check availability
+          </v-btn>
         </div>
       </v-col>
 
@@ -180,7 +190,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
 import TurnstileWidget from '@/components/_helpers/TurnstileWidget.vue'
 import { event } from 'vue-gtag'
@@ -188,6 +199,9 @@ import apiClient from '@/api/elysianClient'
 import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
+import { CONTACT_EMAIL } from '@/utils/contact'
+import { MESSAGE_MAX, camelCaseErrors, emailRules, maxLength, messageRules, nameRules, phoneRules, required, type Rule } from '@/utils/formRules'
+import { useSessionStore } from '@/store/sessions'
 
 const photos = usePhotoStore()
 
@@ -197,12 +211,8 @@ const sessionTypes = [...PORTFOLIO_CATEGORIES.map(category => category.name), OT
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 /** Error key (after camelCasing) for a missing or failed Turnstile token, see Elysian's SendContactMessageCommand */
 const TURNSTILE_ERROR_KEY = 'turnstileToken'
-const MESSAGE_MAX = 5000
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const PHONE_PATTERN = /^[0-9+()\-.\s]{7,30}$/
 
 type FieldName = 'name' | 'email' | 'phone' | 'subject' | 'subjectOther' | 'message'
-type Rule = (value: string) => true | string
 
 const emptyForm = () => ({
   name: '',
@@ -217,23 +227,38 @@ const emptyForm = () => ({
 const form = reactive(emptyForm())
 
 // Mirrors the server-side limits on Elysian's SendContactMessageCommand; the server re-validates everything
-const required = (message: string): Rule => value => !!value?.trim() || message
-const maxLength = (max: number, label: string): Rule => value => (value?.length ?? 0) <= max || `${label} must be ${max} characters or fewer.`
 const rules: Record<FieldName, Rule[]> = {
-  name: [required('Please enter your name.'), maxLength(100, 'Name')],
-  email: [
-    required('Please enter your email.'),
-    value => EMAIL_PATTERN.test(value.trim()) || 'Please enter a valid email address.',
-    maxLength(320, 'Email'),
-  ],
-  phone: [value => !value?.trim() || PHONE_PATTERN.test(value.trim()) || 'Please enter a valid phone number.'],
+  name: nameRules,
+  email: emailRules,
+  phone: phoneRules,
   subject: [required("Please tell me what type of session you're interested in.")],
   subjectOther: [
     value => form.subject !== OTHER_SESSION_TYPE || !!value?.trim() || 'Please specify the type of session.',
     maxLength(200, 'Session details'),
   ],
-  message: [maxLength(MESSAGE_MAX, 'Message')],
+  message: messageRules,
 }
+
+// Booking pages link here as /contact?session={slug} when no time works; start the inquiry for that session
+const route = useRoute()
+onMounted(async () => {
+  const slug = route.query.session
+  if (typeof slug !== 'string' || !slug) return
+
+  const sessions = useSessionStore()
+  await sessions.load()
+  const session = sessions.bySlug(slug)
+  if (!session || form.subject || form.message) return
+
+  const category = PORTFOLIO_CATEGORIES.find(c => c.slug === session.portfolioCategory)
+  if (category) {
+    form.subject = category.name
+  } else {
+    form.subject = OTHER_SESSION_TYPE
+    form.subjectOther = session.title
+  }
+  form.message = `I'm interested in the ${session.title} session, but I couldn't find a time that works on the booking calendar. Here's when I'm available: `
+})
 
 const formRef = ref<{ validate: () => Promise<{ valid: boolean }>, resetValidation: () => void }>()
 const turnstileRef = ref<InstanceType<typeof TurnstileWidget>>()
@@ -316,10 +341,7 @@ async function submit() {
     return
   }
 
-  // Validation errors are keyed by the C# property name (e.g. "Name"), so camelCase them to match the form
-  const errors = new Map(
-    Array.from(response.errors ?? [], ([key, messages]) => [key.charAt(0).toLowerCase() + key.slice(1), messages] as const)
-  )
+  const errors = camelCaseErrors(response.errors)
   if (errors.has(TURNSTILE_ERROR_KEY)) {
     turnstileError.value = "We couldn't verify you're human. Please complete the verification again and resubmit."
     return
@@ -336,7 +358,7 @@ async function submit() {
 
   submitError.value = response.statusCode === 429
     ? 'You\'ve sent a few messages in a short time. Please wait a few minutes and try again.'
-    : 'Something went wrong sending your message. Please try again, or email me directly at aspensmithaphotography@gmail.com.'
+    : `Something went wrong sending your message. Please try again, or email me directly at ${CONTACT_EMAIL}.`
 }
 </script>
 
