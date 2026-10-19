@@ -83,6 +83,42 @@
         </v-col>
       </v-row>
 
+        <label for="booking-referral" class="font-nav tracking-wide text-caption text-stone field-label">
+          How did you hear about us? *
+        </label>
+        <v-select
+          id="booking-referral"
+          v-model="form.referralSource"
+          :items="REFERRAL_SOURCES"
+          :rules="referralSourceRules"
+          :error-messages="fieldErrors.referralSource"
+          variant="outlined"
+          color="blush"
+          rounded="0"
+          placeholder="Select an option"
+          class="font-display mb-4"
+          @update:model-value="fieldErrors.referralSource = []"
+        ></v-select>
+
+        <template v-if="form.referralSource === OTHER_REFERRAL_SOURCE">
+          <label for="booking-referral-other" class="font-nav tracking-wide text-caption text-stone field-label">
+            Please specify *
+          </label>
+          <v-text-field
+            id="booking-referral-other"
+            v-model="form.referralOther"
+            :rules="referralOtherRules(() => form.referralSource)"
+            :error-messages="fieldErrors.referralSource"
+            variant="outlined"
+            color="blush"
+            rounded="0"
+            placeholder="Where did you hear about us?"
+            maxlength="190"
+            class="font-display mb-4"
+            @update:model-value="fieldErrors.referralSource = []"
+          ></v-text-field>
+        </template>
+
       <label for="booking-message" class="font-nav tracking-wide text-caption text-stone field-label">
         Tell me about your session
       </label>
@@ -101,6 +137,7 @@
         @update:model-value="fieldErrors.message = []"
       ></v-textarea>
 
+      <!-- Policies agreement is turned off for now; restore this block, the dialog and the script pieces marked "Policies" to bring it back
       <v-checkbox
         v-model="form.policiesAccepted"
         :rules="[(value: boolean) => value || 'Please confirm you\'ve read and agree to the policies.']"
@@ -119,6 +156,7 @@
       </v-checkbox>
 
       <BookingPoliciesDialog v-model="policiesOpen" @agree="agreeToPolicies" />
+      -->
 
       <!-- Honeypot: invisible to people, so only bots fill it in -->
       <div class="booking-honeypot" aria-hidden="true">
@@ -163,12 +201,13 @@
 import { computed, reactive, ref } from 'vue'
 import { event } from 'vue-gtag'
 import TurnstileWidget from '@/components/_helpers/TurnstileWidget.vue'
-import BookingPoliciesDialog from '@/components/Booking/BookingPoliciesDialog.vue'
+// Policies: import BookingPoliciesDialog from '@/components/Booking/BookingPoliciesDialog.vue'
 import apiClient from '@/api/elysianClient'
 import type { BookingSession } from '@/store/sessions'
 import { CONTACT_EMAIL } from '@/utils/contact'
 import { browserTimeZone, formatLongDate, formatPrice, formatTime, timeZoneLabel } from '@/utils/bookingFormat'
 import { MESSAGE_MAX, camelCaseErrors, emailRules, messageRules, nameRules, phoneRules } from '@/utils/formRules'
+import { OTHER_REFERRAL_SOURCE, REFERRAL_SOURCES, referralOtherRules, referralSourceRules, referralSourceValue } from '@/utils/referralSources'
 
 export interface BookingConfirmation {
   slug: string
@@ -200,7 +239,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 /** Error key (after camelCasing) for a missing or failed Turnstile token, see Elysian's CreateBookingCommand */
 const TURNSTILE_ERROR_KEY = 'turnstileToken'
 
-type FieldName = 'name' | 'email' | 'phone' | 'message' | 'policiesAccepted'
+type FieldName = 'name' | 'email' | 'phone' | 'referralSource' | 'message' | 'policiesAccepted'
 
 const end = computed(() => new Date(props.start.getTime() + props.session.durationMinutes * 60_000))
 
@@ -208,18 +247,21 @@ const form = reactive({
   name: '',
   email: '',
   phone: '',
+  referralSource: '',
+  referralOther: '',
   message: '',
   policiesAccepted: false,
   website: '',
 })
 
-const policiesOpen = ref(false)
-
-function agreeToPolicies() {
-  form.policiesAccepted = true
-  fieldErrors.policiesAccepted = []
-  policiesOpen.value = false
-}
+// Policies: turned off for now
+// const policiesOpen = ref(false)
+//
+// function agreeToPolicies() {
+//   form.policiesAccepted = true
+//   fieldErrors.policiesAccepted = []
+//   policiesOpen.value = false
+// }
 
 const formRef = ref<{ validate: () => Promise<{ valid: boolean }> }>()
 const turnstileRef = ref<InstanceType<typeof TurnstileWidget>>()
@@ -233,6 +275,7 @@ const fieldErrors = reactive<Record<FieldName, string[]>>({
   name: [],
   email: [],
   phone: [],
+  referralSource: [],
   message: [],
   policiesAccepted: [],
 })
@@ -281,8 +324,11 @@ async function submit() {
     name: form.name.trim(),
     email: form.email.trim(),
     phone: form.phone.trim(),
+    referralSource: referralSourceValue(form.referralSource, form.referralOther),
     message: form.message.trim(),
-    policiesAccepted: form.policiesAccepted,
+    // Policies: the checkbox is turned off for now, but Elysian's CreateBookingCommand still requires true.
+    // Switch back to form.policiesAccepted when the checkbox returns.
+    policiesAccepted: true,
     timeZone: browserTimeZone(),
     website: form.website,
     turnstileToken: turnstileToken.value,

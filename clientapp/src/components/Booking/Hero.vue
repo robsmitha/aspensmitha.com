@@ -1,13 +1,13 @@
 <template>
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
-      <span class="font-nav tracking-widest text-caption text-blush">Booking</span>
+      <!-- <span class="font-nav tracking-widest text-caption text-blush">Booking</span> -->
       <h1 class="font-display text-charcoal hero-heading mt-4 mb-4">Book Your Session</h1>
-      <p class="font-display text-stone hero-subtitle mx-auto mb-6">
+      <!-- <p class="font-display text-stone hero-subtitle mx-auto mb-6">
         Browse the sessions below to see what's included, check my availability, and reserve your date in just a few
         steps. Dreaming up something a little different, like a custom package, a special location, or a request that
         doesn't quite fit a box? I'd love to hear about it. Just reach out and we'll create something that's perfectly you.
-      </p>
+      </p> -->
     </v-container>
   </v-sheet>
 </template>
