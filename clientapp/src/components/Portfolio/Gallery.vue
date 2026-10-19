@@ -1,35 +1,45 @@
 <template>
   <v-container class="py-14 py-md-18">
-    <v-row>
-      <v-col v-for="(photo, i) in photos" :key="photo.id" cols="12" sm="6" md="4">
+    <!-- Masonry: photos keep their own shape; see utils/masonry.ts for how they're placed -->
+    <div class="masonry">
+      <div v-for="(column, c) in columns" :key="c" class="masonry__column">
         <button
+          v-for="{ item: photo, index } in column"
+          :key="photo.id"
           class="gallery-item"
-          :aria-label="`View photo ${i + 1} of ${photos.length}`"
-          @click="openLightbox(i)"
+          :aria-label="`View photo ${index + 1} of ${photos.length}`"
+          @click="openLightbox(index)"
         >
           <ResponsivePhoto
             :photo="photo"
             :sizes="PHOTO_SIZES.gallery"
-            aspect-ratio="0.8"
+            :aspect-ratio="1 / aspectHeight(photo)"
             class="gallery-image"
           />
         </button>
-      </v-col>
-    </v-row>
+      </div>
+    </div>
 
     <PhotoLightbox v-model="lightboxOpen" :photos="photos" :index="lightboxIndex" @update:index="lightboxIndex = $event" />
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useDisplay } from 'vuetify'
 import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
 import PhotoLightbox from '@/components/Photo/PhotoLightbox.vue'
 import { PHOTO_SIZES, type PortfolioPhoto } from '@/utils/photoUrls'
+import { aspectHeight, masonryColumns } from '@/utils/masonry'
 
-defineProps<{
+const props = defineProps<{
   photos: PortfolioPhoto[]
 }>()
+
+// Same breakpoints as PHOTO_SIZES.gallery: 1 column on phones, 2 on tablets, 3 above
+const { xs, sm } = useDisplay()
+const columnCount = computed(() => (xs.value ? 1 : sm.value ? 2 : 3))
+const columns = computed(() => masonryColumns(props.photos, columnCount.value))
 
 const lightboxOpen = ref(false)
 const lightboxIndex = ref(0)
@@ -41,6 +51,20 @@ function openLightbox(i: number) {
 </script>
 
 <style scoped>
+.masonry {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.masonry__column {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .gallery-item {
   display: block;
   width: 100%;

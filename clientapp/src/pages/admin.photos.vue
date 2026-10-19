@@ -96,94 +96,171 @@ meta:
           No photos in {{ currentCollection.name }} yet.
         </p>
 
-        <p v-if="photosIn(tab).length > 1" class="text-caption text-stone mb-2">
-          Press and hold a photo, then drag to reorder. Click to edit.
-        </p>
-
-        <!-- Plain element rather than v-row so Sortable can own it; press and hold a tile to drag -->
-        <div ref="grid" class="v-row v-row--dense">
-          <v-col v-for="(photo, index) in photosIn(tab)" :key="photo.id" cols="6" sm="4" lg="3">
-            <div
-              class="tile"
-              :class="{ 'tile--selected': editingId === photo.id }"
-              role="button"
-              tabindex="0"
-              :aria-label="`Edit ${photo.originalFileName}. Alt plus arrow keys to reorder`"
-              @click="onTileClick(photo)"
-              @keydown.enter="openEditor(photo)"
-              @keydown.alt.left.prevent="index > 0 && reorder(tab, index, index - 1)"
-              @keydown.alt.right.prevent="index < photosIn(tab).length - 1 && reorder(tab, index, index + 1)"
-            >
-              <v-img
-                v-if="photo.srcBase"
-                :src="`${photo.srcBase}/${pickWidth(photo)}.webp`"
-                :lazy-src="photo.placeholder ?? undefined"
-                aspect-ratio="0.8"
-                cover
-                :position="`${photo.focusX * 100}% ${photo.focusY * 100}%`"
-              ></v-img>
-              <div v-else class="tile__pending d-flex flex-column align-center justify-center text-center pa-4">
-                <template v-if="isStuck(photo) || photo.status === 'Failed'">
-                  <v-icon :color="photo.status === 'Failed' ? 'error' : 'stone'" size="28">
-                    {{ photo.status === 'Failed' ? 'mdi-image-broken-variant' : 'mdi-timer-sand' }}
-                  </v-icon>
-                  <span class="text-caption text-stone mt-2">
-                    {{ photo.status === 'Failed' ? 'Processing failed' : 'Waiting to process' }}
-                  </span>
-                  <v-btn
-                    size="small"
-                    variant="tonal"
-                    color="blush"
-                    rounded="0"
-                    class="font-nav tracking-wide text-caption mt-3"
-                    :loading="busy[photo.id] === 'reprocess'"
-                    @click.stop="reprocess(photo)"
-                  >
-                    Reprocess
-                  </v-btn>
-                </template>
-                <v-progress-circular v-else indeterminate size="28" width="2" color="stone"></v-progress-circular>
-              </div>
-
-              <div class="tile__badges">
-                <span
-                  v-if="photo.status !== 'Ready'"
-                  class="tile__badge"
-                  :class="photo.status === 'Failed' ? 'tile__badge--error' : 'tile__badge--muted'"
-                >
-                  {{ isStuck(photo) ? 'Waiting' : photo.status }}
-                </span>
-                <v-spacer></v-spacer>
-                <span
-                  v-if="photo.placements.length"
-                  class="tile__badge tile__badge--featured"
-                  :title="photo.placements.map(placementTitle).join('\n')"
-                >
-                  <v-icon size="11" class="mr-1">mdi-star</v-icon>{{ placementBadge(photo) }}
-                </span>
-              </div>
-
-              <!-- Hover tools (always visible on touch screens) -->
-              <div class="tile__tools" @click.stop>
-                <v-icon size="18" color="ivory" class="tile__grip" aria-hidden="true">mdi-drag</v-icon>
-                <v-spacer></v-spacer>
-                <v-btn
-                  icon="mdi-pencil-outline"
-                  size="x-small"
-                  variant="flat"
-                  color="ivory"
-                  rounded="0"
-                  aria-label="Edit details"
-                  @click="openEditor(photo)"
-                ></v-btn>
-              </div>
-            </div>
-            <p class="tile__caption text-caption text-truncate mt-1 mb-2" :title="photo.originalFileName">
-              <span v-if="photo.altText" class="text-charcoal">{{ photo.altText }}</span>
-              <span v-else class="text-stone">{{ photo.originalFileName }}</span>
-            </p>
-          </v-col>
+        <div v-if="photosIn(tab).length > 1" class="d-flex flex-wrap align-center justify-space-between ga-2 mb-2">
+          <p class="text-caption text-stone mb-0">
+            Press and hold a photo, then drag to reorder. Click to edit.
+          </p>
+          <v-btn
+            v-if="galleryFor(tab)"
+            variant="text"
+            size="small"
+            color="charcoal"
+            rounded="0"
+            class="font-nav tracking-wide text-caption"
+            :prepend-icon="showPreview ? 'mdi-eye-off-outline' : 'mdi-view-quilt-outline'"
+            :aria-pressed="showPreview"
+            @click="togglePreview"
+          >
+            {{ showPreview ? 'Hide' : 'Show' }} gallery preview
+          </v-btn>
         </div>
+
+        <v-row dense>
+          <!-- Always rendered (only its width changes) so the Sortable grid inside is never rebuilt -->
+          <v-col cols="12" :md="previewVisible ? 7 : 12">
+            <!-- Plain element rather than v-row so Sortable can own it; press and hold a tile to drag -->
+            <div ref="grid" class="v-row v-row--dense">
+              <v-col
+                v-for="(photo, index) in photosIn(tab)"
+                :key="photo.id"
+                cols="6"
+                :sm="previewVisible ? 6 : 4"
+                :lg="previewVisible ? 4 : 3"
+              >
+                <div
+                  class="tile"
+                  :class="{ 'tile--selected': editingId === photo.id }"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Edit ${photo.originalFileName}. Alt plus arrow keys to reorder`"
+                  @click="onTileClick(photo)"
+                  @keydown.enter="openEditor(photo)"
+                  @keydown.alt.left.prevent="index > 0 && reorder(tab, index, index - 1)"
+                  @keydown.alt.right.prevent="index < photosIn(tab).length - 1 && reorder(tab, index, index + 1)"
+                >
+                  <v-img
+                    v-if="photo.srcBase"
+                    :src="`${photo.srcBase}/${pickWidth(photo)}.webp`"
+                    :lazy-src="photo.placeholder ?? undefined"
+                    aspect-ratio="0.8"
+                    cover
+                    :position="`${photo.focusX * 100}% ${photo.focusY * 100}%`"
+                  ></v-img>
+                  <div v-else class="tile__pending d-flex flex-column align-center justify-center text-center pa-4">
+                    <template v-if="isStuck(photo) || photo.status === 'Failed'">
+                      <v-icon :color="photo.status === 'Failed' ? 'error' : 'stone'" size="28">
+                        {{ photo.status === 'Failed' ? 'mdi-image-broken-variant' : 'mdi-timer-sand' }}
+                      </v-icon>
+                      <span class="text-caption text-stone mt-2">
+                        {{ photo.status === 'Failed' ? 'Processing failed' : 'Waiting to process' }}
+                      </span>
+                      <v-btn
+                        size="small"
+                        variant="tonal"
+                        color="blush"
+                        rounded="0"
+                        class="font-nav tracking-wide text-caption mt-3"
+                        :loading="busy[photo.id] === 'reprocess'"
+                        @click.stop="reprocess(photo)"
+                      >
+                        Reprocess
+                      </v-btn>
+                    </template>
+                    <v-progress-circular v-else indeterminate size="28" width="2" color="stone"></v-progress-circular>
+                  </div>
+
+                  <div class="tile__badges">
+                    <span
+                      v-if="photo.status !== 'Ready'"
+                      class="tile__badge"
+                      :class="photo.status === 'Failed' ? 'tile__badge--error' : 'tile__badge--muted'"
+                    >
+                      {{ isStuck(photo) ? 'Waiting' : photo.status }}
+                    </span>
+                    <v-spacer></v-spacer>
+                    <span
+                      v-if="photo.placements.length"
+                      class="tile__badge tile__badge--featured"
+                      :title="photo.placements.map(placementTitle).join('\n')"
+                    >
+                      <v-icon size="11" class="mr-1">mdi-star</v-icon>{{ placementBadge(photo) }}
+                    </span>
+                  </div>
+
+                  <!-- Hover tools (always visible on touch screens) -->
+                  <div class="tile__tools" @click.stop>
+                    <v-icon size="18" color="ivory" class="tile__grip" aria-hidden="true">mdi-drag</v-icon>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      icon="mdi-pencil-outline"
+                      size="x-small"
+                      variant="flat"
+                      color="ivory"
+                      rounded="0"
+                      aria-label="Edit details"
+                      @click="openEditor(photo)"
+                    ></v-btn>
+                  </div>
+                </div>
+                <p class="tile__caption text-caption text-truncate mt-1 mb-2" :title="photo.originalFileName">
+                  <span v-if="previewVisible" class="text-charcoal font-weight-medium mr-1">{{ index + 1 }}.</span>
+                  <span v-if="photo.altText" class="text-charcoal">{{ photo.altText }}</span>
+                  <span v-else class="text-stone">{{ photo.originalFileName }}</span>
+                </p>
+              </v-col>
+            </div>
+          </v-col>
+
+          <!-- Live preview of the public masonry gallery, laid out by the same code as the site -->
+          <v-col v-if="previewVisible" cols="12" md="5">
+            <aside class="preview" aria-label="Gallery preview">
+              <div class="d-flex flex-wrap align-center justify-space-between ga-2 mb-3">
+                <span class="font-nav tracking-widest text-caption text-stone text-uppercase">Gallery preview</span>
+                <v-btn-toggle
+                  v-model="previewColumns"
+                  mandatory
+                  density="compact"
+                  variant="outlined"
+                  rounded="0"
+                  color="charcoal"
+                  divided
+                >
+                  <v-btn :value="3" size="small" class="font-nav text-caption">Desktop</v-btn>
+                  <v-btn :value="2" size="small" class="font-nav text-caption">Tablet</v-btn>
+                </v-btn-toggle>
+              </div>
+
+              <p v-if="!previewLayout.some(column => column.length)" class="text-caption text-stone">
+                Photos appear here once they finish processing.
+              </p>
+              <div v-else class="preview__masonry">
+                <div v-for="(column, c) in previewLayout" :key="c" class="preview__column">
+                  <button
+                    v-for="{ item } in column"
+                    :key="item.photo.id"
+                    type="button"
+                    class="preview__item"
+                    :class="{ 'preview__item--selected': editingId === item.photo.id }"
+                    :aria-label="`Edit photo ${item.number}, ${item.photo.originalFileName}`"
+                    @click="openEditor(item.photo)"
+                  >
+                    <v-img
+                      :src="`${item.photo.srcBase}/${pickWidth(item.photo, 240)}.webp`"
+                      :lazy-src="item.photo.placeholder ?? undefined"
+                      :aspect-ratio="1 / aspectHeight(item)"
+                      cover
+                    ></v-img>
+                    <span class="preview__number">{{ item.number }}</span>
+                  </button>
+                </div>
+              </div>
+
+              <p class="text-caption text-stone mt-3 mb-0">
+                Numbers match the order on the left. Photos still processing aren't shown. Phones show one column in this same order.
+              </p>
+            </aside>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
 
@@ -476,6 +553,7 @@ import AdminPageHeader from '@/components/Admin/AdminPageHeader.vue'
 import { PORTFOLIO_CATEGORIES, SITE_ONLY_CATEGORY } from '@/utils/portfolioCategories'
 import { SITE_PAGES, SITE_PLACEMENTS, placementTitle, placementsByPage } from '@/utils/sitePlacements'
 import PlacementMap from '@/components/Admin/PlacementMap.vue'
+import { aspectHeight, masonryColumns } from '@/utils/masonry'
 
 interface ManagedPhoto {
   id: string
@@ -873,6 +951,38 @@ async function save(photo: ManagedPhoto) {
   }
 }
 
+// ---- Gallery preview
+const PREVIEW_STORAGE_KEY = 'admin.photos.galleryPreview'
+
+function readPreviewSetting() {
+  try {
+    return localStorage.getItem(PREVIEW_STORAGE_KEY) === 'on'
+  } catch {
+    return false
+  }
+}
+
+const showPreview = ref(readPreviewSetting())
+const previewColumns = ref(3)
+const previewVisible = computed(() => showPreview.value && !!galleryFor(tab.value) && photosIn(tab.value).length > 1)
+
+/** Same placement as the public gallery, which only shows processed photos */
+const previewLayout = computed(() => masonryColumns(
+  photosIn(tab.value)
+    .map((photo, i) => ({ photo, number: i + 1, width: photo.width, height: photo.height }))
+    .filter(x => x.photo.status === 'Ready' && x.photo.srcBase),
+  previewColumns.value,
+))
+
+function togglePreview() {
+  showPreview.value = !showPreview.value
+  try {
+    localStorage.setItem(PREVIEW_STORAGE_KEY, showPreview.value ? 'on' : 'off')
+  } catch {
+    // Storage blocked: the toggle still works for this visit
+  }
+}
+
 // ---- Drag to reorder
 const grid = ref<HTMLElement>()
 const sorting = ref(false)
@@ -1157,6 +1267,68 @@ onBeforeUnmount(() => {
 
 .tile__pending {
   aspect-ratio: 0.8;
+}
+
+.preview {
+  padding: 16px;
+  background-color: rgb(var(--v-theme-ivory));
+  border: 1px solid rgba(var(--v-theme-charcoal), 0.1);
+}
+
+/* Stays in view beside the grid while dragging */
+@media (min-width: 960px) {
+  .preview {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+  }
+}
+
+.preview__masonry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.preview__column {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview__item {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background-color: rgb(var(--v-theme-ivory-deep));
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.2s ease;
+}
+
+.preview__item:hover,
+.preview__item:focus-visible,
+.preview__item--selected {
+  outline-color: rgb(var(--v-theme-blush));
+}
+
+.preview__number {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  min-width: 20px;
+  padding: 1px 6px;
+  font-size: 0.6875rem;
+  line-height: 18px;
+  text-align: center;
+  color: rgb(var(--v-theme-ivory));
+  background-color: rgba(var(--v-theme-charcoal), 0.8);
 }
 
 .tile__badges {
