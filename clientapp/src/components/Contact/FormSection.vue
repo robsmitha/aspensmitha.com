@@ -127,6 +127,42 @@
             ></v-text-field>
           </template>
 
+          <label for="contact-referral" class="font-nav tracking-wide text-caption text-stone field-label">
+            How did you hear about us? *
+          </label>
+          <v-select
+            id="contact-referral"
+            v-model="form.referralSource"
+            :items="REFERRAL_SOURCES"
+            :rules="referralSourceRules"
+            :error-messages="fieldErrors.referralSource"
+            variant="outlined"
+            color="blush"
+            rounded="0"
+            placeholder="Select an option"
+            class="font-display mb-4"
+            @update:model-value="fieldErrors.referralSource = []"
+          ></v-select>
+
+          <template v-if="form.referralSource === OTHER_REFERRAL_SOURCE">
+            <label for="contact-referral-other" class="font-nav tracking-wide text-caption text-stone field-label">
+              Please specify *
+            </label>
+            <v-text-field
+              id="contact-referral-other"
+              v-model="form.referralOther"
+              :rules="referralOtherRules(() => form.referralSource)"
+              :error-messages="fieldErrors.referralSource"
+              variant="outlined"
+              color="blush"
+              rounded="0"
+              placeholder="Where did you hear about us?"
+              maxlength="190"
+              class="font-display mb-4"
+              @update:model-value="fieldErrors.referralSource = []"
+            ></v-text-field>
+          </template>
+
           <label for="contact-message" class="font-nav tracking-wide text-caption text-stone field-label">
             Tell me about you &amp; what your ideal photoshoot would include!
           </label>
@@ -202,6 +238,7 @@ import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
 import { CONTACT_EMAIL } from '@/utils/contact'
 import { MESSAGE_MAX, camelCaseErrors, emailRules, maxLength, messageRules, nameRules, phoneRules, required, type Rule } from '@/utils/formRules'
 import { useSessionStore } from '@/store/sessions'
+import { OTHER_REFERRAL_SOURCE, REFERRAL_SOURCES, referralOtherRules, referralSourceRules, referralSourceValue } from '@/utils/referralSources'
 
 const photos = usePhotoStore()
 
@@ -212,7 +249,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 /** Error key (after camelCasing) for a missing or failed Turnstile token, see Elysian's SendContactMessageCommand */
 const TURNSTILE_ERROR_KEY = 'turnstileToken'
 
-type FieldName = 'name' | 'email' | 'phone' | 'subject' | 'subjectOther' | 'message'
+type FieldName = 'name' | 'email' | 'phone' | 'subject' | 'subjectOther' | 'referralSource' | 'message'
 
 const emptyForm = () => ({
   name: '',
@@ -220,6 +257,8 @@ const emptyForm = () => ({
   phone: '',
   subject: '',
   subjectOther: '',
+  referralSource: '',
+  referralOther: '',
   message: '',
   website: '',
 })
@@ -227,7 +266,7 @@ const emptyForm = () => ({
 const form = reactive(emptyForm())
 
 // Mirrors the server-side limits on Elysian's SendContactMessageCommand; the server re-validates everything
-const rules: Record<FieldName, Rule[]> = {
+const rules: Record<Exclude<FieldName, 'referralSource'>, Rule[]> = {
   name: nameRules,
   email: emailRules,
   phone: phoneRules,
@@ -275,6 +314,7 @@ const fieldErrors = reactive<Record<FieldName, string[]>>({
   phone: [],
   subject: [],
   subjectOther: [],
+  referralSource: [],
   message: [],
 })
 
@@ -323,6 +363,7 @@ async function submit() {
     email: form.email.trim(),
     phone: form.phone.trim(),
     subject,
+    referralSource: referralSourceValue(form.referralSource, form.referralOther),
     message: form.message.trim(),
     website: form.website,
     turnstileToken: turnstileToken.value,

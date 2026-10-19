@@ -13,6 +13,7 @@ meta:
     </template>
     <!-- Categories without a standing gallery (Events) always keep their inquiry prompt -->
     <EventsInquiry v-if="!category.hasGallery" />
+    <BookingCta v-else :category="category" />
   </template>
 
   <v-container v-else class="py-20 text-center">
@@ -29,6 +30,7 @@ import { useRoute } from 'vue-router'
 import CategoryHero from '@/components/Portfolio/CategoryHero.vue'
 import Gallery from '@/components/Portfolio/Gallery.vue'
 import EventsInquiry from '@/components/Portfolio/EventsInquiry.vue'
+import BookingCta from '@/components/Portfolio/BookingCta.vue'
 import { getPortfolioCategory } from '@/utils/portfolioCategories'
 import { usePhotoStore } from '@/store/photos'
 

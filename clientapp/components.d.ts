@@ -11,6 +11,7 @@ declare module 'vue' {
     AdminPageHeader: typeof import('./src/components/Admin/AdminPageHeader.vue')['default']
     BookingCalendar: typeof import('./src/components/Booking/BookingCalendar.vue')['default']
     BookingConfirmation: typeof import('./src/components/Booking/BookingConfirmation.vue')['default']
+    BookingCta: typeof import('./src/components/Portfolio/BookingCta.vue')['default']
     BookingForm: typeof import('./src/components/Booking/BookingForm.vue')['default']
     BookingPoliciesDialog: typeof import('./src/components/Booking/BookingPoliciesDialog.vue')['default']
     BookingUnavailable: typeof import('./src/components/Booking/BookingUnavailable.vue')['default']

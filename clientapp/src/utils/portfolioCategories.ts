@@ -8,6 +8,8 @@ export interface PortfolioCategory {
   slug: string
   name: string
   description: string
+  /** What a client books, for the "Book your ___ today" prompt, e.g. "engagement session" */
+  bookingLabel: string
   hasGallery: boolean
 }
 
@@ -16,48 +18,56 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     slug: 'couples',
     name: 'Couples',
     description: 'Candid, unposed connection between two people building a life together.',
+    bookingLabel: 'couples session',
     hasGallery: true,
   },
   {
     slug: 'engagements',
     name: 'Engagements',
     description: "Celebrating the season between 'yes' and 'I do'.",
+    bookingLabel: 'engagement session',
     hasGallery: true,
   },
   {
     slug: 'weddings',
     name: 'Weddings',
     description: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
+    bookingLabel: 'wedding',
     hasGallery: true,
   },
   {
     slug: 'maternity',
     name: 'Maternity',
     description: 'Soft, timeless portraits that honor the season of waiting and becoming.',
+    bookingLabel: 'maternity session',
     hasGallery: true,
   },
   {
     slug: 'family',
     name: 'Family',
     description: 'Candid, unposed connection between the people who matter most to you.',
+    bookingLabel: 'family session',
     hasGallery: true,
   },
   {
     slug: 'seniors',
     name: 'Seniors',
     description: 'Confident, editorial portraits to mark the milestone.',
+    bookingLabel: 'senior session',
     hasGallery: true,
   },
   {
     slug: 'grads',
     name: 'Grads',
     description: 'Celebrating the achievement, in the places that made it happen.',
+    bookingLabel: 'grad session',
     hasGallery: true,
   },
   {
     slug: 'events',
     name: 'Events',
     description: 'Every gathering worth remembering, documented as it unfolds.',
+    bookingLabel: 'event',
     hasGallery: false,
   },
 ]
