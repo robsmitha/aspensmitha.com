@@ -6,11 +6,18 @@ meta:
 <template>
   <template v-if="category">
     <CategoryHero :name="category.name" :description="category.description" />
-    <template v-if="showGallery">
+
+    <!-- Story categories list their published stories in place of the gallery -->
+    <template v-if="category.stories && stories === undefined">
+      <div class="gallery-pending"></div>
+    </template>
+    <StoryList v-else-if="stories?.length" :stories="stories" />
+    <template v-else-if="showGallery">
       <Gallery v-if="galleryPhotos" :photos="galleryPhotos" />
       <!-- Holds the page height while photo metadata loads -->
       <div v-else class="gallery-pending"></div>
     </template>
+
     <!-- Categories without a standing gallery (Events) always keep their inquiry prompt -->
     <EventsInquiry v-if="!category.hasGallery" />
     <BookingCta v-else :category="category" />
@@ -25,22 +32,39 @@ meta:
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import CategoryHero from '@/components/Portfolio/CategoryHero.vue'
 import Gallery from '@/components/Portfolio/Gallery.vue'
 import EventsInquiry from '@/components/Portfolio/EventsInquiry.vue'
 import BookingCta from '@/components/Portfolio/BookingCta.vue'
+import StoryList from '@/components/Stories/StoryList.vue'
 import { getPortfolioCategory } from '@/utils/portfolioCategories'
 import { usePhotoStore } from '@/store/photos'
+import { useStoryStore } from '@/store/stories'
+import type { StorySummary } from '@/utils/stories'
 
 const route = useRoute()
 const photos = usePhotoStore()
+const storyStore = useStoryStore()
 const category = computed(() => getPortfolioCategory(String((route.params as Record<string, string>).category)))
 const galleryPhotos = computed(() => category.value && photos.byCategory(category.value.slug))
 // Only categories with uploaded photos get a gallery; gallery categories hold their space while loading
 const showGallery = computed(() => !!category.value &&
   (photos.hasUploads(category.value.slug) || (category.value.hasGallery && !photos.loaded)))
+
+/** undefined while loading; a failed request falls back to the gallery */
+const stories = ref<StorySummary[] | null | undefined>()
+
+watch(category, async c => {
+  if (!c?.stories) {
+    stories.value = null
+    return
+  }
+  stories.value = storyStore.lists[c.slug]
+  const list = await storyStore.loadList(c.slug)
+  if (category.value?.slug === c.slug) stories.value = list ?? null
+}, { immediate: true })
 </script>
 
 <style scoped>

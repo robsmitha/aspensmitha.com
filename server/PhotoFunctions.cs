@@ -25,7 +25,7 @@ namespace ElysianFunctions
         /// Short enough that edits show up quickly, with a long stale window so the CDN/browser
         /// never block a page load on this endpoint (cold starts, SQL)
         /// </summary>
-        private const string PortfolioCacheControl = "public, max-age=300, stale-while-revalidate=86400";
+        public const string PortfolioCacheControl = "public, max-age=300, stale-while-revalidate=86400";
 
         [Function("Portfolio")]
         public async Task<HttpResponseData> Portfolio([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "portfolio")] HttpRequestData req)
@@ -33,7 +33,7 @@ namespace ElysianFunctions
             var category = req.Query["category"];
             var tenantIdentifier = multiTenantContextAccessor.MultiTenantContext.TenantInfo!.Identifier!;
 
-            var photos = await portfolioCache.GetOrCreateAsync(tenantIdentifier, category,
+            var photos = await portfolioCache.GetOrCreateAsync("portfolio", tenantIdentifier, category,
                 () => mediator.Send(new GetPortfolioQuery(category)));
 
             var response = await req.WriteJsonResponseAsync(photos);

@@ -118,7 +118,82 @@ export function seoForPath(path: string): PageSeo {
       breadcrumbs: [HOME_CRUMB, BOOKING_CRUMB, { name: 'Session', path: normalized }],
     }
   }
+  // A story page; the page swaps in the story's own tags once it loads (see storySeo)
+  const storyMatch = normalized.match(/^\/portfolio\/([^/]+)\/[^/]+$/)
+  const storyCategory = storyMatch ? getPortfolioCategory(decodeURIComponent(storyMatch[1])) : undefined
+  if (storyCategory?.stories) {
+    return {
+      title: SITE_NAME,
+      description: HOME.description,
+      heading: storyCategory.stories.eyebrow,
+      breadcrumbs: [HOME_CRUMB, PORTFOLIO_CRUMB, { name: storyCategory.name, path: `/portfolio/${storyCategory.slug}` }],
+    }
+  }
   return PAGES[normalized] ?? { title: SITE_NAME, description: HOME.description, heading: SITE_NAME, breadcrumbs: [], noindex: true }
+}
+
+export interface StorySeoInput {
+  title: string
+  category: string
+  description: string | null
+  venueName: string | null
+  city: string | null
+  status: string
+  seoTitle: string | null
+  seoDescription: string | null
+}
+
+/**
+ * Tags for one story. Venue and city lead, since that's how couples search
+ * ("Goodwood Museum wedding photographer"):
+ * "Emily & James · Goodwood Museum Wedding, Tallahassee | Aspen Smitha Photography"
+ */
+export function storySeo(story: StorySeoInput, path: string): PageSeo {
+  const category = getPortfolioCategory(story.category)
+  const term = CATEGORY_SEARCH_TERMS[story.category] ?? category?.name ?? 'Photography'
+  const kind = story.venueName ? `${story.venueName} ${term}` : term
+  const place = story.city ? `${kind}, ${story.city}` : kind
+  const title = story.seoTitle?.trim() || `${story.title} · ${place} | ${SITE_NAME}`
+
+  const where = [story.venueName && `at ${story.venueName}`, story.city && `in ${story.city}`].filter(Boolean).join(' ')
+  const fallback = `${story.title}’s ${term.toLowerCase()}${where ? ` ${where}` : ''}, photographed by Aspen Smitha, a Tallahassee, Florida photographer.`
+  const description = story.seoDescription?.trim() || truncate(story.description?.trim() || fallback, 160)
+
+  return {
+    title,
+    description,
+    heading: story.title,
+    breadcrumbs: [
+      HOME_CRUMB,
+      PORTFOLIO_CRUMB,
+      ...(category ? [{ name: category.name, path: `/portfolio/${category.slug}` }] : []),
+      { name: story.title, path },
+    ],
+    // Unlisted stories open by link but stay out of search
+    noindex: story.status !== 'Published',
+  }
+}
+
+function truncate(text: string, max: number): string {
+  const flat = text.replace(/\s+/g, ' ')
+  if (flat.length <= max) return flat
+  const cut = flat.slice(0, max - 1)
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max - 20))}…`
+}
+
+/** Share image (og:image); every page but a story uses the site default */
+export interface SeoImage {
+  url: string
+  width: number
+  height: number
+  alt: string
+}
+
+export const DEFAULT_SEO_IMAGE: SeoImage = {
+  url: `${SITE_URL}/og-image.jpg`,
+  width: 1200,
+  height: 630,
+  alt: 'A bride holding a burgundy and blush bouquet, photographed by Aspen Smitha',
 }
 
 /** Absolute URL; trailing slash only on the root, matching the sitemap */
@@ -206,12 +281,19 @@ export function applySeo(route: RouteLocationNormalized) {
   applyPageSeo(route.path)
 }
 
-/**
- * Tags for a path, with `overrides` for pages whose details load at runtime
- * (e.g. a session's title once the session list arrives)
- */
-export function applyPageSeo(path: string, overrides: Partial<Pick<PageSeo, 'title' | 'description'>> = {}) {
-  const page = seoForPath(path)
+export interface PageSeoOverrides {
+  /** Replaces the path's own tags entirely, e.g. a story's (see storySeo) */
+  page?: PageSeo
+  /** Replace just the title or description, e.g. a session's once the session list arrives */
+  title?: string
+  description?: string
+  /** Share image; defaults to the site's */
+  image?: SeoImage
+}
+
+/** Sets every tag for a path, with `overrides` for pages whose details load at runtime */
+export function applyPageSeo(path: string, overrides: PageSeoOverrides = {}) {
+  const page = overrides.page ?? seoForPath(path)
   const title = overrides.title ?? page.title
   const description = overrides.description ?? page.description
   const { noindex } = page
@@ -219,6 +301,13 @@ export function applyPageSeo(path: string, overrides: Partial<Pick<PageSeo, 'tit
     ? [...page.breadcrumbs.slice(0, -1), { ...page.breadcrumbs[page.breadcrumbs.length - 1], name: overrides.title.split(' | ')[0] }]
     : page.breadcrumbs
   const url = canonicalUrl(path)
+  const image = overrides.image ?? DEFAULT_SEO_IMAGE
+
+  meta('property', 'og:image', image.url)
+  meta('property', 'og:image:width', String(image.width))
+  meta('property', 'og:image:height', String(image.height))
+  meta('property', 'og:image:alt', image.alt)
+  meta('name', 'twitter:image', image.url)
 
   document.title = title
   meta('name', 'description', description)

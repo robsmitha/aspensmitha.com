@@ -3,6 +3,9 @@
  * (uploaded via /admin/photos, filed under the slug). `hasGallery: false`
  * (Events) shows an inquiry prompt; once photos are uploaded to it, they show
  * above the prompt.
+ *
+ * Categories with `stories` list their stories (see /admin/stories) instead of,
+ * or above, the gallery, and each story gets its own page.
  */
 export interface PortfolioCategory {
   slug: string
@@ -11,6 +14,17 @@ export interface PortfolioCategory {
   /** What a client books, for the "Book your ___ today" prompt, e.g. "engagement session" */
   bookingLabel: string
   hasGallery: boolean
+  stories?: StoryCopy
+}
+
+/** Words used around a category's stories */
+export interface StoryCopy {
+  /** Hero eyebrow, e.g. "A Wedding Story" */
+  eyebrow: string
+  /** Back link on a story page, e.g. "All Weddings" */
+  backLabel: string
+  ctaHeading: string
+  ctaBody: string
 }
 
 export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
@@ -34,6 +48,12 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
     bookingLabel: 'wedding',
     hasGallery: true,
+    stories: {
+      eyebrow: 'A Wedding Story',
+      backLabel: 'All Weddings',
+      ctaHeading: 'Let’s plan your day, hour by hour.',
+      ctaBody: 'I’ll help you build a timeline around the best light, so nothing on your day feels rushed.',
+    },
   },
   {
     slug: 'maternity',
@@ -69,6 +89,12 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Every gathering worth remembering, documented as it unfolds.',
     bookingLabel: 'event',
     hasGallery: false,
+    stories: {
+      eyebrow: 'An Event Story',
+      backLabel: 'All Events',
+      ctaHeading: 'Let’s plan your event.',
+      ctaBody: 'Tell me about your gathering and I’ll make sure every moment worth remembering is covered.',
+    },
   },
 ]
 

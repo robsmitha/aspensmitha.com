@@ -19,7 +19,7 @@
               :key="link.title"
               :to="link.to"
               class="font-nav tracking-wide text-caption text-charcoal nav-link d-none d-md-inline"
-              :class="{ 'nav-link--active': route.path === link.to }"
+              :class="{ 'nav-link--active': route.path === link.to || route.path.startsWith(`${link.to}/`) }"
             >
               {{ link.title.toUpperCase() }}
             </router-link>
@@ -99,6 +99,7 @@ const route = useRoute()
 
 const navLinks = [
   { title: 'Photos', to: '/admin/photos', icon: 'mdi-image-multiple-outline' },
+  { title: 'Stories', to: '/admin/stories', icon: 'mdi-book-open-page-variant-outline' },
   { title: 'Instagram', to: '/admin/instagram', icon: 'mdi-instagram' },
   { title: 'Calendar', to: '/admin/calendar', icon: 'mdi-calendar-month-outline' },
   { title: 'Sessions', to: '/products', icon: 'mdi-camera-outline' },

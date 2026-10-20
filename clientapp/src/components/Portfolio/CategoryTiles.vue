@@ -19,7 +19,7 @@
             <div class="category-tile-content">
               <h2 class="font-display text-ivory category-tile-name">{{ category.name }}</h2>
               <span class="font-nav tracking-wide text-caption text-ivory category-tile-cta">
-                View Gallery
+                {{ category.stories ? 'View Stories' : 'View Gallery' }}
                 <v-icon size="14" class="ml-1">mdi-arrow-right</v-icon>
               </span>
             </div>

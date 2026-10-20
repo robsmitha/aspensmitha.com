@@ -20,6 +20,8 @@ export interface PortfolioPhoto {
   placeholder: string | null
   srcBase: string
   widths: number[]
+  /** Set on a story photo; /api/portfolio only includes those when they fill a site spot */
+  storyId?: string | null
 }
 
 /**
@@ -54,6 +56,10 @@ export const PHOTO_SIZES = {
   showcase: '(max-width: 1279px) 240px, 340px',
   /** Instagram grid: three across in a section capped at 960px */
   instagram: '(max-width: 959px) 33vw, 310px',
+  /** Story hero: full width on phones/tablets, half a ~1200px container on desktop */
+  storyHero: '(max-width: 959px) 100vw, 600px',
+  /** Story list card photo: full width on phones, ~40% of a card otherwise */
+  storyCard: '(max-width: 599px) 100vw, (max-width: 1279px) 40vw, 240px',
 } as const
 
 export function photoUrl(photo: PhotoSource, width: number): string {

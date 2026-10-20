@@ -14,6 +14,8 @@
             :photo="photo"
             :sizes="PHOTO_SIZES.gallery"
             :aspect-ratio="1 / aspectHeight(photo)"
+            :alt="altFor?.(photo, index)"
+            :eager="index < eagerCount"
             class="gallery-image"
           />
         </button>
@@ -32,14 +34,20 @@ import PhotoLightbox from '@/components/Photo/PhotoLightbox.vue'
 import { PHOTO_SIZES, type PortfolioPhoto } from '@/utils/photoUrls'
 import { aspectHeight, masonryColumns } from '@/utils/masonry'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   photos: PortfolioPhoto[]
-}>()
+  /** Alt text per photo (e.g. a story's "Emily & James, photo 3 of 84"); defaults to the photo's own */
+  altFor?: (photo: PortfolioPhoto, index: number) => string
+}>(), {
+  altFor: undefined,
+})
 
 // Same breakpoints as PHOTO_SIZES.gallery: 1 column on phones, 2 on tablets, 3 above
 const { xs, sm } = useDisplay()
 const columnCount = computed(() => (xs.value ? 1 : sm.value ? 2 : 3))
 const columns = computed(() => masonryColumns(props.photos, columnCount.value))
+/** Roughly the first screenful loads right away; the rest as they scroll in */
+const eagerCount = computed(() => columnCount.value * 2)
 
 const lightboxOpen = ref(false)
 const lightboxIndex = ref(0)
@@ -75,11 +83,26 @@ function openLightbox(i: number) {
   text-align: inherit;
 }
 
+.gallery-item:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-blush));
+  outline-offset: 3px;
+}
+
 .gallery-image {
   transition: transform 0.5s ease;
 }
 
 .gallery-item:hover .gallery-image {
   transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-image {
+    transition: none;
+  }
+
+  .gallery-item:hover .gallery-image {
+    transform: none;
+  }
 }
 </style>

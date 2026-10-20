@@ -27,11 +27,12 @@ export const usePhotoStore = defineStore('photos', {
       if (!state.loaded) return undefined
       return state.photos.find(p => p.placements.includes(key))
     },
-    /** Whether any real (uploaded) photo is filed under this category */
-    hasUploads: (state: State) => (slug: string): boolean => state.photos.some(p => p.category === slug),
+    /** Whether any real (uploaded) gallery photo is filed under this category */
+    hasUploads: (state: State) => (slug: string): boolean => state.photos.some(p => p.category === slug && !p.storyId),
+    /** A category's gallery; story photos that fill a site spot also come back from the API, but aren't in it */
     byCategory: (state: State) => (slug: string): PortfolioPhoto[] | undefined => {
       if (!state.loaded) return undefined
-      return state.photos.filter(p => p.category === slug)
+      return state.photos.filter(p => p.category === slug && !p.storyId)
     },
     /** Tile cover for a category: its chosen cover photo, else its first photo by sort order */
     coverFor(): (slug: string) => PortfolioPhoto | undefined {

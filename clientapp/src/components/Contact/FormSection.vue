@@ -278,8 +278,15 @@ const rules: Record<Exclude<FieldName, 'referralSource'>, Rule[]> = {
   message: messageRules,
 }
 
-// Booking pages link here as /contact?session={slug} when no time works; start the inquiry for that session
 const route = useRoute()
+
+// Story pages link here with ?type=Weddings (a session type) to pre-select it
+const requestedType = route.query.type
+if (typeof requestedType === 'string' && sessionTypes.includes(requestedType)) {
+  form.subject = requestedType
+}
+
+// Booking pages link here as /contact?session={slug} when no time works; start the inquiry for that session
 onMounted(async () => {
   const slug = route.query.session
   if (typeof slug !== 'string' || !slug) return

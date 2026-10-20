@@ -4,8 +4,9 @@ using Microsoft.Extensions.Primitives;
 namespace ElysianFunctions.Services
 {
     /// <summary>
-    /// Keeps the public portfolio response in memory so page loads don't hit SQL. Admin writes and
-    /// finished processing call <see cref="Invalidate"/>; other instances catch up when their entry expires.
+    /// Keeps public photo responses (portfolio, story lists, story pages) in memory so page loads don't hit SQL.
+    /// Any photo or story write and finished processing call <see cref="Invalidate"/>, which clears every scope,
+    /// since a photo change can show up in any of them; other instances catch up when their entry expires.
     /// </summary>
     public class PortfolioCache(IMemoryCache cache)
     {
@@ -13,9 +14,11 @@ namespace ElysianFunctions.Services
 
         private CancellationTokenSource _reset = new();
 
-        public async Task<T> GetOrCreateAsync<T>(string tenantIdentifier, string? category, Func<Task<T>> factory)
+        /// <param name="scope">What's cached, e.g. "portfolio" or "story"</param>
+        /// <param name="key">Narrows the scope, e.g. a category or slug</param>
+        public async Task<T> GetOrCreateAsync<T>(string scope, string tenantIdentifier, string? key, Func<Task<T>> factory)
         {
-            var key = $"portfolio:{tenantIdentifier}:{category}";
+            key = $"{scope}:{tenantIdentifier}:{key}";
             if (cache.TryGetValue(key, out T? cached) && cached != null)
             {
                 return cached;
