@@ -2,6 +2,7 @@ using Azure.Storage.Blobs;
 using Elysian.Application.Exceptions;
 using Elysian.Application.Features.Photos.Commands;
 using Elysian.Application.Features.Photos.Queries;
+using Elysian.Application.Interfaces;
 using Elysian.Domain.Data;
 using ElysianFunctions.Middleware;
 using ElysianFunctions.Services;
@@ -14,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace ElysianFunctions
 {
     public class PhotoFunctions(ILogger<PhotoFunctions> logger, IMediator mediator, PortfolioCache portfolioCache,
-        IMultiTenantContextAccessor<ElysianTenantInfo> multiTenantContextAccessor)
+        IMultiTenantContextAccessor<ElysianTenantInfo> multiTenantContextAccessor, IPlacementPublishQueue placementPublishQueue)
     {
         /// <summary>
         /// Must match PhotoStorageSettings:OriginalsContainer
@@ -65,6 +66,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<UpdatePhotoCommand>() ?? throw new CustomValidationException();
             var photo = await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("update-photo");
             return await req.WriteJsonResponseAsync(photo);
         }
 
@@ -74,6 +76,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<ReorderPhotosCommand>() ?? throw new CustomValidationException();
             await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("reorder-photos");
             return await req.WriteJsonResponseAsync(new { success = true });
         }
 
@@ -83,6 +86,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<DeletePhotoCommand>() ?? throw new CustomValidationException();
             await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("delete-photo");
             return await req.WriteJsonResponseAsync(new { success = true });
         }
 
@@ -92,6 +96,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<SetPlacementCommand>() ?? throw new CustomValidationException();
             await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("set-placement");
             return await req.WriteJsonResponseAsync(new { success = true });
         }
 
@@ -101,6 +106,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<ReprocessPhotoCommand>() ?? throw new CustomValidationException();
             var photo = await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("reprocess-photo");
             return await req.WriteJsonResponseAsync(photo);
         }
 
@@ -120,6 +126,7 @@ namespace ElysianFunctions
 
             var status = await mediator.Send(new ProcessPhotoCommand(blob.Name));
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("process-photo");
 
             logger.LogInformation("Photo original {BlobName} finished with status {Status}", blob.Name, status);
         }

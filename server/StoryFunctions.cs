@@ -1,6 +1,7 @@
 using Elysian.Application.Exceptions;
 using Elysian.Application.Features.Stories.Commands;
 using Elysian.Application.Features.Stories.Queries;
+using Elysian.Application.Interfaces;
 using Elysian.Domain.Data;
 using ElysianFunctions.Middleware;
 using ElysianFunctions.Services;
@@ -16,7 +17,7 @@ namespace ElysianFunctions
     /// story's photos go through the photo endpoints (upload takes a storyId).
     /// </summary>
     public class StoryFunctions(IMediator mediator, PortfolioCache portfolioCache,
-        IMultiTenantContextAccessor<ElysianTenantInfo> multiTenantContextAccessor)
+        IMultiTenantContextAccessor<ElysianTenantInfo> multiTenantContextAccessor, IPlacementPublishQueue placementPublishQueue)
     {
         [Function("Stories")]
         public async Task<HttpResponseData> Stories([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stories")] HttpRequestData req)
@@ -70,6 +71,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<CreateStoryCommand>() ?? throw new CustomValidationException();
             var story = await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("create-story");
             return await req.WriteJsonResponseAsync(story);
         }
 
@@ -79,6 +81,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<UpdateStoryCommand>() ?? throw new CustomValidationException();
             var story = await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("update-story");
             return await req.WriteJsonResponseAsync(story);
         }
 
@@ -88,6 +91,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<SetStoryStatusCommand>() ?? throw new CustomValidationException();
             var story = await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("set-story-status");
             return await req.WriteJsonResponseAsync(story);
         }
 
@@ -97,6 +101,7 @@ namespace ElysianFunctions
             var command = await req.DeserializeBodyAsync<DeleteStoryCommand>() ?? throw new CustomValidationException();
             await mediator.Send(command);
             portfolioCache.Invalidate();
+            await placementPublishQueue.EnqueueAsync("delete-story");
             return await req.WriteJsonResponseAsync(new { success = true });
         }
     }

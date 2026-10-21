@@ -9,10 +9,9 @@
       <v-row class="specialties-row">
         <v-col v-for="(item, i) in specialties" :key="item.title" cols="12" md="4">
           <router-link :to="`/portfolio/${item.slug}`" class="text-decoration-none specialty-link">
-            <ResponsivePhoto
-              :photo="photos.forPlacement(item.placement)"
+            <PlacementPhoto
+              :placement="item.placement"
               :sizes="PHOTO_SIZES.specialty"
-              aspect-ratio="0.8"
               class="specialty-image mb-6"
             />
 
@@ -31,11 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
-import { usePhotoStore } from '@/store/photos'
+import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
-
-const photos = usePhotoStore()
 
 const specialties = [
   {

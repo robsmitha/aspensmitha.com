@@ -25,6 +25,8 @@ meta:
       </template>
     </AdminPageHeader>
 
+    <PlacementPublishStatus ref="publishStatus" @error="showError" />
+
     <v-row>
       <!-- Collections: sidebar on desktop, dropdown on phones -->
       <v-col cols="12" md="3" lg="2" class="pr-md-6">
@@ -87,6 +89,7 @@ meta:
           :previewable="!!getPortfolioCategory(tab)"
           @replace="replacePhoto"
           @remove="removePhoto"
+          @changed="publishStatus?.refresh()"
         />
       </v-col>
     </v-row>
@@ -100,6 +103,7 @@ import { computed, onMounted, ref } from 'vue'
 import apiClient from '@/api/elysianClient'
 import AdminPageHeader from '@/components/Admin/AdminPageHeader.vue'
 import PhotoManager from '@/components/Admin/PhotoManager.vue'
+import PlacementPublishStatus from '@/components/Admin/PlacementPublishStatus.vue'
 import { PORTFOLIO_CATEGORIES, SITE_ONLY_CATEGORY, getPortfolioCategory } from '@/utils/portfolioCategories'
 import { byManagedOrder, type ManagedPhoto } from '@/utils/managedPhotos'
 
@@ -133,6 +137,7 @@ const photos = ref<ManagedPhoto[]>([])
 /** Story photos are managed on their story */
 const libraryPhotos = computed(() => photos.value.filter(p => !p.storyId))
 const refreshing = ref(false)
+const publishStatus = ref<InstanceType<typeof PlacementPublishStatus>>()
 const snackbar = ref(false)
 const errorMessage = ref('')
 const tab = ref<string>(PORTFOLIO_CATEGORIES[0].slug)
@@ -157,11 +162,17 @@ async function refresh() {
   const response = await apiClient.getData('/api/manage/photos')
   refreshing.value = false
   if (!response.success) {
-    errorMessage.value = response.errorMessage || 'Could not load photos. Please try again later.'
-    snackbar.value = true
+    showError(response.errorMessage || 'Could not load photos. Please try again later.')
     return
   }
   photos.value = response.data
+  // Reloads also follow uploads through processing, which can change a Home/Portfolio spot
+  publishStatus.value?.refresh()
+}
+
+function showError(message: string | undefined) {
+  errorMessage.value = message || 'An error occurred. Please try again later.'
+  snackbar.value = true
 }
 
 function replacePhoto(updated: ManagedPhoto) {

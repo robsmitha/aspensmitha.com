@@ -2,17 +2,18 @@
   <v-container class="py-14 py-md-20">
     <v-row>
       <v-col
-        v-for="category in categories"
+        v-for="(category, i) in categories"
         :key="category.slug"
         cols="6"
         md="3"
       >
         <router-link :to="`/portfolio/${category.slug}`" class="text-decoration-none">
           <div class="category-tile">
-            <ResponsivePhoto
-              :photo="photos.coverFor(category.slug)"
+            <PlacementPhoto
+              :placement="portfolioCoverKey(category.slug)"
               :sizes="PHOTO_SIZES.tile"
-              aspect-ratio="0.8"
+              :eager="i < 4"
+              :priority="i < 4 ? 'high' : undefined"
               class="category-tile-image"
             />
             <div class="category-tile-scrim"></div>
@@ -32,12 +33,12 @@
 
 <script setup lang="ts">
 import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
-import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
-import { usePhotoStore } from '@/store/photos'
+import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
+import { portfolioCoverKey } from '@/utils/sitePlacements'
 
+// The first row (four across on desktop) is on screen right under the heading
 const categories = PORTFOLIO_CATEGORIES
-const photos = usePhotoStore()
 </script>
 
 <style scoped>

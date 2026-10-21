@@ -90,6 +90,8 @@ import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const photos = usePhotoStore()
+// Not a reserved CDN placement, so this still reads /api/portfolio (load() shares one request)
+photos.load()
 
 function calculateAge(birthYear: number, birthMonth: number, birthDay: number): number {
   const now = new Date()

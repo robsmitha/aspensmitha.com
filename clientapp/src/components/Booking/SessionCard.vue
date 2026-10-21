@@ -30,6 +30,8 @@ const props = defineProps<{
 }>()
 
 const photos = usePhotoStore()
+// Not a reserved CDN placement, so this still reads /api/portfolio (load() shares one request)
+photos.load()
 const cover = computed(() => props.session.coverPhoto
   ?? (props.session.portfolioCategory ? photos.coverFor(props.session.portfolioCategory) : undefined))
 const summary = computed(() => paragraphs(props.session.description).join(' '))
