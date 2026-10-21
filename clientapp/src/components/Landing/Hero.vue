@@ -82,12 +82,12 @@ import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const { mobile } = useDisplay()
 
-// Centered with neighbours peeking in; every swipe or arrow press settles on a
-// whole photo. On screens wider than the whole strip there's nothing to scroll,
-// so the carousel switches off and the photos sit centered instead of hugging
-// the left edge (Embla always aligns content that fits to the start).
+// Starts with slide 1 at the left edge and the rest following to its right
+// (looping, so the last slide only comes round after scrolling). On screens
+// wider than the whole strip there's nothing to scroll, so the carousel
+// switches off and the photos sit centered instead.
 const fits = ref(false)
-const emblaOptions = computed(() => ({ loop: true, align: 'center' as const, active: !fits.value }))
+const emblaOptions = computed(() => ({ loop: true, align: 'start' as const, active: !fits.value }))
 const [emblaRef, emblaApi] = emblaCarouselVue(emblaOptions)
 
 const canScrollPrev = ref(false)
@@ -131,9 +131,9 @@ const slides = computed(() => PLACEMENTS_FROM_CDN || !photos.loaded
   ? HERO_SHOWCASE_PLACEMENTS
   : HERO_SHOWCASE_PLACEMENTS.filter(key => photos.forPlacement(key)))
 
-// Centered loop: slide 1 sits in the middle with its neighbours peeking in,
-// including the last slide on the left. Those load right away (and are
-// preloaded in index.html); the rest wait until they scroll into view.
+// The first few slides are on screen at load, so they load right away (the
+// first two are also preloaded in index.html); the rest wait until they
+// scroll into view.
 function isVisibleAtLoad(index: number) {
   return HERO_VISIBLE_AT_LOAD.includes(index + 1)
 }

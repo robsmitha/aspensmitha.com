@@ -13,13 +13,13 @@ import { PORTFOLIO_CATEGORIES } from './portfolioCategories'
 export const HERO_SHOWCASE_COUNT = 8
 
 /**
- * Hero slides on screen before any scrolling (1-based). The strip is a
- * centered loop, so the last slide peeks in on the left of the first.
+ * Hero slides on screen before any scrolling (1-based). The strip starts
+ * with slide 1 at the left edge; five 346px slides cover a ~1730px screen.
  * These load eagerly; HERO_PRELOAD are also preloaded from index.html.
  */
-export const HERO_VISIBLE_AT_LOAD = [1, 2, 3, HERO_SHOWCASE_COUNT]
+export const HERO_VISIBLE_AT_LOAD = [1, 2, 3, 4, 5]
 /** Visible on a phone as well as a desktop, so worth starting before any JS runs */
-export const HERO_PRELOAD = [1, 2, HERO_SHOWCASE_COUNT]
+export const HERO_PRELOAD = [1, 2]
 
 export type SitePage = 'home' | 'about' | 'contact' | 'portfolio' | 'site'
 
