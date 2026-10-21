@@ -1,4 +1,5 @@
 using Elysian.Application;
+using Elysian.Application.Features.Placements;
 using Elysian.Infrastructure;
 using Elysian.Infrastructure.Context;
 using ElysianFunctions.Middleware;
@@ -38,6 +39,10 @@ var host = new HostBuilder()
         services.AddInstagramFeatures(hostContext.Configuration);
 
         services.AddBookingFeatures(hostContext.Configuration);
+
+        // Reserved Home/Portfolio images; the slots are this site's (clientapp/src/content/placementSlots.json)
+        services.AddPlacementFeatures(hostContext.Configuration,
+            PlacementCatalog.FromEmbeddedResource(typeof(Program).Assembly, "placement-slots.json"));
 
         services.AddMemoryCache();
         services.AddSingleton<PortfolioCache>();

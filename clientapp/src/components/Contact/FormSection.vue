@@ -241,6 +241,8 @@ import { useSessionStore } from '@/store/sessions'
 import { OTHER_REFERRAL_SOURCE, REFERRAL_SOURCES, referralOtherRules, referralSourceRules, referralSourceValue } from '@/utils/referralSources'
 
 const photos = usePhotoStore()
+// Not a reserved CDN placement, so this still reads /api/portfolio (load() shares one request)
+photos.load()
 
 const OTHER_SESSION_TYPE = 'Other - Please specify'
 const sessionTypes = [...PORTFOLIO_CATEGORIES.map(category => category.name), OTHER_SESSION_TYPE]

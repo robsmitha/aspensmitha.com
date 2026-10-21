@@ -354,6 +354,15 @@
             </template>
           </v-select>
 
+          <!-- Home/Portfolio spots are published as fixed-size crops; warn when this photo can't fill one sharply -->
+          <p
+            v-for="warning in lowResolutionWarnings(editing, editingDraft!.placements)"
+            :key="warning"
+            class="text-caption where__none mb-3"
+          >
+            <v-icon size="14" class="mr-1">mdi-alert-outline</v-icon>{{ warning }}
+          </p>
+
           <!-- Where this photo appears on the public site; updates live as the fields change -->
           <section class="where mb-6" aria-label="Where this photo appears">
             <span class="font-nav tracking-widest text-caption text-stone text-uppercase d-block mb-3">
@@ -361,11 +370,11 @@
             </span>
 
             <div v-for="group in placementsByPage(editingDraft!.placements)" :key="group.page" class="d-flex ga-3 mb-3">
-              <PlacementMap :page="group.page" :highlight="group.placements.map(p => p.area)" />
+              <PlacementMap v-if="group.page !== 'site'" :page="group.page" :highlight="group.placements.map(p => p.area)" />
               <div class="where__detail">
                 <div class="d-flex align-center ga-2">
-                  <span class="font-display text-charcoal where__page">{{ group.name }} page</span>
-                  <a :href="group.path" target="_blank" class="font-nav text-caption text-blush where__link">View &#8599;</a>
+                  <span class="font-display text-charcoal where__page">{{ group.page === 'site' ? group.name : `${group.name} page` }}</span>
+                  <a v-if="group.page !== 'site'" :href="group.path" target="_blank" class="font-nav text-caption text-blush where__link">View &#8599;</a>
                 </div>
                 <ul class="where__spots text-caption text-stone">
                   <li v-for="placement in group.placements" :key="placement.key">{{ placement.label }}</li>
@@ -524,6 +533,7 @@ import apiClient from '@/api/elysianClient'
 import PlacementMap from '@/components/Admin/PlacementMap.vue'
 import { PORTFOLIO_CATEGORIES, SITE_ONLY_CATEGORY } from '@/utils/portfolioCategories'
 import { SITE_PAGES, SITE_PLACEMENTS, placementTitle, placementsByPage } from '@/utils/sitePlacements'
+import { placementSlot } from '@/utils/placementImages'
 import { managedPhotoWidth, type ManagedPhoto } from '@/utils/managedPhotos'
 import { aspectHeight, masonryColumns } from '@/utils/masonry'
 
@@ -559,6 +569,8 @@ const emit = defineEmits<{
   /** A photo was deleted */
   remove: [photoId: string]
   'set-hero': [photoId: string]
+  /** Something was saved that can change what a site spot shows (the page refreshes its publish status) */
+  changed: []
 }>()
 
 interface Draft {
@@ -596,12 +608,34 @@ const placementItems = SITE_PLACEMENTS.map(p => ({
   pageName: SITE_PAGES[p.page].name,
 }))
 
-/** How the chosen focal point plays out in the site's common crops */
+/**
+ * How the chosen focal point plays out in the site's crops. Home and Portfolio
+ * spots are published cropped to exactly these shapes (content/placementSlots.json).
+ */
 const CROP_PREVIEWS = [
+  { label: 'Hero strip', ratio: 0.75, flex: '0.75' },
   { label: 'Portrait', ratio: 0.8, flex: '0.8' },
-  { label: 'Landscape', ratio: 1.3333, flex: '1.3333' },
-  { label: 'Banner', ratio: 2, flex: '2' },
+  { label: 'Banner', ratio: 2.2, flex: '2.2' },
 ]
+
+/**
+ * Spots whose largest published size this photo can't fill: the crop to the
+ * spot's shape is narrower than that size, so it's shown softer on sharp screens
+ */
+function lowResolutionWarnings(photo: ManagedPhoto, placements: readonly string[]): string[] {
+  if (!photo.width || !photo.height) return []
+  const width = photo.width
+  const height = photo.height
+  return placements.flatMap(key => {
+    const slot = placementSlot(key)
+    if (!slot) return []
+    const cropWidth = width / height > slot.ratio ? Math.round(height * slot.ratio) : width
+    const largest = slot.widths[slot.widths.length - 1]
+    return cropWidth < largest
+      ? [`${placementTitle(key)}: this photo crops to ${cropWidth}px wide; ${largest}px or more looks sharpest.`]
+      : []
+  })
+}
 
 const { xs, width: displayWidth } = useDisplay()
 
@@ -885,6 +919,7 @@ async function save(photo: ManagedPhoto) {
     showError(response.errorMessage)
     return
   }
+  emit('changed')
   // Taking a spot from another photo, or changing collection, affects other photos: reload everything
   if (!sameSet(d.placements, photo.placements) || d.category !== photo.category) {
     drafts[photo.id] = toDraft(response.data)
@@ -981,7 +1016,10 @@ async function reorder(from: number, to: number) {
   if (!response.success) {
     showError(response.errorMessage)
     await props.refresh()
+    return
   }
+  // A category's first photo is the fallback for its cover
+  emit('changed')
 }
 
 async function reprocess(photo: ManagedPhoto) {
@@ -993,6 +1031,7 @@ async function reprocess(photo: ManagedPhoto) {
     return
   }
   replacePhoto(response.data)
+  emit('changed')
 }
 
 async function remove(photo: ManagedPhoto) {
@@ -1006,6 +1045,7 @@ async function remove(photo: ManagedPhoto) {
   }
   if (editingId.value === photo.id) editingId.value = null
   emit('remove', photo.id)
+  emit('changed')
 }
 
 onMounted(initSortable)

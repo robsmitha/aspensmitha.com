@@ -1,9 +1,8 @@
 <template>
   <section class="cta">
-    <ResponsivePhoto
-      :photo="photos.forPlacement('home-cta')"
-      :sizes="PHOTO_SIZES.fullBleed"
-      aspect-ratio="2.2"
+    <PlacementPhoto
+      placement="home-cta"
+      :sizes="PHOTO_SIZES.ctaBanner"
       class="cta-image"
     >
       <div class="cta-scrim"></div>
@@ -25,16 +24,13 @@
           Inquire Now
         </v-btn>
       </div>
-    </ResponsivePhoto>
+    </PlacementPhoto>
   </section>
 </template>
 
 <script setup lang="ts">
-import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
-import { usePhotoStore } from '@/store/photos'
+import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
-
-const photos = usePhotoStore()
 </script>
 
 <style scoped>

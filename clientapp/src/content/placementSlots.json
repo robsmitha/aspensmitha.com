@@ -1,0 +1,250 @@
+{
+  "$comment": "Reserved CDN images for this site's placements. Read by the frontend (utils/placementImages.ts) and embedded in the Function App, which hands it to Elysian's AddPlacementFeatures (PlacementCatalog). Never rename `key` (stored in the database) or `name` (public URL). Ratio/width changes republish automatically; bump recipeVersion only when the rendering itself changes.",
+  "recipeVersion": 1,
+  "siteDefaultKey": "site-default",
+  "slots": [
+    {
+      "key": "home-hero-1",
+      "name": "home-hero-strip-photo1",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 1 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-2",
+      "name": "home-hero-strip-photo2",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 2 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-3",
+      "name": "home-hero-strip-photo3",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 3 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-4",
+      "name": "home-hero-strip-photo4",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 4 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-5",
+      "name": "home-hero-strip-photo5",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 5 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-6",
+      "name": "home-hero-strip-photo6",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 6 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-7",
+      "name": "home-hero-strip-photo7",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 7 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-hero-8",
+      "name": "home-hero-strip-photo8",
+      "ratio": 0.75,
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "alt": "Featured photograph 8 by Aspen Smitha Photography, Tallahassee"
+    },
+    {
+      "key": "home-intro",
+      "name": "home-intro-portrait-photo1",
+      "ratio": 0.8,
+      "widths": [
+        500,
+        1000,
+        1500
+      ],
+      "alt": "Aspen Smitha, Tallahassee wedding, maternity and family photographer"
+    },
+    {
+      "key": "home-specialty-weddings",
+      "name": "home-specialty-weddings-photo1",
+      "ratio": 0.8,
+      "widths": [
+        420,
+        840,
+        1260
+      ],
+      "alt": "Wedding photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "weddings"
+    },
+    {
+      "key": "home-specialty-maternity",
+      "name": "home-specialty-maternity-photo1",
+      "ratio": 0.8,
+      "widths": [
+        420,
+        840,
+        1260
+      ],
+      "alt": "Maternity photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "maternity"
+    },
+    {
+      "key": "home-specialty-family",
+      "name": "home-specialty-family-photo1",
+      "ratio": 0.8,
+      "widths": [
+        420,
+        840,
+        1260
+      ],
+      "alt": "Family photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "family"
+    },
+    {
+      "key": "home-cta",
+      "name": "home-cta-banner-photo1",
+      "ratio": 2.2,
+      "widths": [
+        880,
+        1320,
+        1760,
+        2400
+      ],
+      "alt": "Photography by Aspen Smitha, Tallahassee"
+    },
+    {
+      "key": "portfolio-cover-couples",
+      "name": "portfolio-cover-couples-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Couples photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "couples"
+    },
+    {
+      "key": "portfolio-cover-engagements",
+      "name": "portfolio-cover-engagements-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Engagement photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "engagements"
+    },
+    {
+      "key": "portfolio-cover-weddings",
+      "name": "portfolio-cover-weddings-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Wedding photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "weddings"
+    },
+    {
+      "key": "portfolio-cover-maternity",
+      "name": "portfolio-cover-maternity-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Maternity photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "maternity"
+    },
+    {
+      "key": "portfolio-cover-family",
+      "name": "portfolio-cover-family-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Family photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "family"
+    },
+    {
+      "key": "portfolio-cover-seniors",
+      "name": "portfolio-cover-seniors-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Senior portrait photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "seniors"
+    },
+    {
+      "key": "portfolio-cover-grads",
+      "name": "portfolio-cover-grads-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Graduation photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "grads"
+    },
+    {
+      "key": "portfolio-cover-events",
+      "name": "portfolio-cover-events-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Event photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "events"
+    }
+  ]
+}

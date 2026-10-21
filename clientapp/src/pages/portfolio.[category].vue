@@ -46,6 +46,8 @@ import type { StorySummary } from '@/utils/stories'
 
 const route = useRoute()
 const photos = usePhotoStore()
+// Not a reserved CDN placement, so this still reads /api/portfolio (load() shares one request)
+photos.load()
 const storyStore = useStoryStore()
 const category = computed(() => getPortfolioCategory(String((route.params as Record<string, string>).category)))
 const galleryPhotos = computed(() => category.value && photos.byCategory(category.value.slug))

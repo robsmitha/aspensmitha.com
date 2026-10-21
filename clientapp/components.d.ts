@@ -34,6 +34,8 @@ declare module 'vue' {
     PhotoLightbox: typeof import('./src/components/Photo/PhotoLightbox.vue')['default']
     PhotoManager: typeof import('./src/components/Admin/PhotoManager.vue')['default']
     PlacementMap: typeof import('./src/components/Admin/PlacementMap.vue')['default']
+    PlacementPhoto: typeof import('./src/components/Photo/PlacementPhoto.vue')['default']
+    PlacementPublishStatus: typeof import('./src/components/Admin/PlacementPublishStatus.vue')['default']
     Portfolio: typeof import('./src/components/Landing/Portfolio.vue')['default']
     PricingSection: typeof import('./src/components/Investment/PricingSection.vue')['default']
     ProductList: typeof import('./src/components/Merchant/ProductList.vue')['default']

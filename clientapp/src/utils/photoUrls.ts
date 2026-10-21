@@ -38,6 +38,11 @@ export type PhotoSource = Pick<PortfolioPhoto, 'srcBase' | 'widths' | 'width' | 
  */
 export const PHOTO_SIZES = {
   fullBleed: '100vw',
+  /**
+   * Landing closing banner: full width, but min-height 400px at ratio 2.2
+   * means it never draws narrower than 880px (cover scales it up on phones)
+   */
+  ctaBanner: '(max-width: 879px) 880px, 100vw',
   /** cols 12 / sm 6 / md 4 */
   gallery: '(max-width: 599px) 100vw, (max-width: 959px) 50vw, 33vw',
   /** cols 6 / md 3 */

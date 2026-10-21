@@ -12,13 +12,24 @@ import { PORTFOLIO_CATEGORIES } from './portfolioCategories'
 /** Photos in the landing hero strip */
 export const HERO_SHOWCASE_COUNT = 8
 
-export type SitePage = 'home' | 'about' | 'contact' | 'portfolio'
+/**
+ * Hero slides on screen before any scrolling (1-based). The strip is a
+ * centered loop, so the last slide peeks in on the left of the first.
+ * These load eagerly; HERO_PRELOAD are also preloaded from index.html.
+ */
+export const HERO_VISIBLE_AT_LOAD = [1, 2, 3, HERO_SHOWCASE_COUNT]
+/** Visible on a phone as well as a desktop, so worth starting before any JS runs */
+export const HERO_PRELOAD = [1, 2, HERO_SHOWCASE_COUNT]
+
+export type SitePage = 'home' | 'about' | 'contact' | 'portfolio' | 'site'
 
 export const SITE_PAGES: Record<SitePage, { name: string, path: string }> = {
   home: { name: 'Home', path: '/' },
   about: { name: 'About', path: '/about-me' },
   contact: { name: 'Contact', path: '/contact' },
   portfolio: { name: 'Portfolio', path: '/portfolio' },
+  /** Not a page: spots that apply across the site, like the fallback photo */
+  site: { name: 'Whole site', path: '/' },
 }
 
 export interface SitePlacement {
@@ -48,6 +59,13 @@ export const SITE_PLACEMENTS: readonly SitePlacement[] = [
     area: `cover-${c.slug}`,
     label: `${c.name} tile cover`,
   })),
+  {
+    // Must match siteDefaultKey in content/placementSlots.json
+    key: 'site-default',
+    page: 'site',
+    area: 'site-default',
+    label: 'Fallback for any empty spot (Home & Portfolio)',
+  },
 ]
 
 /** Landing hero strip, in display order */

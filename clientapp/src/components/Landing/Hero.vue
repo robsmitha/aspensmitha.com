@@ -36,11 +36,11 @@
             aria-roledescription="slide"
             :aria-label="`${i + 1} of ${slides.length}`"
           >
-            <ResponsivePhoto
-              :photo="photos.forPlacement(key)"
+            <PlacementPhoto
+              :placement="key"
               :sizes="PHOTO_SIZES.showcase"
-              aspect-ratio="0.75"
-              :eager="i < 3"
+              :eager="isVisibleAtLoad(i)"
+              :priority="i === 0 ? 'high' : undefined"
             />
           </div>
         </div>
@@ -74,9 +74,10 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import emblaCarouselVue from 'embla-carousel-vue'
-import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { usePhotoStore } from '@/store/photos'
-import { HERO_SHOWCASE_PLACEMENTS } from '@/utils/sitePlacements'
+import { PLACEMENTS_FROM_CDN } from '@/utils/placementConfig'
+import { HERO_SHOWCASE_PLACEMENTS, HERO_VISIBLE_AT_LOAD } from '@/utils/sitePlacements'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const { mobile } = useDisplay()
@@ -103,8 +104,7 @@ watch(emblaApi, api => {
   api.on('select', updateArrows).on('reInit', updateArrows)
 })
 
-// The real gallery strip from the live site's homepage, in its original
-// order. Only the first few are visible on load, so only those load eagerly.
+// Only read on the API rollback path (PlacementPhoto loads it there)
 const photos = usePhotoStore()
 
 function measureFit() {
@@ -124,11 +124,19 @@ onMounted(() => {
 })
 onBeforeUnmount(() => resizeObserver?.disconnect())
 
-// Hold every frame while photos load so nothing shifts; afterwards drop any
-// slot the admin hasn't filled yet rather than showing an empty frame.
-const slides = computed(() => photos.loaded
-  ? HERO_SHOWCASE_PLACEMENTS.filter(key => photos.forPlacement(key))
-  : HERO_SHOWCASE_PLACEMENTS)
+// From the CDN every slot always has an image (the publisher fills empty ones
+// with a fallback), so the strip is fixed. On the API rollback path, hold every
+// frame while photos load so nothing shifts, then drop any unfilled slot.
+const slides = computed(() => PLACEMENTS_FROM_CDN || !photos.loaded
+  ? HERO_SHOWCASE_PLACEMENTS
+  : HERO_SHOWCASE_PLACEMENTS.filter(key => photos.forPlacement(key)))
+
+// Centered loop: slide 1 sits in the middle with its neighbours peeking in,
+// including the last slide on the left. Those load right away (and are
+// preloaded in index.html); the rest wait until they scroll into view.
+function isVisibleAtLoad(index: number) {
+  return HERO_VISIBLE_AT_LOAD.includes(index + 1)
+}
 
 watch(() => slides.value.length, () => nextTick(measureFit))
 </script>

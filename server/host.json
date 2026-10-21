@@ -3,6 +3,12 @@
     "extensions": {
         "blobs": {
             "maxDegreeOfParallelism": 1
+        },
+        "queues": {
+            "batchSize": 1,
+            "newBatchThreshold": 0,
+            "maxPollingInterval": "00:00:05",
+            "maxDequeueCount": 5
         }
     },
     "logging": {

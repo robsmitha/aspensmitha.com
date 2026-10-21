@@ -9,6 +9,7 @@ import vuetify from './vuetify'
 import pinia from '../store'
 import router from '../router'
 import gtag from './gtag'
+import { reportWebVitals } from './webVitals'
 
 // Types
 import type { App } from 'vue'
@@ -22,5 +23,6 @@ export function registerPlugins (app: App) {
   // Only report production traffic to Google Analytics
   if (import.meta.env.PROD) {
     app.use(gtag)
+    reportWebVitals()
   }
 }
