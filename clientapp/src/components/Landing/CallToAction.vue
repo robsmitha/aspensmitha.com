@@ -34,12 +34,11 @@ import { PHOTO_SIZES } from '@/utils/photoUrls'
 </script>
 
 <style scoped>
-/* Explicit aspect-ratio above gives this its normal shape; the clamp here
-   is just a hard backstop so it can never grow taller than the viewport on
-   an unusual screen size or a differently-shaped photo. */
+/* The image file is already cropped to the slot's ratio, so the box keeps that
+   shape. No max-height: capping it would crop the published image a second time
+   on wide, short screens. min-height leaves room for the text on phones. */
 .cta-image {
   min-height: 400px;
-  max-height: 85vh;
 }
 
 .cta-scrim {

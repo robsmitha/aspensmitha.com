@@ -1,0 +1,29 @@
+# Local Azure Storage emulator (blobs, queues, tables) for the Function App.
+#   docker compose up -d azurite     start
+#   docker compose down              stop (data is kept in the azurite-data volume)
+#   docker compose down -v           stop and wipe all local blobs/queues
+#
+# server/local.settings.json uses "UseDevelopmentStorage=true", which points at these ports.
+# Visual Studio starts its own Azurite on the same ports; close it (or end azurite.exe) first.
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.35.0
+    container_name: aspensmitha-azurite
+    # --skipApiVersionCheck: newer Azure SDKs send API versions Azurite may not know yet
+    # --loose: ignore headers Azurite doesn't support instead of failing the request
+    command: >
+      azurite
+      --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0
+      --location /data
+      --skipApiVersionCheck
+      --loose
+    ports:
+      - "10000:10000" # blob   (placement images: http://127.0.0.1:10000/devstoreaccount1/placements/...)
+      - "10001:10001" # queue  (placements-publish)
+      - "10002:10002" # table
+    volumes:
+      - azurite-data:/data
+    restart: unless-stopped
+
+volumes:
+  azurite-data:

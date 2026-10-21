@@ -452,6 +452,7 @@ Expected:
 - **Admin status compares what each slot should show against what's published.** A failed enqueue therefore still shows as "Updating…", and Republish fixes it. It doesn't read queue depth.
 - **ImageSharp 3.1.12 has 5 known vulnerabilities** (3 high, all in TIFF encoding, histogram equalisation and ICC/BigTIFF parsing). They're fixed only in **4.1.2**. This is already true of the live upload pipeline through Elysian; pinning the package here just makes the build warning visible. Uploads are admin-only. Upgrading means moving Elysian to ImageSharp 4.x: a separate task.
 - D15 (the `aspensmitha.com` canonical domain) is **not** changed here.
+- **Home CTA banner: `max-height: 85vh` removed (2026-10-21).** It cropped the already-cropped 2.2 file a second time on laptop screens.
 
 **Publishing Elysian:** merge `feature/placement-publishing` into Elysian `master`, then tag `v0.0.49` (the release workflow packs from the tag and requires the commit to be on `master`). Until 0.0.49 is on the feed, the aspensmitha.com server won't restore.
 
