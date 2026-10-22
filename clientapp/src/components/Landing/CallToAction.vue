@@ -1,8 +1,9 @@
 <template>
   <section class="cta">
-    <PlacementPhoto
-      placement="home-cta"
-      :sizes="PHOTO_SIZES.ctaBanner"
+    <ResponsivePhoto
+      :photo="photos.forPlacement('home-cta')"
+      :sizes="PHOTO_SIZES.fullBleed"
+      aspect-ratio="2.2"
       class="cta-image"
     >
       <div class="cta-scrim"></div>
@@ -24,21 +25,28 @@
           Inquire Now
         </v-btn>
       </div>
-    </PlacementPhoto>
+    </ResponsivePhoto>
   </section>
 </template>
 
 <script setup lang="ts">
-import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
+import ResponsivePhoto from '@/components/Photo/ResponsivePhoto.vue'
+import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
+
+const photos = usePhotoStore()
+// Below the fold, so it uses the full photo from the API (cropped by CSS per screen)
+// rather than the CDN's pre-cropped banner; the landing layout no longer loads it
+photos.load()
 </script>
 
 <style scoped>
-/* The image file is already cropped to the slot's ratio, so the box keeps that
-   shape. No max-height: capping it would crop the published image a second time
-   on wide, short screens. min-height leaves room for the text on phones. */
+/* Explicit aspect-ratio above gives this its normal shape; the clamp here
+   is just a hard backstop so it can never grow taller than the viewport on
+   an unusual screen size or a differently-shaped photo. */
 .cta-image {
   min-height: 400px;
+  max-height: 85vh;
 }
 
 .cta-scrim {

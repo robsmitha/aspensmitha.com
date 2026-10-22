@@ -3,8 +3,12 @@
     Deletes one tenant's photo blobs (originals and optimized variants) from Azure Storage.
 
 .DESCRIPTION
-    Removes everything under "<tenant>/" in the photo-originals and photos containers.
+    Removes the tenant's photos under "<tenant>/" in the photo-originals and photos containers.
     Other tenants' blobs are not touched. Lists what would be deleted unless -Commit is passed.
+
+    Instagram thumbnails ("<tenant>/instagram/") are kept: reset-photos-db.sql doesn't remove the
+    InstagramPost rows, and the sync never re-uploads files for posts it already has, so deleting
+    them leaves the site's Instagram section pointing at missing files.
 
     Requires the Azure CLI (az). Pair with reset-photos-db.sql so the database matches.
 
@@ -44,6 +48,8 @@ if ($ConnectionString) {
 }
 
 $prefix = "$Tenant/"
+# Not photos; see the description
+$keepPrefixes = @("$Tenant/instagram/")
 
 foreach ($container in $Containers) {
     $names = az storage blob list --container-name $container --prefix $prefix --num-results '*' `
@@ -51,7 +57,9 @@ foreach ($container in $Containers) {
     if ($LASTEXITCODE -ne 0) { throw "Listing $container failed." }
 
     $names = @($names | Where-Object { $_ })
-    Write-Host "${container}: $($names.Count) blob(s) under $prefix"
+    $kept = @($names | Where-Object { $n = $_; $keepPrefixes | Where-Object { $n.StartsWith($_) } })
+    $names = @($names | Where-Object { $kept -notcontains $_ })
+    Write-Host "${container}: $($names.Count) blob(s) under $prefix ($($kept.Count) kept under $($keepPrefixes -join ', '))"
 
     if ($names.Count -eq 0) { continue }
 
@@ -61,8 +69,15 @@ foreach ($container in $Containers) {
         continue
     }
 
-    az storage blob delete-batch --source $container --pattern "$prefix*" --delete-snapshots include @auth | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "Deleting from $container failed." }
+    # One batch per top-level folder (one per photo), so the kept prefixes are never matched
+    $patterns = $names | ForEach-Object {
+        $rest = $_.Substring($prefix.Length)
+        if ($rest.Contains('/')) { "$prefix$($rest.Split('/')[0])/*" } else { $_ }
+    } | Sort-Object -Unique
+    foreach ($pattern in $patterns) {
+        az storage blob delete-batch --source $container --pattern $pattern --delete-snapshots include @auth | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Deleting $pattern from $container failed." }
+    }
     Write-Host "  Deleted."
 }
 
