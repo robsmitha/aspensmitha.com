@@ -13,7 +13,7 @@ meta:
       <template #actions>
         <v-btn
           variant="text"
-          color="charcoal"
+          color="sage"
           rounded="0"
           class="font-nav tracking-wide text-caption"
           prepend-icon="mdi-refresh"
@@ -34,7 +34,7 @@ meta:
 
           <template v-else-if="connection.connected">
             <div class="d-flex flex-wrap align-center ga-3 mt-3">
-              <h2 class="font-display text-charcoal account-name">{{ connection.accountId }}</h2>
+              <h2 class="font-heading text-charcoal account-name">{{ connection.accountId }}</h2>
               <v-chip
                 :color="connection.error ? 'error' : 'success'"
                 :prepend-icon="connection.error ? 'mdi-alert-circle-outline' : 'mdi-check-circle-outline'"
@@ -104,7 +104,7 @@ meta:
             <v-btn
               type="submit"
               variant="flat"
-              color="charcoal"
+              color="sage"
               rounded="0"
               class="font-nav tracking-wide text-caption mt-2"
               :loading="connecting"

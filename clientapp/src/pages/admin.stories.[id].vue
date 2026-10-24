@@ -5,7 +5,7 @@ meta:
 
 <template>
   <v-container class="py-10 py-md-14">
-    <router-link to="/admin/stories" class="font-nav tracking-wide text-caption text-charcoal-light back-link d-inline-flex align-center ga-2 mb-4">
+    <router-link to="/admin/stories" class="font-nav tracking-wide text-caption text-sage back-link d-inline-flex align-center ga-2 mb-4">
       <v-icon size="14">mdi-arrow-left</v-icon>
       All Stories
     </router-link>
@@ -28,7 +28,7 @@ meta:
         <template #actions>
           <v-btn
             variant="text"
-            color="charcoal"
+            color="sage"
             rounded="0"
             class="font-nav tracking-wide text-caption"
             prepend-icon="mdi-open-in-new"
@@ -47,7 +47,7 @@ meta:
           mandatory
           divided
           variant="outlined"
-          color="charcoal"
+          color="sage"
           rounded="0"
           density="comfortable"
           @update:model-value="setStatus"
@@ -209,7 +209,7 @@ meta:
               <v-btn
                 type="submit"
                 variant="flat"
-                color="charcoal"
+                color="sage"
                 rounded="0"
                 size="large"
                 class="font-nav tracking-wide text-caption"
@@ -221,7 +221,7 @@ meta:
               <v-btn
                 v-if="dirty"
                 variant="text"
-                color="charcoal"
+                color="sage"
                 rounded="0"
                 size="large"
                 class="font-nav tracking-wide text-caption"
@@ -259,7 +259,7 @@ meta:
       <section class="mt-12" aria-labelledby="photos-heading">
         <div class="d-flex flex-wrap align-end justify-space-between ga-2 mb-4">
           <div>
-            <h2 id="photos-heading" class="font-display text-charcoal photos-heading">Photos</h2>
+            <h2 id="photos-heading" class="font-heading text-charcoal photos-heading">Photos</h2>
             <p class="text-caption text-charcoal-light mb-0">
               {{ photos.length }} photo{{ photos.length === 1 ? '' : 's' }}, shown on the page in this order, uncropped.
               <template v-if="defaultAltCount">{{ defaultAltCount }} still use the default alt text.</template>
@@ -294,7 +294,7 @@ meta:
 
       <!-- Delete -->
       <section class="danger mt-16 pa-5" aria-label="Delete story">
-        <h2 class="font-display text-charcoal danger__heading mb-1">Delete this story</h2>
+        <h2 class="font-heading text-charcoal danger__heading mb-1">Delete this story</h2>
         <p class="text-body-2 text-charcoal-light mb-4">
           Removes the page and all {{ photos.length }} of its photos. This can&rsquo;t be undone.
         </p>
@@ -320,7 +320,7 @@ meta:
             >
               Delete Story and {{ photos.length }} Photo{{ photos.length === 1 ? '' : 's' }}
             </v-btn>
-            <v-btn variant="text" color="charcoal" rounded="0" class="font-nav tracking-wide text-caption" @click="confirmingDelete = false">
+            <v-btn variant="text" color="sage" rounded="0" class="font-nav tracking-wide text-caption" @click="confirmingDelete = false">
               Keep It
             </v-btn>
           </template>

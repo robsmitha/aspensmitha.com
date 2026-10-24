@@ -7,7 +7,7 @@
     <div v-if="stories.length > shown.length" class="text-center mt-14">
       <v-btn
         variant="outlined"
-        color="charcoal"
+        color="sage"
         size="large"
         rounded="0"
         class="font-nav tracking-wide text-caption"

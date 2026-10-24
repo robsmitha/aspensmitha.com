@@ -12,23 +12,39 @@
 
 :root {
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-  --font-display: 'Cormorant Garamond', serif;
-  --font-nav: 'Jost', sans-serif;
+  --font-heading: 'Bodoni Moda', 'Didot', 'Bodoni 72', serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-script: 'Pinyon Script', 'Playfair Display', cursive;
+  --font-nav: 'Rufina', Georgia, serif;
 }
 
 .font-mono {
   font-family: var(--font-mono);
 }
 
-// Light-weight editorial display serif used for the Aspen Smitha
-// Photography landing page headings and pull quotes.
-.font-display {
-  font-family: var(--font-display);
-  font-weight: 300;
+// High-contrast Didone for the logo and every heading (h1–h3) on the
+// Aspen Smitha Photography pages.
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 400;
 }
 
-// Clean geometric sans used for the Aspen Smitha Photography landing page
-// nav, labels and buttons — always paired with generous letter-spacing.
+// Editorial serif for paragraphs, quotes, prices and form input text.
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+// Accent script, used only for the home hero tagline. Already slanted, so
+// never combine it with font-italic.
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+}
+
+// Small serif used for the Aspen Smitha Photography landing page nav,
+// labels and buttons.
 .font-nav {
   font-family: var(--font-nav);
   font-weight: 400;

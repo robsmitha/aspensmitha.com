@@ -14,7 +14,7 @@
     <div class="story-card__text">
       <span v-if="date" class="font-nav tracking-widest text-caption text-blush-dark story-card__date">{{ date }}</span>
 
-      <h2 class="font-display text-charcoal story-card__title">
+      <h2 class="font-heading text-charcoal story-card__title">
         <template v-if="parts.length === 2">
           {{ parts[0] }} <span class="story-card__amp">&amp;</span> {{ parts[1] }}
         </template>
@@ -85,7 +85,7 @@ const where = computed(() =>
 
 .story-card__title {
   font-size: clamp(1.875rem, 1.5vw + 1.25rem, 2.5rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.05;
   text-wrap: balance;
 }

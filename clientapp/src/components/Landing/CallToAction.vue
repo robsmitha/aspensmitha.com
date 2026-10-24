@@ -11,7 +11,7 @@
       <div class="cta-content d-flex flex-column align-center justify-center text-center h-100 px-6">
         <span class="font-nav tracking-widest text-caption text-ivory cta-text-shadow mb-4">Let's Work Together</span>
 
-        <h2 class="font-display text-ivory cta-heading cta-text-shadow mb-8">
+        <h2 class="font-heading text-ivory cta-heading cta-text-shadow mb-8">
           Let's create something<br class="d-none d-sm-block" /> beautiful together.
         </h2>
 

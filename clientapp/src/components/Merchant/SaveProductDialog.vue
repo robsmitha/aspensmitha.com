@@ -9,7 +9,7 @@
         <v-toolbar color="ivory-deep" density="comfortable">
             <v-btn
                 icon="mdi-close"
-                color="stone"
+                color="sage"
                 aria-label="Close without saving"
                 :disabled="loading"
                 @click="dialog = false"
@@ -21,14 +21,14 @@
                 <v-btn
                   class="font-nav tracking-wide text-caption d-none d-sm-flex" rounded="0"
                   variant="text"
-                  color="stone"
+                  color="sage"
                   :disabled="loading"
                   @click="dialog = false"
                 >
                   Cancel
                 </v-btn>
                 <v-btn
-                  color="charcoal"
+                  color="sage"
                   class="font-nav tracking-wide text-caption" rounded="0"
                   variant="flat"
                   :disabled="loading"

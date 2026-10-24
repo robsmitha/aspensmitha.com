@@ -169,12 +169,19 @@ export default defineConfig({
             styles: 'wght@400;500;600;700',
           },
           {
-            name: 'Cormorant Garamond',
-            styles: 'ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500',
+            name: 'Bodoni Moda',
+            styles: 'ital,opsz,wght@0,6..96,400..700;1,6..96,400..700',
           },
           {
-            name: 'Jost',
-            styles: 'wght@300;400;500',
+            name: 'Playfair Display',
+            styles: 'ital,wght@0,400;0,500;1,400;1,500',
+          },
+          {
+            name: 'Pinyon Script',
+          },
+          {
+            name: 'Rufina',
+            styles: 'wght@400;700',
           },
         ],
       },

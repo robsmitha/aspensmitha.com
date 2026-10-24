@@ -24,8 +24,8 @@ meta:
   </template>
 
   <v-container v-else class="py-20 text-center">
-    <h1 class="font-display text-charcoal not-found-heading mb-4">Category Not Found</h1>
-    <router-link to="/portfolio" class="font-nav tracking-wide text-caption text-charcoal">
+    <h1 class="font-heading text-charcoal not-found-heading mb-4">Category Not Found</h1>
+    <router-link to="/portfolio" class="font-nav tracking-wide text-caption text-sage">
       Back to Portfolio
     </router-link>
   </v-container>

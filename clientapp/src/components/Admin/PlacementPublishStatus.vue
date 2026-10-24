@@ -12,7 +12,7 @@
       <v-spacer></v-spacer>
       <v-btn
         variant="text"
-        color="charcoal"
+        color="sage"
         rounded="0"
         size="small"
         class="font-nav tracking-wide text-caption"

@@ -10,7 +10,7 @@
         />
 
         <div class="contact-aside__text">
-          <h2 class="font-display text-charcoal contact-heading mb-3">Ready to book?</h2>
+          <h2 class="font-heading text-charcoal contact-heading mb-3">Ready to book?</h2>
           <p class="font-display text-stone contact-copy mb-4">
             If you're looking to book a wedding or event, please use this page to inquire about my
             availability. You can also contact me if you are unsure about what session type works
@@ -23,7 +23,7 @@
 
           <v-btn
             variant="outlined"
-            color="charcoal"
+            color="sage"
             rounded="0"
             class="font-nav tracking-wide text-caption"
             to="/booking"
@@ -198,7 +198,7 @@
 
           <div v-if="turnstileError" class="font-display text-error contact-feedback mb-4" role="alert">
             {{ turnstileError }}
-            <a href="#" class="text-charcoal contact-retry" @click.prevent="retryVerification">Retry verification</a>
+            <a href="#" class="text-sage contact-retry" @click.prevent="retryVerification">Retry verification</a>
           </div>
 
           <div v-if="submitError" class="font-display text-error contact-feedback mb-4" role="alert">
@@ -211,7 +211,7 @@
 
           <v-btn
             type="submit"
-            color="charcoal"
+            color="sage"
             size="large"
             rounded="0"
             :loading="submitting"
@@ -448,12 +448,12 @@ async function submit() {
   font-size: 1.0625rem;
   text-decoration: none;
   width: fit-content;
-  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  border-bottom: 1px solid rgba(var(--v-theme-sage), 0.4);
   transition: border-color 0.2s ease;
 }
 
 .contact-email:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 
 .field-label {

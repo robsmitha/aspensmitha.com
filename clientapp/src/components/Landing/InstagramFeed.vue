@@ -6,7 +6,7 @@
         :href="INSTAGRAM_PROFILE_URL"
         target="_blank"
         rel="noopener"
-        class="font-nav tracking-wide text-caption text-charcoal instagram-link d-inline-flex align-center ga-2"
+        class="font-nav tracking-wide text-caption text-sage instagram-link d-inline-flex align-center ga-2"
       >
         <v-icon size="16">mdi-instagram</v-icon>
         Follow along on Instagram {{ INSTAGRAM_HANDLE }}
@@ -17,7 +17,7 @@
       <v-row align="end" justify="space-between" class="mb-10 mb-md-12">
         <v-col cols="12" md="7">
           <span class="font-nav tracking-widest text-caption text-blush">{{ INSTAGRAM_HANDLE }}</span>
-          <h2 class="font-display text-charcoal instagram-heading mt-4">Latest on Instagram</h2>
+          <h2 class="font-heading text-charcoal instagram-heading mt-4">Latest on Instagram</h2>
         </v-col>
 
         <v-col cols="12" md="auto" class="mt-6 mt-md-0">
@@ -25,7 +25,7 @@
             :href="INSTAGRAM_PROFILE_URL"
             target="_blank"
             rel="noopener"
-            class="font-nav tracking-wide text-caption text-charcoal instagram-link d-inline-flex align-center ga-2"
+            class="font-nav tracking-wide text-caption text-sage instagram-link d-inline-flex align-center ga-2"
           >
             Follow on Instagram
             <v-icon size="16">mdi-arrow-right</v-icon>
@@ -121,12 +121,12 @@ function altText (post: InstagramPost): string {
 .instagram-link {
   text-decoration: none;
   padding-bottom: 3px;
-  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  border-bottom: 1px solid rgba(var(--v-theme-sage), 0.4);
   transition: border-color 0.2s ease;
 }
 
 .instagram-link:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 
 .instagram-tile {

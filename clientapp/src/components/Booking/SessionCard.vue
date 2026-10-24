@@ -5,7 +5,7 @@
 
       <div class="pa-6 pa-md-7 d-flex flex-column flex-grow-1">
         <span class="font-nav tracking-widest text-caption text-blush text-uppercase">{{ session.collection }}</span>
-        <h2 class="font-display text-charcoal session-title mt-1 mb-3">{{ session.title }}</h2>
+        <h2 class="font-heading text-charcoal session-title mt-1 mb-3">{{ session.title }}</h2>
 
         <p v-if="summary" class="font-display text-charcoal-light session-description mb-5">{{ summary }}</p>
 

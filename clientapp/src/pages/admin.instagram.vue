@@ -13,7 +13,7 @@ meta:
       <template #actions>
         <v-btn
           variant="text"
-          color="charcoal"
+          color="sage"
           rounded="0"
           class="font-nav tracking-wide text-caption"
           prepend-icon="mdi-refresh"
@@ -34,13 +34,13 @@ meta:
 
           <template v-else-if="connection.connected">
             <div class="d-flex flex-wrap align-center ga-3 mt-3">
-              <h2 class="font-display text-charcoal account-name">
+              <h2 class="font-heading text-charcoal account-name">
                 <a
                   v-if="connection.username"
                   :href="`https://www.instagram.com/${connection.username}`"
                   target="_blank"
                   rel="noopener"
-                  class="text-charcoal text-decoration-none"
+                  class="text-sage text-decoration-none"
                 >@{{ connection.username }}</a>
                 <span v-else>Account {{ connection.userId }}</span>
               </h2>
@@ -115,7 +115,7 @@ meta:
             <v-btn
               type="submit"
               variant="flat"
-              color="charcoal"
+              color="sage"
               rounded="0"
               class="font-nav tracking-wide text-caption mt-2"
               :loading="connecting"

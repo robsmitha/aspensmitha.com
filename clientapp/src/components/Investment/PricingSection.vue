@@ -1,8 +1,8 @@
 <template>
-  <v-sheet :color="tone" class="py-14 py-md-20">
+  <v-sheet color="ivory" class="py-14 py-md-20">
     <v-container>
       <div class="d-flex align-center mb-10 mb-md-14 section-heading">
-        <h2 class="font-display text-charcoal section-title text-nowrap">{{ title }}</h2>
+        <h2 class="font-heading text-charcoal section-title text-nowrap">{{ title }}</h2>
         <v-divider class="ml-6 flex-grow-1" color="stone-light" opacity="0.8" thickness="1"></v-divider>
       </div>
 
@@ -10,7 +10,7 @@
         <v-col v-for="tier in tiers" :key="tier.name" cols="12" :md="12 / tiers.length">
           <v-sheet color="surface" border rounded="0" class="pricing-card pa-8 pa-md-10 h-100">
             <span class="font-nav tracking-widest text-caption text-blush">{{ title }}</span>
-            <h3 class="font-display text-charcoal tier-name mt-2 mb-4">{{ tier.name }}</h3>
+            <h3 class="font-heading text-charcoal tier-name mt-2 mb-4">{{ tier.name }}</h3>
 
             <div class="d-flex align-baseline ga-1 mb-4">
               <span class="font-display text-charcoal tier-price">{{ tier.price }}</span>
@@ -24,7 +24,7 @@
 
             <ul class="tier-features">
               <li v-for="feature in tier.features" :key="feature" class="d-flex align-start ga-3 mb-3">
-                <v-icon color="blush" size="16" class="mt-1">mdi-check</v-icon>
+                <v-icon color="sage" size="18" class="mt-1">mdi-check-bold</v-icon>
                 <span class="font-display font-italic text-charcoal">{{ feature }}</span>
               </li>
             </ul>
@@ -46,7 +46,6 @@ export interface PricingTier {
 defineProps<{
   title: string
   tiers: PricingTier[]
-  tone?: 'ivory' | 'ivory-deep'
 }>()
 </script>
 

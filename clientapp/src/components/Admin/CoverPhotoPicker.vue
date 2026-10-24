@@ -11,11 +11,11 @@
       </div>
 
       <div class="d-flex flex-column ga-2">
-        <v-btn variant="outlined" color="charcoal" rounded="0" size="small" class="font-nav tracking-wide text-caption"
+        <v-btn variant="outlined" color="sage" rounded="0" size="small" class="font-nav tracking-wide text-caption"
           prepend-icon="mdi-image-search-outline" @click="dialog = true">
           {{ modelValue ? 'Change photo' : 'Choose photo' }}
         </v-btn>
-        <v-btn v-if="modelValue" variant="text" color="stone" rounded="0" size="small" class="font-nav tracking-wide text-caption"
+        <v-btn v-if="modelValue" variant="text" color="sage" rounded="0" size="small" class="font-nav tracking-wide text-caption"
           @click="emit('update:modelValue', null)">
           Use default
         </v-btn>
@@ -28,7 +28,7 @@
           <v-toolbar-title>
             <span class="font-display text-h5 text-charcoal">Choose a cover photo</span>
           </v-toolbar-title>
-          <v-btn icon="mdi-close" color="stone" @click="dialog = false"></v-btn>
+          <v-btn icon="mdi-close" color="sage" @click="dialog = false"></v-btn>
         </v-toolbar>
         <v-divider color="stone-light" />
 

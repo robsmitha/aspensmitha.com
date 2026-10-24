@@ -3,13 +3,13 @@
     <v-row align="end" justify="space-between" class="mb-10 mb-md-12">
       <v-col cols="12" md="7">
         <span class="font-nav tracking-widest text-caption text-blush">Selected Work</span>
-        <h2 class="font-display text-charcoal portfolio-heading mt-4">Recent Sessions</h2>
+        <h2 class="font-heading text-charcoal portfolio-heading mt-4">Recent Sessions</h2>
       </v-col>
 
       <v-col cols="12" md="auto" class="mt-6 mt-md-0">
         <router-link
           to="/portfolio"
-          class="font-nav tracking-wide text-caption text-charcoal portfolio-link d-inline-flex align-center ga-2"
+          class="font-nav tracking-wide text-caption text-sage portfolio-link d-inline-flex align-center ga-2"
         >
           View Full Portfolio
           <v-icon size="16">mdi-arrow-right</v-icon>
@@ -63,12 +63,12 @@ photos.load()
 .portfolio-link {
   text-decoration: none;
   padding-bottom: 3px;
-  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  border-bottom: 1px solid rgba(var(--v-theme-sage), 0.4);
   transition: border-color 0.2s ease;
 }
 
 .portfolio-link:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 
 .portfolio-image {

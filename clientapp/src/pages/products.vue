@@ -28,7 +28,7 @@ meta:
                 It will be removed from the Investment and booking pages. Bookings already on your calendar aren't affected.
             </v-card-text>
             <v-card-actions class="px-6 pb-5 d-flex justify-end">
-                <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="text" color="stone" :disabled="deleting" @click="deleteDialog = false">
+                <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="text" color="sage" :disabled="deleting" @click="deleteDialog = false">
                     Cancel
                 </v-btn>
                 <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="flat" color="error" :loading="deleting" @click="deleteSession">
@@ -52,7 +52,7 @@ meta:
                 <v-btn
                   icon="mdi-close"
                   variant="text"
-                  color="stone"
+                  color="sage"
                   @click="snackbar = false"
                 ></v-btn>
               </v-card-title>

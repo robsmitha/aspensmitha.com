@@ -2,7 +2,7 @@
   <v-sheet color="surface" border rounded="0" class="booking-confirmation pa-8 pa-md-12 text-center mx-auto" role="status">
     <v-icon size="40" color="blush" class="mb-4">mdi-check-circle-outline</v-icon>
     <span class="d-block font-nav tracking-widest text-caption text-blush">REQUEST RECEIVED</span>
-    <h2 class="font-display text-charcoal confirmation-heading mt-2 mb-4">Thank you, {{ firstName }}!</h2>
+    <h2 class="font-heading text-charcoal confirmation-heading mt-2 mb-4">Thank you, {{ firstName }}!</h2>
     <p class="font-display text-charcoal confirmation-copy mx-auto mb-8">
       Your <strong class="font-weight-medium">{{ booking.title }}</strong> session is being held for
       <strong class="font-weight-medium">{{ formatLongDate(start) }} at {{ formatTime(start) }}</strong>
@@ -19,10 +19,10 @@
     </div>
 
     <div class="d-flex flex-wrap justify-center ga-3">
-      <v-btn color="charcoal" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/booking">
+      <v-btn color="sage" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/booking">
         Back to sessions
       </v-btn>
-      <v-btn variant="outlined" color="charcoal" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/contact">
+      <v-btn variant="outlined" color="sage" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/contact">
         Questions? Contact
       </v-btn>
     </div>

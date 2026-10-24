@@ -13,7 +13,7 @@ meta:
       <template #actions>
         <v-btn
           variant="text"
-          color="charcoal"
+          color="sage"
           rounded="0"
           class="font-nav tracking-wide text-caption"
           prepend-icon="mdi-refresh"
@@ -64,7 +64,7 @@ meta:
             </button>
           </template>
 
-          <router-link to="/admin/stories" class="collections__stories font-nav tracking-wide text-caption text-blush-dark">
+          <router-link to="/admin/stories" class="collections__stories font-nav tracking-wide text-caption text-sage">
             Wedding &amp; event stories &rarr;
           </router-link>
         </nav>
@@ -72,11 +72,11 @@ meta:
 
       <v-col cols="12" md="9" lg="10">
         <div class="mb-6">
-          <h2 class="font-display text-charcoal collection-title">{{ currentCollection.name }}</h2>
+          <h2 class="font-heading text-charcoal collection-title">{{ currentCollection.name }}</h2>
           <p class="font-display text-stone collection-description mb-0">{{ currentCollection.description }}</p>
           <p v-if="getPortfolioCategory(tab)?.stories" class="text-caption text-charcoal-light mt-2 mb-0">
             Once a {{ currentCollection.name.toLowerCase() }} story is published, the public page lists stories instead of this gallery.
-            <router-link to="/admin/stories" class="text-blush-dark">Manage stories</router-link>
+            <router-link to="/admin/stories" class="text-sage">Manage stories</router-link>
           </p>
         </div>
 

@@ -8,7 +8,7 @@
             <template #actions>
                 <v-btn
                     variant="outlined"
-                    color="charcoal"
+                    color="sage"
                     rounded="0"
                     class="font-nav tracking-wide text-caption"
                     prepend-icon="mdi-plus"
@@ -89,7 +89,7 @@
                                                 icon="mdi-dots-horizontal"
                                                 variant="text"
                                                 size="small"
-                                                color="stone"
+                                                color="sage"
                                                 :aria-label="`Actions for ${item.title}`"
                                                 @click.stop
                                                 @keydown.enter.stop

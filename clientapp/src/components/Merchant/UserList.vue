@@ -76,7 +76,7 @@
                                         icon="mdi-dots-horizontal"
                                         variant="text"
                                         size="small"
-                                        color="stone"
+                                        color="sage"
                                         :aria-label="`Actions for ${item.userName}`"
                                     ></v-btn>
                                 </template>
@@ -107,7 +107,7 @@
                 <v-btn
                     icon="mdi-close"
                     variant="text"
-                    color="stone"
+                    color="sage"
                     @click="dialog = false"
                 ></v-btn>
             </v-toolbar>
@@ -179,7 +179,7 @@
                 <v-btn
                   class="font-nav tracking-wide text-caption" rounded="0"
                   variant="text"
-                  color="stone"
+                  color="sage"
                   @click="dialog = false"
                 >
                   Cancel
@@ -188,7 +188,7 @@
                 <v-btn
                   class="font-nav tracking-wide text-caption"
                   rounded="0"
-                  color="primary"
+                  color="sage"
                   variant="outlined"
                   @click="saveAccessPolicy"
                 >
@@ -211,7 +211,7 @@
                 <v-btn
                   icon="mdi-close"
                   variant="text"
-                  color="stone"
+                  color="sage"
                   @click="snackbar = false"
                 ></v-btn>
               </v-card-title>

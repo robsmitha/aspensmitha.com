@@ -3,7 +3,7 @@
     <v-container class="text-center">
       <span class="font-nav tracking-widest text-caption text-blush">LOVE WHAT YOU SEE?</span>
 
-      <h2 class="font-display text-charcoal cta-heading mt-3 mb-4">
+      <h2 class="font-heading text-charcoal cta-heading mt-3 mb-4">
         {{ category ? "Let's create yours." : "Let's create something beautiful together." }}
       </h2>
 
@@ -17,7 +17,7 @@
       </p>
 
       <v-btn
-        color="charcoal"
+        color="sage"
         size="large"
         rounded="0"
         class="font-nav tracking-wide text-caption"

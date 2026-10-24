@@ -2,7 +2,7 @@
   <v-footer color="ivory-deep" class="py-12 py-md-16">
     <v-container>
       <div class="text-center mb-10">
-        <span class="font-display text-charcoal footer-brand">Aspen Smitha</span>
+        <span class="font-heading text-charcoal footer-brand">Aspen Smitha</span>
         <p class="font-nav tracking-widest text-caption text-stone mt-2">
           Wedding &amp; Portrait Photography
         </p>
@@ -13,15 +13,15 @@
           v-for="link in navLinks"
           :key="link.title"
           :to="link.to"
-          class="font-nav tracking-wide text-caption text-charcoal footer-link"
+          class="font-nav tracking-wide text-caption text-sage footer-link"
         >
           {{ link.title.toUpperCase() }}
         </router-link>
       </nav>
 
       <div class="d-flex justify-center ga-2 mb-10">
-        <v-btn icon="mdi-instagram" variant="text" color="charcoal" size="small" href="https://www.instagram.com/aspensmitha.photography" target="_blank"></v-btn>
-        <v-btn icon="mdi-facebook" variant="text" color="charcoal" size="small" href="https://www.facebook.com/aspensage.photography" target="_blank"></v-btn>
+        <v-btn icon="mdi-instagram" variant="text" color="sage" size="small" href="https://www.instagram.com/aspensmitha.photography" target="_blank"></v-btn>
+        <v-btn icon="mdi-facebook" variant="text" color="sage" size="small" href="https://www.facebook.com/aspensage.photography" target="_blank"></v-btn>
       </div>
 
       <v-divider color="stone-light" opacity="0.6" class="mb-6"></v-divider>
@@ -35,17 +35,17 @@
             Made with
             <v-icon icon="mdi-heart" color="red-darken-1" size="small" class="footer-heart" role="img" aria-label="love"></v-icon>
             by
-            <a href="https://robsmitha.com" target="_blank" rel="noopener" class="text-stone footer-utility">robsmitha.com</a>
+            <a href="https://robsmitha.com" target="_blank" rel="noopener" class="text-sage footer-utility">robsmitha.com</a>
           </span>
 
           <span class="text-stone-light" aria-hidden="true">&middot;</span>
 
           <template v-if="signedIn">
-            <router-link :to="ADMIN_HOME" class="font-nav text-caption text-blush footer-utility">Admin</router-link>
+            <router-link :to="ADMIN_HOME" class="font-nav text-caption text-sage footer-utility">Admin</router-link>
             <span class="text-stone-light" aria-hidden="true">&middot;</span>
-            <a :href="SIGN_OUT_URL" class="font-nav text-caption text-stone footer-utility">Sign out</a>
+            <a :href="SIGN_OUT_URL" class="font-nav text-caption text-sage footer-utility">Sign out</a>
           </template>
-          <a v-else :href="SIGN_IN_URL" class="font-nav text-caption text-stone footer-utility">Sign in</a>
+          <a v-else :href="SIGN_IN_URL" class="font-nav text-caption text-sage footer-utility">Sign in</a>
         </div>
       </div>
     </v-container>

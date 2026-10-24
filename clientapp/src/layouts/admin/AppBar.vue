@@ -4,7 +4,7 @@
       <v-row align="center" no-gutters>
         <v-col cols="auto" class="d-flex align-center">
           <router-link to="/admin/photos" class="text-decoration-none">
-            <span class="font-display text-charcoal brand-mark">aspensmitha.com</span>
+            <span class="font-heading text-charcoal brand-mark">aspensmitha.com</span>
           </router-link>
           <span class="font-nav tracking-widest text-caption text-blush admin-tag ml-3 pl-3">Admin</span>
         </v-col>
@@ -18,7 +18,7 @@
               v-for="link in navLinks"
               :key="link.title"
               :to="link.to"
-              class="font-nav tracking-wide text-caption text-charcoal nav-link d-none d-md-inline"
+              class="font-nav tracking-wide text-caption text-sage nav-link d-none d-md-inline"
               :class="{ 'nav-link--active': route.path === link.to || route.path.startsWith(`${link.to}/`) }"
             >
               {{ link.title.toUpperCase() }}
@@ -26,7 +26,7 @@
 
             <router-link
               to="/"
-              class="font-nav tracking-wide text-caption text-charcoal nav-link d-inline-flex align-center"
+              class="font-nav tracking-wide text-caption text-sage nav-link d-inline-flex align-center"
               title="View the public site"
             >
               <span class="d-none d-sm-inline">VIEW SITE</span>
@@ -40,7 +40,7 @@
                 v-bind="props"
                 icon
                 variant="outlined"
-                color="charcoal"
+                color="sage"
                 size="small"
                 rounded="0"
                 class="user-btn"
@@ -74,7 +74,7 @@
                 <v-btn
                   block
                   variant="text"
-                  color="charcoal"
+                  color="sage"
                   rounded="0"
                   class="font-nav tracking-wide text-caption justify-start"
                   prepend-icon="mdi-logout"
@@ -144,7 +144,7 @@ const { userDetails } = useSignedInUser()
 }
 
 .user-btn {
-  border-color: rgba(var(--v-theme-charcoal), 0.35);
+  border-color: rgba(var(--v-theme-sage), 0.5);
 }
 
 .user-initial {

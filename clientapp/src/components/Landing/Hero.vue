@@ -1,26 +1,11 @@
 <template>
   <section class="hero py-10 py-md-14">
     <v-container class="text-center mb-8 mb-md-10">
-      <span class="font-nav tracking-widest text-caption text-blush hero-eyebrow mb-4">
-        Tallahassee &amp; Beyond
-      </span>
+      <h1 class="font-heading text-charcoal hero-name my-2">Aspen Smitha Photography</h1>
 
-      <h1 class="font-display text-charcoal hero-name my-2">Aspen Smitha</h1>
-
-      <p class="font-display font-italic text-charcoal hero-tagline mb-8">
-        Wedding &middot; Maternity &middot; Family Photography
+      <p class="font-script text-charcoal hero-tagline mb-0">
+        Wedding &middot; Maternity &middot; Family
       </p>
-
-      <v-btn
-        variant="outlined"
-        color="charcoal"
-        size="large"
-        rounded="0"
-        class="font-nav tracking-wide text-caption"
-        to="/portfolio"
-      >
-        View the Portfolio
-      </v-btn>
     </v-container>
 
     <!-- A wide, edge-to-edge carousel of standout session frames — the
@@ -142,14 +127,11 @@ watch(() => slides.value.length, () => nextTick(measureFit))
 </script>
 
 <style scoped>
-.hero-eyebrow {
-  display: inline-block;
-}
-
 .hero-name {
   font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);
   line-height: 1.05;
   letter-spacing: 0.01em;
+  text-wrap: balance;
 }
 
 .hero-tagline {

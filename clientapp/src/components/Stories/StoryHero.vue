@@ -6,7 +6,7 @@
           <router-link
             v-if="back && !preview"
             :to="back.to"
-            class="font-nav tracking-wide text-caption text-charcoal-light story-hero__back d-inline-flex align-center ga-2"
+            class="font-nav tracking-wide text-caption text-sage story-hero__back d-inline-flex align-center ga-2"
           >
             <v-icon size="14">mdi-arrow-left</v-icon>
             {{ back.label }}
@@ -14,7 +14,7 @@
 
           <span class="font-nav tracking-widest text-caption text-blush-dark story-hero__eyebrow">{{ eyebrow }}</span>
 
-          <component :is="preview ? 'div' : 'h1'" class="font-display text-charcoal story-hero__title">
+          <component :is="preview ? 'div' : 'h1'" class="font-heading text-charcoal story-hero__title">
             <template v-if="parts.length === 2">
               {{ parts[0] }} <span class="story-hero__amp">&amp;</span> {{ parts[1] }}
             </template>
@@ -118,7 +118,7 @@ const meta = computed(() => storyMeta(props.story))
 
 .story-hero__title {
   font-size: clamp(3rem, 5vw + 1rem, 5.75rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.02;
   margin-top: 20px;
   text-wrap: balance;

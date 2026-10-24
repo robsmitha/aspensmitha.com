@@ -17,7 +17,7 @@ meta:
       <p class="font-display text-charcoal empty-note mx-auto mb-6">
         Session details are taking a moment to load. Please refresh, or reach out and I'll help you find a time.
       </p>
-      <v-btn color="charcoal" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/contact">
+      <v-btn color="sage" size="large" rounded="0" class="font-nav tracking-wide text-caption" to="/contact">
         Contact
       </v-btn>
     </div>

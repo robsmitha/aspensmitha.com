@@ -1,7 +1,7 @@
 <template>
   <div class="time-slots">
     <template v-if="date">
-      <h3 class="font-display text-charcoal time-slots__date mb-1">{{ formatLongDate(date) }}</h3>
+      <h3 class="font-heading text-charcoal time-slots__date mb-1">{{ formatLongDate(date) }}</h3>
       <p class="d-flex align-center font-nav text-caption text-stone mb-6">
         <v-icon size="14" class="mr-1">mdi-earth</v-icon>
         Times shown in {{ timeZoneLabel(date) }}
@@ -42,7 +42,7 @@
 
     <p class="font-display text-charcoal-light time-slots__contact mb-0">
       Don't see a time that works for you?
-      <router-link :to="contactLink" class="text-charcoal time-slots__link">Get in touch</router-link>
+      <router-link :to="contactLink" class="text-sage time-slots__link">Get in touch</router-link>
       and we'll find one that does.
     </p>
   </div>
@@ -86,12 +86,12 @@ function isSelected(slot: Date) {
 }
 
 .time-slots__btn--idle {
-  color: rgb(var(--v-theme-charcoal)) !important;
-  border-color: rgba(var(--v-theme-charcoal), 0.25);
+  color: rgb(var(--v-theme-sage)) !important;
+  border-color: rgba(var(--v-theme-sage), 0.35);
 }
 
 .time-slots__btn--idle:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 
 .time-slots__empty,

@@ -3,13 +3,13 @@
     <v-container class="text-center">
       <router-link
         to="/portfolio"
-        class="font-nav tracking-wide text-caption text-stone back-link d-inline-flex align-center ga-2 mb-6"
+        class="font-nav tracking-wide text-caption text-sage back-link d-inline-flex align-center ga-2 mb-6"
       >
         <v-icon size="14">mdi-arrow-left</v-icon>
         All Categories
       </router-link>
 
-      <h1 class="font-display text-charcoal hero-heading mb-4">{{ name }}</h1>
+      <h1 class="font-heading text-charcoal hero-heading mb-4">{{ name }}</h1>
       <p class="font-display text-stone hero-subtitle mx-auto">{{ description }}</p>
     </v-container>
   </v-sheet>

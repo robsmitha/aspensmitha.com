@@ -45,11 +45,11 @@ meta:
   <div v-else-if="story === undefined" class="story-pending"></div>
 
   <v-container v-else class="py-20 text-center">
-    <h1 class="font-display text-charcoal not-found-heading mb-4">Story Not Found</h1>
+    <h1 class="font-heading text-charcoal not-found-heading mb-4">Story Not Found</h1>
     <p class="text-charcoal-light mb-6">This story may have moved or isn&rsquo;t published yet.</p>
     <router-link
       :to="category?.stories ? `/portfolio/${category.slug}` : '/portfolio'"
-      class="font-nav tracking-wide text-caption text-charcoal"
+      class="font-nav tracking-wide text-caption text-sage"
     >
       {{ category?.stories ? `See ${category.stories.backLabel}` : 'Back to Portfolio' }}
     </router-link>

@@ -8,10 +8,9 @@ meta:
 
   <template v-if="sessions.loaded">
     <PricingSection
-      v-for="(collection, index) in sessions.collections"
+      v-for="collection in sessions.collections"
       :key="collection.name"
       :title="collection.name"
-      :tone="index % 2 === 0 ? 'ivory' : 'ivory-deep'"
       :tiers="collection.sessions.map(toTier)"
     />
   </template>

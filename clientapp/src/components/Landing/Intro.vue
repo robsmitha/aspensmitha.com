@@ -10,9 +10,7 @@
       </v-col>
 
       <v-col cols="12" md="6" offset-md="1" order="1" order-md="2">
-        <span class="font-nav tracking-widest text-caption text-blush">The Photographer</span>
-
-        <h2 class="font-display text-charcoal intro-heading my-4">Hello, I'm Aspen.</h2>
+        <h2 class="font-heading text-charcoal intro-heading mb-4">Hello, I'm Aspen.</h2>
 
         <div class="intro-quote">
           <v-icon color="blush" size="28" class="d-flex mb-3">mdi-format-quote-open</v-icon>
@@ -23,18 +21,7 @@
           </p>
         </div>
 
-        <p class="font-nav tracking-wide text-caption text-stone intro-list-label mt-8 mb-4">
-          Every session is crafted to
-        </p>
-
-        <div class="intro-list">
-          <div v-for="point in points" :key="point" class="d-flex align-start ga-3 mb-3">
-            <v-icon color="blush" size="14" class="intro-list-mark">mdi-check</v-icon>
-            <span class="font-display text-charcoal intro-list-copy">{{ point }}</span>
-          </div>
-        </div>
-
-        <router-link to="/about-me" class="font-nav tracking-wide text-caption text-charcoal intro-link d-inline-flex align-center ga-2 mt-4">
+        <router-link to="/about-me" class="font-nav tracking-wide text-caption text-sage intro-link d-inline-flex align-center ga-2 mt-8">
           Learn more about me
           <v-icon size="16">mdi-arrow-right</v-icon>
         </router-link>
@@ -46,12 +33,6 @@
 <script setup lang="ts">
 import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
-
-const points = [
-  'Reflect your authentic self and personality',
-  'Tell a captivating story',
-  'Elicit emotions such as joy, love, and nostalgia',
-]
 </script>
 
 <style scoped>
@@ -86,28 +67,14 @@ const points = [
   padding-left: 20px;
 }
 
-.intro-list-label {
-  font-style: italic;
-}
-
-.intro-list-mark {
-  margin-top: 6px;
-}
-
-.intro-list-copy {
-  font-size: 1.125rem;
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-}
-
 .intro-link {
   text-decoration: none;
   padding-bottom: 3px;
-  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  border-bottom: 1px solid rgba(var(--v-theme-sage), 0.4);
   transition: border-color 0.2s ease;
 }
 
 .intro-link:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 </style>

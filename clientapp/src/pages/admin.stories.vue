@@ -13,7 +13,7 @@ meta:
       <template #actions>
         <v-btn
           variant="flat"
-          color="charcoal"
+          color="sage"
           rounded="0"
           class="font-nav tracking-wide text-caption"
           prepend-icon="mdi-plus"
@@ -27,7 +27,7 @@ meta:
     <!-- New story: just a category and a title; everything else is on the story's page -->
     <v-expand-transition>
       <v-form v-if="creating" class="new-story pa-5 mb-8" @submit.prevent="create">
-        <h2 class="font-display text-charcoal new-story__heading mb-4">New story</h2>
+        <h2 class="font-heading text-charcoal new-story__heading mb-4">New story</h2>
         <div class="d-flex flex-wrap ga-4 align-start">
           <v-select
             id="new-story-category"
@@ -56,7 +56,7 @@ meta:
             <v-btn
               type="submit"
               variant="flat"
-              color="charcoal"
+              color="sage"
               rounded="0"
               size="large"
               class="font-nav tracking-wide text-caption"
@@ -65,7 +65,7 @@ meta:
             >
               Create Draft
             </v-btn>
-            <v-btn variant="text" color="charcoal" rounded="0" size="large" class="font-nav tracking-wide text-caption" @click="creating = false">
+            <v-btn variant="text" color="sage" rounded="0" size="large" class="font-nav tracking-wide text-caption" @click="creating = false">
               Cancel
             </v-btn>
           </div>
@@ -96,7 +96,7 @@ meta:
       <p class="text-body-2 text-charcoal-light mb-6">
         A story is one wedding or event told as its own page: a hero with the couple&rsquo;s names and details, then the photos in order.
       </p>
-      <v-btn variant="outlined" color="charcoal" rounded="0" class="font-nav tracking-wide text-caption" @click="creating = true">
+      <v-btn variant="outlined" color="sage" rounded="0" class="font-nav tracking-wide text-caption" @click="creating = true">
         Start Your First Story
       </v-btn>
     </div>

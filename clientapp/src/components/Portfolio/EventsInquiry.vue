@@ -1,7 +1,7 @@
 <template>
   <v-container class="py-14 py-md-18 text-center">
     <v-btn
-      color="charcoal"
+      color="sage"
       size="large"
       rounded="0"
       class="font-nav tracking-wide text-caption"

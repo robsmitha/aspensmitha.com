@@ -5,7 +5,7 @@
         <v-toolbar-title>
           <span class="font-display text-h5 text-charcoal">Booking Policies</span>
         </v-toolbar-title>
-        <v-btn icon="mdi-close" color="stone" aria-label="Close" @click="emit('update:modelValue', false)"></v-btn>
+        <v-btn icon="mdi-close" color="sage" aria-label="Close" @click="emit('update:modelValue', false)"></v-btn>
       </v-toolbar>
       <v-divider color="stone-light" />
 
@@ -18,10 +18,10 @@
 
       <v-divider color="stone-light" />
       <v-card-actions class="px-6 py-4 d-flex justify-end ga-2">
-        <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="text" color="stone" @click="emit('update:modelValue', false)">
+        <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="text" color="sage" @click="emit('update:modelValue', false)">
           Close
         </v-btn>
-        <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="flat" color="charcoal" @click="emit('agree')">
+        <v-btn class="font-nav tracking-wide text-caption" rounded="0" variant="flat" color="sage" @click="emit('agree')">
           I agree
         </v-btn>
       </v-card-actions>

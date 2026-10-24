@@ -2,7 +2,7 @@
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
       <!-- <span class="font-nav tracking-widest text-caption text-blush">Pricing</span> -->
-      <h1 class="font-display text-charcoal hero-heading mt-4 mb-4">Investment</h1>
+      <h1 class="font-heading text-charcoal hero-heading mt-4 mb-4">Investment</h1>
       <p class="font-display font-italic text-stone hero-subtitle mx-auto">
         Session pricing and what's included, so you can find the right fit for your story.
       </p>

@@ -2,7 +2,7 @@
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
       <!-- <span class="font-nav tracking-widest text-caption text-blush">About</span> -->
-      <h1 class="font-display text-charcoal hero-heading mt-4">Meet Your Photographer</h1>
+      <h1 class="font-heading text-charcoal hero-heading mt-4">Meet Your Photographer</h1>
     </v-container>
   </v-sheet>
 </template>

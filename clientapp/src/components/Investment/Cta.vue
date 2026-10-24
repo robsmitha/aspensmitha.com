@@ -6,7 +6,7 @@
     </p>
 
     <v-btn
-      color="charcoal"
+      color="sage"
       size="large"
       rounded="0"
       class="font-nav tracking-wide text-caption"

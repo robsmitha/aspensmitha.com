@@ -2,13 +2,13 @@
   <!-- Same green header treatment as /booking: the session's details and description, centered -->
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
-      <router-link to="/booking" class="d-inline-flex align-center font-nav tracking-wide text-caption text-stone back-link mb-6">
+      <router-link to="/booking" class="d-inline-flex align-center font-nav tracking-wide text-caption text-sage back-link mb-6">
         <v-icon size="14" class="mr-1">mdi-arrow-left</v-icon>
         ALL SESSIONS
       </router-link>
 
       <!-- <span class="d-block font-nav tracking-widest text-caption text-blush text-uppercase">{{ session.collection }}</span> -->
-      <h1 class="font-display text-charcoal summary-title mt-4 mb-4">{{ session.title }}</h1>
+      <h1 class="font-heading text-charcoal summary-title mt-4 mb-4">{{ session.title }}</h1>
 
       <SessionMeta :session="session" class="justify-center mb-8" />
 
@@ -23,7 +23,7 @@
               <h2 class="font-nav tracking-widest text-caption text-charcoal text-uppercase mb-3">What's included</h2>
               <ul class="summary-features">
                 <li v-for="feature in session.features" :key="feature" class="d-flex align-start justify-center ga-2 mb-1">
-                  <v-icon color="blush" size="16" class="mt-1">mdi-check</v-icon>
+                  <v-icon color="sage" size="18" class="mt-1">mdi-check-bold</v-icon>
                   <span class="font-italic">{{ feature }}</span>
                 </li>
               </ul>
@@ -32,7 +32,7 @@
         </v-expand-transition>
       </div>
 
-      <button type="button" class="font-nav tracking-wide text-caption text-charcoal read-more" :aria-expanded="expanded" @click="emit('update:expanded', !expanded)">
+      <button type="button" class="font-nav tracking-wide text-caption text-sage read-more" :aria-expanded="expanded" @click="emit('update:expanded', !expanded)">
         {{ expanded ? 'SHOW LESS' : 'READ MORE' }}
         <v-icon size="14" class="ml-1">{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
       </button>
@@ -63,7 +63,7 @@ const descriptionParagraphs = computed(() => paragraphs(props.session.descriptio
 }
 
 .back-link:hover {
-  color: rgb(var(--v-theme-charcoal)) !important;
+  color: rgb(var(--v-theme-sage)) !important;
 }
 
 /* Matches the /booking header */
@@ -99,12 +99,12 @@ const descriptionParagraphs = computed(() => paragraphs(props.session.descriptio
   background: none;
   border: 0;
   padding: 0 0 3px;
-  border-bottom: 1px solid rgba(var(--v-theme-charcoal), 0.35);
+  border-bottom: 1px solid rgba(var(--v-theme-sage), 0.4);
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
 
 .read-more:hover {
-  border-color: rgb(var(--v-theme-charcoal));
+  border-color: rgb(var(--v-theme-sage));
 }
 </style>

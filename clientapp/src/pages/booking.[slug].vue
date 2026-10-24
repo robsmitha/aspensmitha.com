@@ -27,7 +27,7 @@ meta:
         <template v-else>
           <v-sheet ref="calendarCard" color="surface" border rounded="0" class="calendar-card pa-6 pa-sm-8 pa-md-10">
             <span class="d-block font-nav tracking-widest text-caption text-blush mb-1">AVAILABILITY</span>
-            <h2 class="font-display text-charcoal calendar-heading mb-6">Choose a date &amp; time</h2>
+            <h2 class="font-heading text-charcoal calendar-heading mb-6">Choose a date &amp; time</h2>
 
             <v-alert
               v-if="conflictMessage"
@@ -87,8 +87,8 @@ meta:
   </template>
 
   <v-container v-else-if="sessions.loaded" class="py-20 text-center">
-    <h1 class="font-display text-charcoal not-found-heading mb-4">Session Not Found</h1>
-    <router-link to="/booking" class="font-nav tracking-wide text-caption text-charcoal">
+    <h1 class="font-heading text-charcoal not-found-heading mb-4">Session Not Found</h1>
+    <router-link to="/booking" class="font-nav tracking-wide text-caption text-sage">
       Back to all sessions
     </router-link>
   </v-container>

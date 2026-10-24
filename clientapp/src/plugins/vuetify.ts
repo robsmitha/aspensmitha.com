@@ -58,35 +58,37 @@ const portfolio: ThemeDefinition = {
   },
 }
 
-// Light, airy bridal theme for the Aspen Smitha Photography landing page —
-// soft near-white paper tones, ink used only for text/line-work (never as a
-// section background) and a single muted sage-green accent ("Soft Sage",
-// built from seed #63725b), in the spirit of a wedding studio site rather
-// than an earthy/rustic one. Custom keys (ivory / charcoal / blush etc.)
-// still render as Vuetify utility classes at runtime, e.g. `bg-ivory`,
-// `text-blush`, `border-charcoal` — only the hex values shifted from blush
-// to sage, so every component that already consumes these tokens picks up
-// the new palette automatically. Scoped on to that page only via
-// `theme="aspen"` so the rest of the (unrelated, dark) site is untouched.
+// Light bridal theme for the Aspen Smitha Photography pages: near-white
+// paper (`ivory`, also `ivory-deep` for hero bands), white cards
+// (`surface`) and near-black text (`charcoal`). Green (#63725b) is the
+// accent: `sage` for every link and button, `blush` for small touches such
+// as quote marks, check marks, labels and focused fields. Custom keys
+// (ivory / charcoal / blush etc.) render as Vuetify utility classes, e.g.
+// `bg-ivory`, `text-blush`; only their hex values change between palettes.
+// Scoped to those pages via `theme="aspen"`, so the dark developer site is
+// untouched.
 const aspen: ThemeDefinition = {
   dark: false,
   colors: {
     background: '#f9faf6',
     surface: '#ffffff',
     primary: '#2c3126',
-    secondary: '#8b9880',
+    secondary: '#63725b',
     'on-background': '#2c3126',
     'on-surface': '#2c3126',
     'on-primary': '#f9faf6',
 
     ivory: '#f9faf6',
-    'ivory-deep': '#f0f2e9',
+    'ivory-deep': '#f9faf6',
     charcoal: '#2c3126',
+    'on-charcoal': '#f9faf6',
     'charcoal-light': '#474d3d',
     stone: '#a7b09a',
     'stone-light': '#e0e4d5',
-    blush: '#8b9880',
-    'blush-dark': '#6d7a63',
+    sage: '#63725b',
+    'on-sage': '#f9faf6',
+    blush: '#63725b',
+    'blush-dark': '#4f5b48',
   },
   variables: {
     'border-color': '#2c3126',

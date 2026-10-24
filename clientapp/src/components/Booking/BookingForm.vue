@@ -1,7 +1,7 @@
 <template>
   <v-sheet color="surface" border rounded="0" class="booking-form pa-6 pa-sm-8 pa-md-10">
     <span class="font-nav tracking-widest text-caption text-blush">YOUR SESSION</span>
-    <h2 class="font-display text-charcoal booking-form__heading mt-1 mb-6">Confirm your details</h2>
+    <h2 class="font-heading text-charcoal booking-form__heading mt-1 mb-6">Confirm your details</h2>
 
     <dl class="booking-recap mb-8">
       <div>
@@ -150,7 +150,7 @@
         <template #label>
           <span class="font-display text-charcoal">
             I've read and agree to the
-            <a href="#" class="text-charcoal booking-link" @click.prevent.stop="policiesOpen = true">Payment and Gallery Policies</a>.
+            <a href="#" class="text-sage booking-link" @click.prevent.stop="policiesOpen = true">Payment and Gallery Policies</a>.
           </span>
         </template>
       </v-checkbox>
@@ -175,7 +175,7 @@
 
       <div v-if="turnstileError" class="font-display text-error booking-feedback mb-4" role="alert">
         {{ turnstileError }}
-        <a href="#" class="text-charcoal booking-link ml-1" @click.prevent="retryVerification">Retry verification</a>
+        <a href="#" class="text-sage booking-link ml-1" @click.prevent="retryVerification">Retry verification</a>
       </div>
 
       <div v-if="submitError" class="font-display text-error booking-feedback mb-4" role="alert">
@@ -184,7 +184,7 @@
 
       <v-btn
         type="submit"
-        color="charcoal"
+        color="sage"
         size="large"
         rounded="0"
         :loading="submitting"

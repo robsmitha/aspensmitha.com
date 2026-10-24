@@ -90,7 +90,7 @@
                     :disabled="loading"
                     :href="selectedImage"
                     target="_blank"
-                    color="primary"
+                    color="sage"
                     icon
                 >
                     <v-icon>mdi-download</v-icon>

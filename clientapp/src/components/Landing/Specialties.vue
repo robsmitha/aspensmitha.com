@@ -3,11 +3,11 @@
     <v-container class="py-16 py-md-16">
       <div class="text-center mb-12 mb-md-16">
         <!-- <span class="font-nav tracking-widest text-caption text-blush">What I Shoot</span> -->
-        <h2 class="font-display text-charcoal specialties-heading mt-4">Specialties</h2>
+        <h2 class="font-heading text-charcoal specialties-heading mt-4">Specialties</h2>
       </div>
 
       <v-row class="specialties-row">
-        <v-col v-for="(item, i) in specialties" :key="item.title" cols="12" md="4">
+        <v-col v-for="item in specialties" :key="item.title" cols="12" md="4">
           <router-link :to="`/portfolio/${item.slug}`" class="text-decoration-none specialty-link">
             <PlacementPhoto
               :placement="item.placement"
@@ -16,11 +16,7 @@
             />
 
             <div class="text-center">
-              <span class="font-display font-italic text-blush specialty-index">
-                {{ String(i + 1).padStart(2, '0') }}
-              </span>
-              <h3 class="font-display text-charcoal specialty-title my-2">{{ item.title }}</h3>
-              <p class="font-display font-italic text-stone specialty-copy">{{ item.copy }}</p>
+              <h3 class="font-heading text-charcoal specialty-title mb-0">{{ item.title }}</h3>
             </div>
           </router-link>
         </v-col>
@@ -37,19 +33,16 @@ const specialties = [
   {
     title: 'Weddings',
     slug: 'weddings',
-    copy: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
     placement: 'home-specialty-weddings',
   },
   {
     title: 'Maternity',
     slug: 'maternity',
-    copy: 'Soft, timeless portraits that honor the season of waiting and becoming.',
     placement: 'home-specialty-maternity',
   },
   {
     title: 'Family',
     slug: 'family',
-    copy: 'Candid, unposed connection between the people who matter most to you.',
     placement: 'home-specialty-family',
   },
 ]
@@ -84,19 +77,7 @@ const specialties = [
   transform: translateY(-4px);
 }
 
-.specialty-index {
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-}
-
 .specialty-title {
   font-size: 1.75rem;
-}
-
-.specialty-copy {
-  font-size: 1.125rem;
-  line-height: 1.5;
-  max-width: 340px;
-  margin-inline: auto;
 }
 </style>

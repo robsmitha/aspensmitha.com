@@ -39,7 +39,7 @@
         v-if="previewable"
         variant="text"
         size="small"
-        color="charcoal"
+        color="sage"
         rounded="0"
         class="font-nav tracking-wide text-caption"
         :prepend-icon="showPreview ? 'mdi-eye-off-outline' : 'mdi-view-quilt-outline'"
@@ -92,7 +92,7 @@
                   <v-btn
                     size="small"
                     variant="tonal"
-                    color="blush"
+                    color="sage"
                     rounded="0"
                     class="font-nav tracking-wide text-caption mt-3"
                     :loading="busy[photo.id] === 'reprocess'"
@@ -171,7 +171,7 @@
               density="compact"
               variant="outlined"
               rounded="0"
-              color="charcoal"
+              color="sage"
               divided
             >
               <v-btn :value="3" size="small" class="font-nav text-caption">Desktop</v-btn>
@@ -224,11 +224,11 @@
         <div class="d-flex align-start justify-space-between ga-2 px-5 pt-5 pb-4">
           <div class="editor__title">
             <span class="font-nav tracking-widest text-caption text-blush text-uppercase">Photo details</span>
-            <h3 class="font-display text-charcoal editor__filename text-truncate" :title="editing.originalFileName">
+            <h3 class="font-heading text-charcoal editor__filename text-truncate" :title="editing.originalFileName">
               {{ editing.originalFileName }}
             </h3>
           </div>
-          <v-btn icon="mdi-close" variant="text" size="small" color="charcoal" aria-label="Close" @click="closeEditor"></v-btn>
+          <v-btn icon="mdi-close" variant="text" size="small" color="sage" aria-label="Close" @click="closeEditor"></v-btn>
         </div>
         <v-divider color="stone-light"></v-divider>
 
@@ -282,7 +282,7 @@
             <v-btn
               v-else
               variant="outlined"
-              color="charcoal"
+              color="sage"
               rounded="0"
               prepend-icon="mdi-star-outline"
               class="font-nav tracking-wide text-caption"
@@ -374,7 +374,7 @@
               <div class="where__detail">
                 <div class="d-flex align-center ga-2">
                   <span class="font-display text-charcoal where__page">{{ group.page === 'site' ? group.name : `${group.name} page` }}</span>
-                  <a v-if="group.page !== 'site'" :href="group.path" target="_blank" class="font-nav text-caption text-blush where__link">View &#8599;</a>
+                  <a v-if="group.page !== 'site'" :href="group.path" target="_blank" class="font-nav text-caption text-sage where__link">View &#8599;</a>
                 </div>
                 <ul class="where__spots text-caption text-stone">
                   <li v-for="placement in group.placements" :key="placement.key">{{ placement.label }}</li>
@@ -385,12 +385,12 @@
             <div v-if="story" class="d-flex align-center ga-2 text-caption">
               <v-icon size="16" color="stone">mdi-book-open-page-variant-outline</v-icon>
               <span class="text-charcoal">Story &rsaquo; {{ story.title }}</span>
-              <a v-if="story.href" :href="story.href" target="_blank" class="font-nav text-blush where__link">View &#8599;</a>
+              <a v-if="story.href" :href="story.href" target="_blank" class="font-nav text-sage where__link">View &#8599;</a>
             </div>
             <div v-else-if="galleryFor(editingDraft!.category)" class="d-flex align-center ga-2 text-caption">
               <v-icon size="16" color="stone">mdi-view-grid-outline</v-icon>
               <span class="text-charcoal">Portfolio &rsaquo; {{ galleryFor(editingDraft!.category)!.name }} gallery</span>
-              <a :href="`/portfolio/${editingDraft!.category}`" target="_blank" class="font-nav text-blush where__link">View &#8599;</a>
+              <a :href="`/portfolio/${editingDraft!.category}`" target="_blank" class="font-nav text-sage where__link">View &#8599;</a>
             </div>
 
             <p
@@ -430,7 +430,7 @@
           <v-spacer></v-spacer>
           <v-btn
             variant="text"
-            color="charcoal"
+            color="sage"
             rounded="0"
             class="font-nav tracking-wide text-caption"
             :loading="busy[editing.id] === 'reprocess'"
@@ -440,7 +440,7 @@
           </v-btn>
           <v-btn
             variant="flat"
-            color="charcoal"
+            color="sage"
             rounded="0"
             class="font-nav tracking-wide text-caption"
             :disabled="!isDirty(editing)"
@@ -470,7 +470,7 @@
             :icon="trayCollapsed ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             variant="text"
             size="small"
-            color="charcoal"
+            color="sage"
             :aria-label="trayCollapsed ? 'Show uploads' : 'Hide uploads'"
             @click="trayCollapsed = !trayCollapsed"
           ></v-btn>
@@ -479,7 +479,7 @@
             icon="mdi-close"
             variant="text"
             size="small"
-            color="charcoal"
+            color="sage"
             aria-label="Close"
             @click="clearUploads"
           ></v-btn>
