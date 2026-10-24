@@ -184,6 +184,13 @@
             }
         },
         {
+            "route": "/portfolio/creative",
+            "rewrite": "/portfolio/creative.html",
+            "headers": {
+                "Cache-Control": "no-cache"
+            }
+        },
+        {
             "route": "/spending",
             "allowedRoles": [
                 "authenticated"

@@ -245,6 +245,18 @@
       ],
       "alt": "Event photography by Aspen Smitha, Tallahassee photographer",
       "fallbackCategory": "events"
+    },
+    {
+      "key": "portfolio-cover-creative",
+      "name": "portfolio-cover-creative-photo1",
+      "ratio": 0.8,
+      "widths": [
+        400,
+        800,
+        1200
+      ],
+      "alt": "Creative and editorial photography by Aspen Smitha, Tallahassee photographer",
+      "fallbackCategory": "creative"
     }
   ]
 }

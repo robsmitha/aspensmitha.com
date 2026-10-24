@@ -33,7 +33,7 @@
         <div class="d-flex flex-wrap justify-center align-center ga-3">
           <span class="font-nav text-caption text-stone">
             Made with
-            <v-icon icon="mdi-heart" color="red-darken-1" size="small" class="footer-heart" role="img" aria-label="love"></v-icon>
+            <v-icon icon="mdi-heart" color="sage" size="small" class="footer-heart" role="img" aria-label="love"></v-icon>
             by
             <a href="https://robsmitha.com" target="_blank" rel="noopener" class="text-sage footer-utility">robsmitha.com</a>
           </span>

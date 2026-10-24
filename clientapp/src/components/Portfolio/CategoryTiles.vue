@@ -5,15 +5,15 @@
         v-for="(category, i) in categories"
         :key="category.slug"
         cols="6"
-        md="3"
+        md="4"
       >
         <router-link :to="`/portfolio/${category.slug}`" class="text-decoration-none">
           <div class="category-tile">
             <PlacementPhoto
               :placement="portfolioCoverKey(category.slug)"
               :sizes="PHOTO_SIZES.tile"
-              :eager="i < 4"
-              :priority="i < 4 ? 'high' : undefined"
+              :eager="i < 3"
+              :priority="i < 3 ? 'high' : undefined"
               class="category-tile-image"
             />
             <div class="category-tile-scrim"></div>
@@ -37,7 +37,7 @@ import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 import { portfolioCoverKey } from '@/utils/sitePlacements'
 
-// The first row (four across on desktop) is on screen right under the heading
+// The first row (three across on desktop, a 3×3 grid) is on screen right under the heading
 const categories = PORTFOLIO_CATEGORIES
 </script>
 

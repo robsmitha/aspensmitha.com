@@ -7,8 +7,8 @@ meta:
   <Hero />
 
   <v-container class="py-14 py-md-20">
-    <v-row v-if="!sessions.loaded">
-      <v-col v-for="n in 3" :key="n" cols="12" sm="6" md="4">
+    <v-row v-if="!sessions.loaded" class="session-grid">
+      <v-col v-for="n in 4" :key="n" cols="12" sm="6">
         <v-skeleton-loader type="image, heading, text@2" color="transparent" />
       </v-col>
     </v-row>
@@ -22,8 +22,9 @@ meta:
       </v-btn>
     </div>
 
-    <v-row v-else>
-      <v-col v-for="session in sessions.sessions" :key="session.slug" cols="12" sm="6" md="4">
+    <!-- 2 × 2: two cards per row from tablet up, centered so they don't stretch on wide screens -->
+    <v-row v-else class="session-grid">
+      <v-col v-for="session in sessions.sessions" :key="session.slug" cols="12" sm="6">
         <SessionCard :session="session" />
       </v-col>
     </v-row>
@@ -40,6 +41,11 @@ sessions.load()
 </script>
 
 <style scoped>
+.session-grid {
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
 .empty-note {
   font-size: 1.125rem;
   line-height: 1.6;

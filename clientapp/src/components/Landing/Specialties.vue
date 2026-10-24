@@ -1,10 +1,7 @@
 <template>
   <v-sheet color="ivory-deep">
     <v-container class="py-16 py-md-16">
-      <div class="text-center mb-12 mb-md-16">
-        <!-- <span class="font-nav tracking-widest text-caption text-blush">What I Shoot</span> -->
-        <h2 class="font-heading text-charcoal specialties-heading mt-4">Specialties</h2>
-      </div>
+      <SectionHeading>Specialties</SectionHeading>
 
       <v-row class="specialties-row">
         <v-col v-for="item in specialties" :key="item.title" cols="12" md="4">
@@ -27,6 +24,7 @@
 
 <script setup lang="ts">
 import PlacementPhoto from '@/components/Photo/PlacementPhoto.vue'
+import SectionHeading from '@/components/Landing/SectionHeading.vue'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 
 const specialties = [
@@ -36,23 +34,21 @@ const specialties = [
     placement: 'home-specialty-weddings',
   },
   {
-    title: 'Maternity',
-    slug: 'maternity',
-    placement: 'home-specialty-maternity',
-  },
-  {
     title: 'Family',
     slug: 'family',
     placement: 'home-specialty-family',
+  },
+  {
+    title: 'Couples',
+    slug: 'couples',
+    // Shares the Couples portfolio cover (same 4:5 crop, already published)
+    // instead of adding a new fixed image URL
+    placement: 'portfolio-cover-couples',
   },
 ]
 </script>
 
 <style scoped>
-.specialties-heading {
-  font-size: clamp(2.25rem, 2.5vw + 1.25rem, 3rem);
-}
-
 /* Keeps the three cards at a reasonable size on big screens, centered as a
    group instead of stretching to the container's full width */
 @media (min-width: 1400px) {

@@ -279,7 +279,7 @@ meta:
         </v-alert>
 
         <PhotoManager
-          :photos="photos"
+          :photos="orderedPhotos"
           :all-photos="allPhotos"
           :upload-target="{ storyId: saved.id }"
           :label="saved.title"
@@ -381,6 +381,11 @@ const storyId = computed(() => String((route.params as Record<string, string>).i
 const saved = ref<ManagedStory>()
 const draft = ref<Fields>()
 const photos = ref<ManagedPhoto[]>([])
+/**
+ * Display order. Sorted on every change because PhotoManager reorders by
+ * updating sortOrder in place, so a drop moves the tiles right away.
+ */
+const orderedPhotos = computed(() => [...photos.value].sort(byManagedOrder))
 const allPhotos = ref<ManagedPhoto[]>([])
 const loadError = ref(false)
 const saving = ref(false)
@@ -419,7 +424,7 @@ const dirty = computed(() => !!saved.value && !!draft.value &&
   JSON.stringify(normalize(draft.value)) !== JSON.stringify(normalize(fieldsOf(saved.value))))
 
 const heroPhoto = computed(() => {
-  const ready = photos.value.filter(p => p.status === 'Ready' && p.srcBase)
+  const ready = orderedPhotos.value.filter(p => p.status === 'Ready' && p.srcBase)
   const photo = ready.find(p => p.id === draft.value?.heroPhotoId) ?? ready[0]
   return photo ? { ...photo, srcBase: photo.srcBase!, width: photo.width ?? 0, height: photo.height ?? 0 } : null
 })

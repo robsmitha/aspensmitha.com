@@ -42,6 +42,7 @@ const CATEGORY_SEARCH_TERMS: Record<string, string> = {
   seniors: 'Senior Portrait',
   grads: 'Graduation',
   events: 'Event',
+  creative: 'Creative',
 }
 
 const HOME_CRUMB: Crumb = { name: 'Home', path: '/' }

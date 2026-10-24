@@ -3,11 +3,10 @@
     <v-container class="text-center">
       <span class="font-nav tracking-widest text-caption text-blush">LOVE WHAT YOU SEE?</span>
 
-      <h2 class="font-heading text-charcoal cta-heading mt-3 mb-4">
-        {{ category ? "Let's create yours." : "Let's create something beautiful together." }}
-      </h2>
+      <!-- Category pages only; the main Portfolio page goes straight to the copy -->
+      <h2 v-if="category" class="font-heading text-charcoal cta-heading mt-3 mb-4">Let's create yours.</h2>
 
-      <p class="font-display text-stone cta-copy mx-auto mb-8">
+      <p class="font-display text-stone cta-copy mx-auto mb-8" :class="{ 'mt-4': !category }">
         <template v-if="category">
           Book your {{ category.bookingLabel }} today and let's capture the moments you'll want to hold onto.
         </template>

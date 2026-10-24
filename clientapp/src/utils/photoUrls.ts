@@ -45,8 +45,10 @@ export const PHOTO_SIZES = {
   ctaBanner: '(max-width: 879px) 880px, 100vw',
   /** cols 12 / sm 6 / md 4 */
   gallery: '(max-width: 599px) 100vw, (max-width: 959px) 50vw, 33vw',
-  /** cols 6 / md 3 */
-  tile: '(max-width: 959px) 50vw, 25vw',
+  /** Booking session cards: cols 12 / sm 6 in a grid capped at 1000px */
+  sessionCard: '(max-width: 599px) 100vw, (max-width: 1039px) 50vw, 500px',
+  /** cols 6 / md 4 */
+  tile: '(max-width: 959px) 50vw, 33vw',
   /** cols 12 / md 4 */
   third: '(max-width: 959px) 100vw, 33vw',
   /** cols 12 / md 5 */

@@ -1,11 +1,9 @@
 <template>
   <section class="hero py-10 py-md-14">
     <v-container class="text-center mb-8 mb-md-10">
-      <h1 class="font-heading text-charcoal hero-name my-2">Aspen Smitha Photography</h1>
+      <h1 class="font-heading text-charcoal hero-name my-2">Aspen Smitha</h1>
 
-      <p class="font-script text-charcoal hero-tagline mb-0">
-        Wedding &middot; Maternity &middot; Family
-      </p>
+      <p class="font-script text-charcoal hero-tagline mb-0">Photography</p>
     </v-container>
 
     <!-- A wide, edge-to-edge carousel of standout session frames — the
@@ -134,9 +132,12 @@ watch(() => slides.value.length, () => nextTick(measureFit))
   text-wrap: balance;
 }
 
+/* Just under the title's size (40–72px); the script's small letters make it
+   read noticeably smaller than Bodoni at the same size */
 .hero-tagline {
-  font-size: clamp(1.125rem, 1vw + 0.75rem, 1.5rem);
-  letter-spacing: 0.02em;
+  font-size: clamp(2.25rem, 3.6vw + 0.9rem, 4rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 
 .hero-showcase {

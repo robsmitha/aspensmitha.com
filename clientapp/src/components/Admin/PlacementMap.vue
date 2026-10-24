@@ -171,7 +171,7 @@ function block(area: string) {
 
 .pm__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 }
 

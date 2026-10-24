@@ -96,6 +96,19 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
       ctaBody: 'Tell me about your gathering and I’ll make sure every moment worth remembering is covered.',
     },
   },
+  {
+    slug: 'creative',
+    name: 'Creative',
+    description: 'Styled concepts and editorial shoots, each one built around its own story.',
+    bookingLabel: 'creative session',
+    hasGallery: true,
+    stories: {
+      eyebrow: 'A Creative Story',
+      backLabel: 'All Creative',
+      ctaHeading: 'Let’s build your concept.',
+      ctaBody: 'Bring the idea, the mood or just a feeling, and we’ll shape it into a shoot that’s entirely yours.',
+    },
+  },
 ]
 
 /**

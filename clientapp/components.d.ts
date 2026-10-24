@@ -44,6 +44,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaveProductDialog: typeof import('./src/components/Merchant/SaveProductDialog.vue')['default']
+    SectionHeading: typeof import('./src/components/Landing/SectionHeading.vue')['default']
     SessionCard: typeof import('./src/components/Booking/SessionCard.vue')['default']
     SessionMeta: typeof import('./src/components/Booking/SessionMeta.vue')['default']
     SessionSummary: typeof import('./src/components/Booking/SessionSummary.vue')['default']

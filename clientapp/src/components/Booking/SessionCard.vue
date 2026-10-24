@@ -1,7 +1,7 @@
 <template>
   <router-link :to="`/booking/${session.slug}`" class="session-card-link d-block h-100" :aria-label="`${session.title}: view details and availability`">
     <v-sheet color="surface" border rounded="0" class="session-card d-flex flex-column h-100">
-      <ResponsivePhoto :photo="cover" :sizes="PHOTO_SIZES.gallery" aspect-ratio="1.5" :alt="`${session.title} session`" />
+      <ResponsivePhoto :photo="cover" :sizes="PHOTO_SIZES.sessionCard" aspect-ratio="1.5" :alt="`${session.title} session`" />
 
       <div class="pa-6 pa-md-7 d-flex flex-column flex-grow-1">
         <span class="font-nav tracking-widest text-caption text-blush text-uppercase">{{ session.collection }}</span>
