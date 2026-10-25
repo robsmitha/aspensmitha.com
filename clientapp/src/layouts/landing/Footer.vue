@@ -4,7 +4,7 @@
       <div class="text-center mb-10">
         <span class="font-heading text-charcoal footer-brand">Aspen Smitha</span>
         <p class="font-nav tracking-widest text-caption text-stone mt-2">
-          Wedding &amp; Portrait Photography
+          North Florida &amp; South Georgia Photographer
         </p>
       </div>
 

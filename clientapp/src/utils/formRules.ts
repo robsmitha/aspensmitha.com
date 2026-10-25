@@ -24,6 +24,12 @@ export const emailRules: Rule[] = [
 /** Optional, but must look like a phone number when given */
 export const phoneRules: Rule[] = [value => !value?.trim() || PHONE_PATTERN.test(value.trim()) || 'Please enter a valid phone number.']
 
+/** Required, and must look like a phone number */
+export const requiredPhoneRules: Rule[] = [
+  required('Please enter your phone number.'),
+  value => PHONE_PATTERN.test(value.trim()) || 'Please enter a valid phone number.',
+]
+
 export const messageRules: Rule[] = [maxLength(MESSAGE_MAX, 'Message')]
 
 /**

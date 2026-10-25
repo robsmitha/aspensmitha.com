@@ -10,78 +10,42 @@
         />
       </v-col>
 
+      <!-- One column of text beside the photo, so it reads as a single block -->
       <v-col cols="12" md="6" offset-md="1">
+        <v-icon color="blush" size="32" class="d-flex mb-6">mdi-format-quote-open</v-icon>
+
         <p class="font-display text-charcoal story-copy mb-6">
-          Hey there! My name is Aspen, and I'm a {{ aspenAge }} year-old stay-at-home mom,
-          caring for my {{ sonAge }} year-old snack bandit. My husband and I will celebrate our
-          {{ yearsTogetherOrdinal }} year together in
-          December. We have three cats; Zeus, Jasper, and Athena, and a French Bulldog named
-          Hazel. When I'm not working on my photography business, we're most likely to be
-          walking as a family around the nearby park or completing tasks on the ever-growing
-          list of to-dos for our renovated house.
+          Hey there! I’m Aspen, a {{ aspenAge }}-year-old stay-at-home mom to my
+          {{ sonAge }}-year-old son, wife to my best friend of {{ yearsTogetherPhrase }}, and cat
+          mom to Zeus, Jasper, and Athena. When I’m not behind the camera, you’ll probably find
+          us exploring a nearby park or working on our ever-growing list of home renovations.
         </p>
 
         <p class="font-display text-charcoal story-copy mb-6">
-          From my earliest memories, I had a passion to create and share stories with the
-          world. My storytelling journey took various forms throughout the years. Through
-          avenues like journalism club and yearbook class, I honed my skills in crafting
-          compelling narratives and capturing moments that mattered.
+          My love for storytelling began long before photography. Through journalism club,
+          yearbook, and countless photoshoots with my friends and little brother, I discovered
+          the joy of capturing moments and turning them into something meaningful. When I
+          received my first camera for Christmas in 2020, that passion quickly grew into
+          something more.
         </p>
 
         <p class="font-display text-charcoal story-copy mb-6">
-          It was when I got my hands on my mom's camera that my love for photography began to
-          take root. I'd bring it with me on trips to capture the landscape and wildlife, had
-          endless photoshoots with friends, and made my little brother my very own model
-          (older sibling love at its finest).
+          Motherhood has shaped my perspective in ways I never could have imagined. Our eldest
+          son, Beckham, was born at 24 weeks and spent 105 days in the NICU. Our second son,
+          Lincoln, arrived at just 21 weeks, and heartbreakingly, we were unable to bring him
+          home. Both of my boys are my greatest inspiration, reminding me to cherish the
+          fleeting moments and pursue the things that matter most.
         </p>
 
         <p class="font-display text-charcoal story-copy">
-          Christmas of 2020 I was gifted my very own camera and two Christmases ago my husband
-          bought me a new one! My gear collection has multiplied and my love for photography
-          has grown beyond just taking pictures. I love scouting for new locations, connecting
-          with my clients, editing images to perfection, and of course &mdash; telling your
-          story.
+          Photography has become more than just taking pictures. It’s about preserving memories,
+          celebrating life, and telling the stories that make us who we are. Whether your story
+          is filled with profound joy, heartbreaking loss, or a little of both, I hope to help
+          you hold onto it&mdash;one photograph at a time.
         </p>
       </v-col>
     </v-row>
-
   </v-container>
-
-  <!-- A wider, full-bleed pull-quote band for the most personal part of the
-       story. Wider than the old narrow centered column so the same text
-       takes less scroll, but kept as one flowing column — a left-to-right
-       reader's eye doesn't naturally split a screen into two texts to read
-       side by side, so two columns here felt disjointed rather than wide. -->
-  <v-sheet color="ivory-deep" class="py-14 py-md-20">
-    <v-container>
-      <div class="quote-block">
-        <v-icon color="blush" size="32" class="d-flex mb-8 mb-md-10">mdi-format-quote-open</v-icon>
-
-        <p class="font-display text-charcoal story-copy mb-6">
-          The journey of motherhood has been both a profound and emotional one for me. Our
-          eldest son, Beckham, was born prematurely at 24 weeks, and spent 105 days in the TMH
-          NICU. Our second son, Lincoln, arrived even earlier at 21 weeks, and we were
-          heartbreakingly unable to bring him home. These experiences have made me cherish
-          every moment and instilled even more of a desire to capture life's fleeting moments
-          through my camera. Both of my sons are my inspiration. They've taught me to never
-          take life for granted, to seize every moment, and to gather the courage to pursue my
-          dream of starting my own photography business. Through them, I've discovered the
-          incredible power of photography to preserve memories, celebrate life, and tell the
-          stories that matter most.
-        </p>
-
-        <p class="font-display text-charcoal story-copy">
-          I hope to have the opportunity to tell your story, whether it's filled with moments
-          of profound joy or heart wrenching sadness. Life is woven with threads of varying
-          shades and textures, and it's in the diverse experiences and emotions that our
-          stories truly come to life. I aim to capture the essence of your journey, preserving
-          the moments that define it, so you can hold onto them for a lifetime. Each
-          photograph becomes a chapter in your unique story, and I can't wait to help you tell
-          it, one image at a time.
-        </p>
-      </div>
-    </v-container>
-  </v-sheet>
 </template>
 
 <script setup lang="ts">
@@ -105,12 +69,19 @@ function calculateAge(birthYear: number, birthMonth: number, birthDay: number): 
 const aspenAge = calculateAge(2002, 2, 25)
 const sonAge = calculateAge(2021, 11, 18)
 
-// Dating started December 1, 2020; each December marks another year together.
-const ordinalWords = [
-  'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
+// Together since December 1, 2020. Reads "nearly six years" in the months
+// leading up to an anniversary and "six years" in the months after it.
+const numberWords = [
+  'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
 ]
-const yearsTogether = new Date().getFullYear() - 2020
-const yearsTogetherOrdinal = ordinalWords[yearsTogether - 1] ?? `${yearsTogether}th`
+const today = new Date()
+const monthsTogether = (today.getFullYear() - 2020) * 12 + today.getMonth() - 11
+const fullYears = Math.floor(monthsTogether / 12)
+const nearly = monthsTogether % 12 >= 6
+const shownYears = nearly ? fullYears + 1 : Math.max(fullYears, 1)
+const yearsWord = numberWords[shownYears - 1] ?? String(shownYears)
+const yearsTogetherPhrase = `${nearly ? 'nearly ' : ''}${yearsWord} year${shownYears === 1 ? '' : 's'}`
 </script>
 
 <style scoped>
@@ -138,8 +109,4 @@ const yearsTogetherOrdinal = ordinalWords[yearsTogether - 1] ?? `${yearsTogether
   letter-spacing: 0.01em;
 }
 
-.quote-block {
-  max-width: 780px;
-  margin-inline: auto;
-}
 </style>

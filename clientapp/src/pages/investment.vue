@@ -10,7 +10,6 @@ meta:
     <PricingSection
       v-for="collection in sessions.collections"
       :key="collection.name"
-      :title="collection.name"
       :tiers="collection.sessions.map(toTier)"
     />
   </template>

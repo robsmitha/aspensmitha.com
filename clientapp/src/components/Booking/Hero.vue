@@ -2,7 +2,8 @@
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
       <!-- <span class="font-nav tracking-widest text-caption text-blush">Booking</span> -->
-      <h1 class="font-heading text-charcoal hero-heading mt-4 mb-4">Book Your Session</h1>
+      <h1 class="font-heading text-charcoal hero-heading mt-4">Book Your Session</h1>
+      <span class="heading-rule heading-rule--page heading-rule--wide" aria-hidden="true"></span>
       <!-- <p class="font-display text-stone hero-subtitle mx-auto mb-6">
         Browse the sessions below to see what's included, check my availability, and reserve your date in just a few
         steps. Dreaming up something a little different, like a custom package, a special location, or a request that

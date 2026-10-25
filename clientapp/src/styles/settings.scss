@@ -102,3 +102,22 @@ pre {
   font-size: 0.8125rem;
   line-height: 1.7;
 }
+
+/* Short, thin green accent line under a page or section title */
+.heading-rule {
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin: 20px auto 0;
+  background-color: rgb(var(--v-theme-sage));
+}
+
+// Page titles are set larger than section titles, so their line is longer
+.heading-rule--page {
+  width: 96px;
+}
+
+// Longer page titles (three words) get a longer line still
+.heading-rule--wide {
+  width: 144px;
+}

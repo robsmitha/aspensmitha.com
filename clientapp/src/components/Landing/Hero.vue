@@ -4,6 +4,8 @@
       <h1 class="font-heading text-charcoal hero-name my-2">Aspen Smitha</h1>
 
       <p class="font-script text-charcoal hero-tagline mb-0">Photography</p>
+
+      <p class="font-nav text-charcoal hero-location mt-4 mb-0">Tallahassee &amp; Beyond</p>
     </v-container>
 
     <!-- A wide, edge-to-edge carousel of standout session frames — the
@@ -138,6 +140,13 @@ watch(() => slides.value.length, () => nextTick(measureFit))
   font-size: clamp(2.25rem, 3.6vw + 0.9rem, 4rem);
   line-height: 1.1;
   letter-spacing: 0.01em;
+}
+
+/* Same font as the nav links, larger, and well under the tagline */
+.hero-location {
+  font-size: clamp(calc(1rem - 7pt), calc(1vw + 0.75rem - 7pt), calc(1.5rem - 7pt));
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .hero-showcase {

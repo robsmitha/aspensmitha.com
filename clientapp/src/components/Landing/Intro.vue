@@ -14,10 +14,14 @@
 
         <div class="intro-quote">
           <v-icon color="blush" size="28" class="d-flex mb-3">mdi-format-quote-open</v-icon>
+          <p class="font-display font-italic text-charcoal intro-copy mb-4">
+            I’m here to capture life’s fleeting, unrepeatable moments: the way he looks at her,
+            the hand resting on a growing belly, a child’s laugh caught midair.
+          </p>
           <p class="font-display font-italic text-charcoal intro-copy mb-0">
-            I'm here to capture life's fleeting, unrepeatable moments — the way he looks at her,
-            the hand resting on a growing belly, a child's laugh caught mid-air. Take a tour,
-            stay awhile, and let's make something beautiful together.
+            Whether you’re a couple wanting your first photos together, parents-to-be,
+            celebrating a graduation, saying “I do,” or simply wanting photos for your wall,
+            I’m here for you.
           </p>
         </div>
 

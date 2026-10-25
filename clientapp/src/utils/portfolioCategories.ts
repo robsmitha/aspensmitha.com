@@ -31,21 +31,21 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
   {
     slug: 'couples',
     name: 'Couples',
-    description: 'Candid, unposed connection between two people building a life together.',
+    description: 'Tallahassee Couples Photographer | Aspen Smitha Photography',
     bookingLabel: 'couples session',
     hasGallery: true,
   },
   {
     slug: 'engagements',
     name: 'Engagements',
-    description: "Celebrating the season between 'yes' and 'I do'.",
+    description: 'Tallahassee Engagement Photographer | Aspen Smitha Photography',
     bookingLabel: 'engagement session',
     hasGallery: true,
   },
   {
     slug: 'weddings',
     name: 'Weddings',
-    description: 'From quiet getting-ready moments to the last dance, documented with an editorial eye.',
+    description: 'Tallahassee Wedding Photographer | Aspen Smitha Photography',
     bookingLabel: 'wedding',
     hasGallery: true,
     stories: {
@@ -58,35 +58,35 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
   {
     slug: 'maternity',
     name: 'Maternity',
-    description: 'Soft, timeless portraits that honor the season of waiting and becoming.',
+    description: 'Tallahassee Maternity Photographer | Aspen Smitha Photography',
     bookingLabel: 'maternity session',
     hasGallery: true,
   },
   {
     slug: 'family',
     name: 'Family',
-    description: 'Candid, unposed connection between the people who matter most to you.',
+    description: 'Tallahassee Family Photographer | Aspen Smitha Photography',
     bookingLabel: 'family session',
     hasGallery: true,
   },
   {
     slug: 'seniors',
     name: 'Seniors',
-    description: 'Confident, editorial portraits to mark the milestone.',
+    description: 'Tallahassee Senior Photographer | Aspen Smitha Photography',
     bookingLabel: 'senior session',
     hasGallery: true,
   },
   {
     slug: 'grads',
     name: 'Grads',
-    description: 'Celebrating the achievement, in the places that made it happen.',
+    description: 'Tallahassee Graduation Photographer | Aspen Smitha Photography',
     bookingLabel: 'grad session',
     hasGallery: true,
   },
   {
     slug: 'events',
     name: 'Events',
-    description: 'Every gathering worth remembering, documented as it unfolds.',
+    description: 'Tallahassee Event Photographer | Aspen Smitha Photography',
     bookingLabel: 'event',
     hasGallery: false,
     stories: {
@@ -99,7 +99,7 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
   {
     slug: 'creative',
     name: 'Creative',
-    description: 'Styled concepts and editorial shoots, each one built around its own story.',
+    description: "Not every photoshoot begins with a client inquiry. Sometimes, an idea simply pops into my head, and I can’t help but bring it to life. These creative sessions are offered as complimentary model collaborations in exchange for permission to share the resulting images. Interested in collaborating? Reach out through my contact page!",
     bookingLabel: 'creative session',
     hasGallery: true,
     stories: {

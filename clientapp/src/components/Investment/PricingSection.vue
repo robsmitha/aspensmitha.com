@@ -1,19 +1,13 @@
 <template>
-  <v-sheet color="ivory" class="py-14 py-md-20">
+  <v-sheet color="ivory" class="py-8 py-md-12">
     <v-container>
-      <div class="d-flex align-center mb-10 mb-md-14 section-heading">
-        <h2 class="font-heading text-charcoal section-title text-nowrap">{{ title }}</h2>
-        <v-divider class="ml-6 flex-grow-1" color="stone-light" opacity="0.8" thickness="1"></v-divider>
-      </div>
-
       <v-row>
         <v-col v-for="tier in tiers" :key="tier.name" cols="12" :md="12 / tiers.length">
           <v-sheet color="surface" border rounded="0" class="pricing-card pa-8 pa-md-10 h-100">
-            <span class="font-nav tracking-widest text-caption text-blush">{{ title }}</span>
-            <h3 class="font-heading text-charcoal tier-name mt-2 mb-4">{{ tier.name }}</h3>
+            <h3 class="font-heading text-charcoal tier-name mb-4">{{ tier.name }}</h3>
 
             <div class="d-flex align-baseline ga-1 mb-4">
-              <span class="font-display text-charcoal tier-price">{{ tier.price }}</span>
+              <span class="font-display text-sage tier-price">{{ tier.price }}</span>
             </div>
 
             <p v-if="tier.description" class="font-display font-italic text-stone tier-description mb-6">
@@ -44,16 +38,11 @@ export interface PricingTier {
 }
 
 defineProps<{
-  title: string
   tiers: PricingTier[]
 }>()
 </script>
 
 <style scoped>
-.section-title {
-  font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
-}
-
 .pricing-card {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }

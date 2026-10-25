@@ -72,7 +72,7 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-              <label for="contact-phone" class="font-nav tracking-wide text-caption text-stone field-label">Phone</label>
+              <label for="contact-phone" class="font-nav tracking-wide text-caption text-stone field-label">Phone *</label>
               <v-text-field
                 id="contact-phone"
                 v-model="form.phone"
@@ -128,7 +128,7 @@
           </template>
 
           <label for="contact-referral" class="font-nav tracking-wide text-caption text-stone field-label">
-            How did you hear about us? *
+            How did you hear about me? *
           </label>
           <v-select
             id="contact-referral"
@@ -156,7 +156,7 @@
               variant="outlined"
               color="blush"
               rounded="0"
-              placeholder="Where did you hear about us?"
+              placeholder="Where did you hear about me?"
               maxlength="190"
               class="font-display mb-4"
               @update:model-value="fieldErrors.referralSource = []"
@@ -236,7 +236,7 @@ import { usePhotoStore } from '@/store/photos'
 import { PHOTO_SIZES } from '@/utils/photoUrls'
 import { PORTFOLIO_CATEGORIES } from '@/utils/portfolioCategories'
 import { CONTACT_EMAIL } from '@/utils/contact'
-import { MESSAGE_MAX, camelCaseErrors, emailRules, maxLength, messageRules, nameRules, phoneRules, required, type Rule } from '@/utils/formRules'
+import { MESSAGE_MAX, camelCaseErrors, emailRules, maxLength, messageRules, nameRules, requiredPhoneRules, required, type Rule } from '@/utils/formRules'
 import { useSessionStore } from '@/store/sessions'
 import { OTHER_REFERRAL_SOURCE, REFERRAL_SOURCES, referralOtherRules, referralSourceRules, referralSourceValue } from '@/utils/referralSources'
 
@@ -271,7 +271,7 @@ const form = reactive(emptyForm())
 const rules: Record<Exclude<FieldName, 'referralSource'>, Rule[]> = {
   name: nameRules,
   email: emailRules,
-  phone: phoneRules,
+  phone: requiredPhoneRules,
   subject: [required("Please tell me what type of session you're interested in.")],
   subjectOther: [
     value => form.subject !== OTHER_SESSION_TYPE || !!value?.trim() || 'Please specify the type of session.',
@@ -459,6 +459,8 @@ async function submit() {
 .field-label {
   display: block;
   margin-bottom: 0.5rem;
+  /* Beats Vuetify's .text-caption (0.75rem !important) */
+  font-size: 0.875rem !important;
 }
 
 .contact-form :deep(.v-field) {

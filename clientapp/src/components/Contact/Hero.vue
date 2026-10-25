@@ -2,7 +2,8 @@
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
       <!-- <span class="font-nav tracking-widest text-caption text-blush">Contact</span> -->
-      <h1 class="font-heading text-charcoal hero-heading mt-4 mb-4">Let's Connect</h1>
+      <h1 class="font-heading text-charcoal hero-heading mt-4">Let's Connect</h1>
+      <span class="heading-rule heading-rule--page mb-6" aria-hidden="true"></span>
       <p class="font-display text-stone hero-subtitle mx-auto">
         Please fill out the form below to inquire about booking.
       </p>

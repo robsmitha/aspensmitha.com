@@ -3,6 +3,7 @@
     <v-container class="text-center">
       <!-- <span class="font-nav tracking-widest text-caption text-blush">About</span> -->
       <h1 class="font-heading text-charcoal hero-heading mt-4">Meet Your Photographer</h1>
+      <span class="heading-rule heading-rule--page heading-rule--wide" aria-hidden="true"></span>
     </v-container>
   </v-sheet>
 </template>
