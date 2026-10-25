@@ -14,6 +14,12 @@ export interface PortfolioCategory {
   /** What a client books, for the "Book your ___ today" prompt, e.g. "engagement session" */
   bookingLabel: string
   hasGallery: boolean
+  /** Replaces "Let's create yours." in the booking prompt at the bottom of the category page */
+  bookingHeading?: string
+  /** Leaves out the sentence under the booking prompt's heading */
+  hideBookingCopy?: boolean
+  /** The booking prompt's button reads "Inquire Now" and opens the contact form instead of booking */
+  inquireInstead?: boolean
   stories?: StoryCopy
 }
 
@@ -24,7 +30,6 @@ export interface StoryCopy {
   /** Back link on a story page, e.g. "All Weddings" */
   backLabel: string
   ctaHeading: string
-  ctaBody: string
 }
 
 export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
@@ -34,6 +39,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Couples Photographer | Aspen Smitha Photography',
     bookingLabel: 'couples session',
     hasGallery: true,
+    bookingHeading: 'Let’s capture your love story',
+    hideBookingCopy: true,
   },
   {
     slug: 'engagements',
@@ -41,6 +48,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Engagement Photographer | Aspen Smitha Photography',
     bookingLabel: 'engagement session',
     hasGallery: true,
+    bookingHeading: 'Let’s make it official.',
+    hideBookingCopy: true,
   },
   {
     slug: 'weddings',
@@ -48,11 +57,13 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Wedding Photographer | Aspen Smitha Photography',
     bookingLabel: 'wedding',
     hasGallery: true,
+    bookingHeading: 'Your wedding plans start here.',
+    hideBookingCopy: true,
+    inquireInstead: true,
     stories: {
       eyebrow: 'A Wedding Story',
       backLabel: 'All Weddings',
-      ctaHeading: 'Let’s plan your day, hour by hour.',
-      ctaBody: 'I’ll help you build a timeline around the best light, so nothing on your day feels rushed.',
+      ctaHeading: 'Your wedding plans start here.',
     },
   },
   {
@@ -61,6 +72,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Maternity Photographer | Aspen Smitha Photography',
     bookingLabel: 'maternity session',
     hasGallery: true,
+    bookingHeading: 'Ready to celebrate your little one?',
+    hideBookingCopy: true,
   },
   {
     slug: 'family',
@@ -68,6 +81,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Family Photographer | Aspen Smitha Photography',
     bookingLabel: 'family session',
     hasGallery: true,
+    bookingHeading: 'Let’s create your gallery wall.',
+    hideBookingCopy: true,
   },
   {
     slug: 'seniors',
@@ -75,6 +90,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Senior Photographer | Aspen Smitha Photography',
     bookingLabel: 'senior session',
     hasGallery: true,
+    bookingHeading: 'Start your next adventure!',
+    hideBookingCopy: true,
   },
   {
     slug: 'grads',
@@ -82,6 +99,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: 'Tallahassee Graduation Photographer | Aspen Smitha Photography',
     bookingLabel: 'grad session',
     hasGallery: true,
+    bookingHeading: 'Eternalize your accomplishment!',
+    hideBookingCopy: true,
   },
   {
     slug: 'events',
@@ -93,7 +112,6 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
       eyebrow: 'An Event Story',
       backLabel: 'All Events',
       ctaHeading: 'Let’s plan your event.',
-      ctaBody: 'Tell me about your gathering and I’ll make sure every moment worth remembering is covered.',
     },
   },
   {
@@ -102,11 +120,13 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     description: "Not every photoshoot begins with a client inquiry. Sometimes, an idea simply pops into my head, and I can’t help but bring it to life. These creative sessions are offered as complimentary model collaborations in exchange for permission to share the resulting images. Interested in collaborating? Reach out through my contact page!",
     bookingLabel: 'creative session',
     hasGallery: true,
+    bookingHeading: 'Let’s collaborate!',
+    hideBookingCopy: true,
+    inquireInstead: true,
     stories: {
       eyebrow: 'A Creative Story',
       backLabel: 'All Creative',
-      ctaHeading: 'Let’s build your concept.',
-      ctaBody: 'Bring the idea, the mood or just a feeling, and we’ll shape it into a shoot that’s entirely yours.',
+      ctaHeading: 'Let’s Collaborate!',
     },
   },
 ]

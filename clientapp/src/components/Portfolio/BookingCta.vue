@@ -4,9 +4,11 @@
       <span class="font-nav tracking-widest text-caption text-blush">LOVE WHAT YOU SEE?</span>
 
       <!-- Category pages only; the main Portfolio page goes straight to the copy -->
-      <h2 v-if="category" class="font-heading text-charcoal cta-heading mt-3 mb-4">Let's create yours.</h2>
+      <h2 v-if="category" class="font-heading text-charcoal cta-heading-lg mt-3" :class="category.hideBookingCopy ? 'mb-8' : 'mb-4'">
+        {{ category.bookingHeading ?? "Let's create yours." }}
+      </h2>
 
-      <p class="font-display text-stone cta-copy mx-auto mb-8" :class="{ 'mt-4': !category }">
+      <p v-if="!category?.hideBookingCopy" class="font-display text-stone cta-copy mx-auto mb-8" :class="{ 'mt-4': !category }">
         <template v-if="category">
           Book your {{ category.bookingLabel }} today and let's capture the moments you'll want to hold onto.
         </template>
@@ -23,7 +25,7 @@
         :to="bookingLink"
         @click="trackClick"
       >
-        Book Now
+        {{ category?.inquireInstead ? 'Inquire Now' : 'Book Now' }}
       </v-btn>
     </v-container>
   </v-sheet>
@@ -48,6 +50,7 @@ onMounted(() => {
 // Straight to the session when exactly one bookable session matches the category; otherwise the full list
 const bookingLink = computed(() => {
   if (!props.category) return '/booking'
+  if (props.category.inquireInstead) return { path: '/contact', query: { type: props.category.name } }
   const matches = sessions.sessions.filter(s => s.isBookable && s.portfolioCategory === props.category!.slug)
   return matches.length === 1 ? `/booking/${matches[0].slug}` : '/booking'
 })
@@ -58,11 +61,6 @@ function trackClick() {
 </script>
 
 <style scoped>
-.cta-heading {
-  font-size: clamp(2rem, 2.5vw + 1rem, 3rem);
-  line-height: 1.15;
-}
-
 .cta-copy {
   font-size: clamp(1.0625rem, 0.5vw + 0.875rem, 1.1875rem);
   line-height: 1.6;

@@ -35,9 +35,7 @@ meta:
 
     <StoryCallToAction
       :heading="copy.ctaHeading"
-      :body="copy.ctaBody"
       :session-type="category?.name"
-      :more-to="`/portfolio/${story.category}`"
     />
   </template>
 
@@ -65,8 +63,8 @@ import StoryCallToAction from '@/components/Stories/StoryCallToAction.vue'
 import apiClient from '@/api/elysianClient'
 import { useStoryStore } from '@/store/stories'
 import { getPortfolioCategory } from '@/utils/portfolioCategories'
-import { photoUrl, type PortfolioPhoto } from '@/utils/photoUrls'
-import { applyPageSeo, storySeo, DEFAULT_SEO_IMAGE } from '@/utils/seo'
+import type { PortfolioPhoto } from '@/utils/photoUrls'
+import { applyPageSeo, storySeo } from '@/utils/seo'
 import { storyPath, storyPhotoAlt, type Story } from '@/utils/stories'
 
 const route = useRoute()
@@ -104,17 +102,8 @@ watch([() => params.value.slug, previewId], async ([slug, preview]) => {
 
 watch(story, s => {
   if (!s) return
-  const hero = s.hero
-  const image = hero
-    ? {
-        url: photoUrl(hero, hero.widths.find(w => w >= 1200) ?? hero.widths[hero.widths.length - 1]),
-        width: 1200,
-        height: Math.round(1200 * (hero.height / hero.width)),
-        alt: hero.altText || s.title,
-      }
-    : DEFAULT_SEO_IMAGE
   const page = storySeo(s, route.path)
-  applyPageSeo(route.path, { page: previewing.value ? { ...page, noindex: true } : page, image })
+  applyPageSeo(route.path, { page: previewing.value ? { ...page, noindex: true } : page })
 })
 
 interface ManagedStoryPhoto extends Omit<PortfolioPhoto, 'srcBase' | 'width' | 'height'> {

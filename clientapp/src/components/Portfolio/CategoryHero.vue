@@ -1,13 +1,15 @@
 <template>
   <v-sheet color="ivory-deep" class="py-14 py-md-18">
     <v-container class="text-center">
-      <router-link
-        to="/portfolio"
-        class="font-nav tracking-wide text-caption text-sage back-link d-inline-flex align-center ga-2 mb-6"
-      >
-        <v-icon size="14">mdi-arrow-left</v-icon>
-        All Categories
-      </router-link>
+      <div class="text-left mb-6">
+        <router-link
+          to="/portfolio"
+          class="font-nav tracking-wide text-caption text-sage back-link d-inline-flex align-center ga-2"
+        >
+          <v-icon size="14">mdi-arrow-left</v-icon>
+          All Categories
+        </router-link>
+      </div>
 
       <h1 class="font-heading text-charcoal hero-heading">{{ name }}</h1>
       <span class="heading-rule heading-rule--page mb-6" aria-hidden="true"></span>

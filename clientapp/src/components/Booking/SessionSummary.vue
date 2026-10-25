@@ -2,15 +2,18 @@
   <!-- Same green header treatment as /booking: the session's details and description, centered -->
   <v-sheet color="ivory-deep" class="py-16 py-md-20">
     <v-container class="text-center">
-      <router-link to="/booking" class="d-inline-flex align-center font-nav tracking-wide text-caption text-sage back-link mb-6">
-        <v-icon size="14" class="mr-1">mdi-arrow-left</v-icon>
-        ALL SESSIONS
-      </router-link>
+      <div class="text-left mb-6">
+        <router-link to="/booking" class="d-inline-flex align-center font-nav tracking-wide text-caption text-sage back-link">
+          <v-icon size="14" class="mr-1">mdi-arrow-left</v-icon>
+          ALL SESSIONS
+        </router-link>
+      </div>
 
       <!-- <span class="d-block font-nav tracking-widest text-caption text-blush text-uppercase">{{ session.collection }}</span> -->
       <h1 class="font-heading text-charcoal summary-title mt-4 mb-4">{{ session.title }}</h1>
 
-      <SessionMeta :session="session" class="justify-center mb-8" />
+      <SessionMeta :session="session" class="justify-center" />
+      <span class="heading-rule heading-rule--page mb-8" aria-hidden="true"></span>
 
       <div class="summary-body font-display text-stone mx-auto">
         <div :class="{ 'summary-clamp': !expanded }">

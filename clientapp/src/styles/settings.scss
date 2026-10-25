@@ -121,3 +121,11 @@ pre {
 .heading-rule--wide {
   width: 144px;
 }
+
+// Closing heading at the bottom of portfolio and story pages (e.g. "Let's create yours.")
+.cta-heading-lg {
+  font-size: clamp(calc(2rem - 2pt), calc(2.5vw + 1rem - 2pt), calc(3rem - 2pt));
+  font-weight: 400;
+  line-height: 1.15;
+  text-wrap: balance;
+}

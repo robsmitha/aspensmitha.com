@@ -64,11 +64,11 @@
         </v-col>
 
         <v-col cols="12" sm="6">
-          <label for="booking-phone" class="font-nav tracking-wide text-caption text-stone field-label">Phone</label>
+          <label for="booking-phone" class="font-nav tracking-wide text-caption text-stone field-label">Phone *</label>
           <v-text-field
             id="booking-phone"
             v-model="form.phone"
-            :rules="phoneRules"
+            :rules="requiredPhoneRules"
             :error-messages="fieldErrors.phone"
             variant="outlined"
             color="blush"
@@ -84,7 +84,7 @@
       </v-row>
 
         <label for="booking-referral" class="font-nav tracking-wide text-caption text-stone field-label">
-          How did you hear about us? *
+          How did you hear about me? *
         </label>
         <v-select
           id="booking-referral"
@@ -112,7 +112,7 @@
             variant="outlined"
             color="blush"
             rounded="0"
-            placeholder="Where did you hear about us?"
+            placeholder="Where did you hear about me?"
             maxlength="190"
             class="font-display mb-4"
             @update:model-value="fieldErrors.referralSource = []"
@@ -131,7 +131,7 @@
         color="blush"
         rounded="0"
         rows="4"
-        placeholder="Location ideas, who'll be joining, outfit questions, or a rush-delivery request..."
+        placeholder="Location ideas, who'll be joining, must-have images, or add-ons..."
         :counter="MESSAGE_MAX"
         class="font-display mb-2"
         @update:model-value="fieldErrors.message = []"
@@ -206,7 +206,7 @@ import apiClient from '@/api/elysianClient'
 import type { BookingSession } from '@/store/sessions'
 import { CONTACT_EMAIL } from '@/utils/contact'
 import { browserTimeZone, formatLongDate, formatPrice, formatTime, timeZoneLabel } from '@/utils/bookingFormat'
-import { MESSAGE_MAX, camelCaseErrors, emailRules, messageRules, nameRules, phoneRules } from '@/utils/formRules'
+import { MESSAGE_MAX, camelCaseErrors, emailRules, messageRules, nameRules, requiredPhoneRules } from '@/utils/formRules'
 import { OTHER_REFERRAL_SOURCE, REFERRAL_SOURCES, referralOtherRules, referralSourceRules, referralSourceValue } from '@/utils/referralSources'
 
 export interface BookingConfirmation {
@@ -401,6 +401,8 @@ async function submit() {
 .field-label {
   display: block;
   margin-bottom: 0.5rem;
+  /* Beats Vuetify's .text-caption (0.75rem !important) */
+  font-size: 1rem !important;
 }
 
 .booking-fields :deep(.v-field) {

@@ -35,7 +35,7 @@
 
       <v-col cols="12" md="6" offset-md="1">
         <v-form ref="formRef" class="contact-form" validate-on="blur lazy" @submit.prevent="submit">
-          <label for="contact-name" class="font-nav tracking-wide text-caption text-stone field-label">Name *</label>
+          <label for="contact-name" class="font-nav tracking-wide text-caption text-charcoal field-label">Name *</label>
           <v-text-field
             id="contact-name"
             v-model="form.name"
@@ -53,7 +53,7 @@
 
           <v-row>
             <v-col cols="12" sm="6">
-              <label for="contact-email" class="font-nav tracking-wide text-caption text-stone field-label">Email *</label>
+              <label for="contact-email" class="font-nav tracking-wide text-caption text-charcoal field-label">Email *</label>
               <v-text-field
                 id="contact-email"
                 v-model="form.email"
@@ -72,7 +72,7 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-              <label for="contact-phone" class="font-nav tracking-wide text-caption text-stone field-label">Phone *</label>
+              <label for="contact-phone" class="font-nav tracking-wide text-caption text-charcoal field-label">Phone *</label>
               <v-text-field
                 id="contact-phone"
                 v-model="form.phone"
@@ -91,7 +91,7 @@
             </v-col>
           </v-row>
 
-          <label for="contact-subject" class="font-nav tracking-wide text-caption text-stone field-label">
+          <label for="contact-subject" class="font-nav tracking-wide text-caption text-charcoal field-label">
             What type of session are you interested in? *
           </label>
           <v-select
@@ -109,7 +109,7 @@
           ></v-select>
 
           <template v-if="form.subject === OTHER_SESSION_TYPE">
-            <label for="contact-subject-other" class="font-nav tracking-wide text-caption text-stone field-label">
+            <label for="contact-subject-other" class="font-nav tracking-wide text-caption text-charcoal field-label">
               Please specify *
             </label>
             <v-text-field
@@ -127,7 +127,7 @@
             ></v-text-field>
           </template>
 
-          <label for="contact-referral" class="font-nav tracking-wide text-caption text-stone field-label">
+          <label for="contact-referral" class="font-nav tracking-wide text-caption text-charcoal field-label">
             How did you hear about me? *
           </label>
           <v-select
@@ -145,7 +145,7 @@
           ></v-select>
 
           <template v-if="form.referralSource === OTHER_REFERRAL_SOURCE">
-            <label for="contact-referral-other" class="font-nav tracking-wide text-caption text-stone field-label">
+            <label for="contact-referral-other" class="font-nav tracking-wide text-caption text-charcoal field-label">
               Please specify *
             </label>
             <v-text-field
@@ -163,8 +163,8 @@
             ></v-text-field>
           </template>
 
-          <label for="contact-message" class="font-nav tracking-wide text-caption text-stone field-label">
-            Tell me about you &amp; what your ideal photoshoot would include!
+          <label for="contact-message" class="font-nav tracking-wide text-caption text-charcoal field-label">
+            Please provide as much information about your inquiry as possible *
           </label>
           <v-textarea
             id="contact-message"
@@ -245,7 +245,16 @@ const photos = usePhotoStore()
 photos.load()
 
 const OTHER_SESSION_TYPE = 'Other - Please specify'
-const sessionTypes = [...PORTFOLIO_CATEGORIES.map(category => category.name), OTHER_SESSION_TYPE]
+// Couples stays as is; every other category reads as one session ("Wedding", not "Weddings")
+const SINGULAR_SESSION_TYPES: Record<string, string> = {
+  Engagements: 'Engagement',
+  Weddings: 'Wedding',
+  Seniors: 'Senior',
+  Grads: 'Grad',
+  Events: 'Event',
+}
+const sessionTypeFor = (categoryName: string) => SINGULAR_SESSION_TYPES[categoryName] ?? categoryName
+const sessionTypes = [...PORTFOLIO_CATEGORIES.map(category => sessionTypeFor(category.name)), OTHER_SESSION_TYPE]
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 /** Error key (after camelCasing) for a missing or failed Turnstile token, see Elysian's SendContactMessageCommand */
@@ -277,15 +286,17 @@ const rules: Record<Exclude<FieldName, 'referralSource'>, Rule[]> = {
     value => form.subject !== OTHER_SESSION_TYPE || !!value?.trim() || 'Please specify the type of session.',
     maxLength(200, 'Session details'),
   ],
-  message: messageRules,
+  message: [required('Please tell me about your inquiry.'), ...messageRules],
 }
 
 const route = useRoute()
 
 // Story pages link here with ?type=Weddings (a session type) to pre-select it
 const requestedType = route.query.type
-if (typeof requestedType === 'string' && sessionTypes.includes(requestedType)) {
-  form.subject = requestedType
+if (typeof requestedType === 'string') {
+  // Accepts the category name ("Weddings") or the dropdown wording ("Wedding")
+  const requested = sessionTypeFor(requestedType)
+  if (sessionTypes.includes(requested)) form.subject = requested
 }
 
 // Booking pages link here as /contact?session={slug} when no time works; start the inquiry for that session
@@ -300,7 +311,7 @@ onMounted(async () => {
 
   const category = PORTFOLIO_CATEGORIES.find(c => c.slug === session.portfolioCategory)
   if (category) {
-    form.subject = category.name
+    form.subject = sessionTypeFor(category.name)
   } else {
     form.subject = OTHER_SESSION_TYPE
     form.subjectOther = session.title

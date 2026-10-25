@@ -182,7 +182,7 @@ function truncate(text: string, max: number): string {
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max - 20))}…`
 }
 
-/** Share image (og:image); every page but a story uses the site default */
+/** Share image (og:image); every page uses the site default (the logo) */
 export interface SeoImage {
   url: string
   width: number
@@ -194,7 +194,7 @@ export const DEFAULT_SEO_IMAGE: SeoImage = {
   url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
-  alt: 'A bride holding a burgundy and blush bouquet, photographed by Aspen Smitha',
+  alt: 'Aspen Smitha Photography logo',
 }
 
 /** Absolute URL; trailing slash only on the root, matching the sitemap */

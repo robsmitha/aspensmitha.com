@@ -10,7 +10,7 @@
               <span class="font-display text-sage tier-price">{{ tier.price }}</span>
             </div>
 
-            <p v-if="tier.description" class="font-display font-italic text-stone tier-description mb-6">
+            <p v-if="tier.description" class="font-display font-italic text-charcoal tier-description mb-6">
               {{ tier.description }}
             </p>
 
