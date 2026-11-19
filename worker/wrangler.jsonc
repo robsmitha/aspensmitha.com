@@ -1,0 +1,29 @@
+{
+  // The Worker for Aspen's site. Until cutover it is only reachable at
+  // https://site-aspensmitha.smithadigital.workers.dev; the live site stays on Static Web Apps.
+  "name": "site-aspensmitha",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "preview_urls": false,
+
+  "assets": {
+    // Built by: yarn --cwd ../clientapp build:worker
+    "directory": "../clientapp/dist",
+    "binding": "ASSETS",
+    // Pages, scripts and images are served straight from static assets. Only the API runs the Worker,
+    // so nothing sits between the browser and the page.
+    "run_worker_first": ["/api/*"],
+    // /contact serves contact.html, /portfolio/weddings serves portfolio/weddings.html: the prerendered pages
+    "html_handling": "auto-trailing-slash",
+    // Any other path is an app route (a story, an admin page): serve the app and let it route
+    "not_found_handling": "single-page-application"
+  },
+
+  "vars": {
+    "ELYSIAN_ORIGIN": "https://elysian-sites.azurewebsites.net"
+  },
+
+  // ELYSIAN_EDGE_CREDENTIAL is a secret: npx wrangler secret put ELYSIAN_EDGE_CREDENTIAL
+  "observability": { "enabled": true }
+}

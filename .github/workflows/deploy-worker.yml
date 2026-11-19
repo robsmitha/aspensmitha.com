@@ -1,0 +1,53 @@
+name: Deploy the site Worker
+
+# Builds the site for the Cloudflare Worker and deploys it. Until cutover the Worker is only reachable at
+# https://site-aspensmitha.smithadigital.workers.dev; the live site is still the Static Web App, which its own
+# workflow deploys.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'clientapp/**'
+      - 'worker/**'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # READ_REPO_TOKEN and the Cloudflare secrets live in this environment
+    environment: Production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Also points the @robsmitha scope at GitHub Packages, reading the token from NODE_AUTH_TOKEN
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@robsmitha'
+
+      - name: Install the site's dependencies
+        run: yarn --cwd clientapp install --frozen-lockfile
+
+      # @robsmitha/site-edge lives in another repository's packages, which this repository's own token can't read
+      - name: Install the Worker's dependencies
+        working-directory: worker
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_REPO_TOKEN }}
+
+      # Builds clientapp in Worker mode, then deploys. The edge credential is a Worker secret set once by hand
+      # and is not touched by a deploy.
+      - name: Build and deploy
+        working-directory: worker
+        run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
