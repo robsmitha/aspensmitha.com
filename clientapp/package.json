@@ -4,11 +4,13 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--no-warnings' vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:worker": "vue-tsc --noEmit && vite build --mode worker",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore",
     "swa": "swa start http://localhost:3000 --api-devserver-url http://localhost:7071"
   },
   "dependencies": {
+    "@azure/msal-browser": "^5.30.0",
     "@azure/storage-blob": "^12.24.0",
     "@highlightjs/vue-plugin": "^2.1.0",
     "@mdi/font": "7.0.96",

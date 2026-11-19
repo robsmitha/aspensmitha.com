@@ -9,6 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import search from '@/pages/search.vue'
 import { applySeo } from '@/utils/seo'
+import { AUTH_MODE, currentUser, requiresSignIn } from '@/auth'
 
 import { RouteLocationNormalized } from 'vue-router';
 const routes = [
@@ -31,6 +32,18 @@ const router = createRouter({
     return { top: 0 }
   },
 })
+
+// Static Web Apps guards the signed-in pages itself (staticwebapp.config.json). Behind a Worker nothing does,
+// so the app sends anyone who isn't signed in to sign in first. This only decides which page to show: the
+// API checks the person's token on every call, whatever the browser does.
+if (AUTH_MODE === 'external') {
+  router.beforeEach(async to => {
+    if (!requiresSignIn(to.path) || await currentUser()) {
+      return true
+    }
+    return { path: '/auth/sign-in', query: { returnTo: to.fullPath } }
+  })
+}
 
 router.afterEach(to => applySeo(to))
 

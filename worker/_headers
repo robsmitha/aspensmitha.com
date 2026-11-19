@@ -1,0 +1,14 @@
+# Response headers for the pages and files the Worker serves from static assets.
+# Copied into ../clientapp/dist by "npm run build:site".
+
+# File names under /assets carry a hash of their content, so a given URL never changes
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: same-origin
+
+# The workers.dev address is for testing. Keep it out of search results; the real domain is unaffected.
+https://site-aspensmitha.smithadigital.workers.dev/*
+  X-Robots-Tag: noindex

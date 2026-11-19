@@ -1,0 +1,17 @@
+{
+  "name": "site-aspensmitha",
+  "private": true,
+  "type": "module",
+  "description": "The Cloudflare Worker that serves aspensmithaphotography.com: static pages from ../clientapp/dist, /api forwarded to the shared backend.",
+  "scripts": {
+    "build:site": "yarn --cwd ../clientapp build:worker && node -e \"require('fs').copyFileSync('_headers','../clientapp/dist/_headers')\"",
+    "deploy": "npm run build:site && wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {
+    "@robsmitha/site-edge": "^0.1.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
