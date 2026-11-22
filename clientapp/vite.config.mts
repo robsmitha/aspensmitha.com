@@ -147,7 +147,7 @@ export default defineConfig({
     // the option keeps the plugin on its lightweight import.meta.glob-based client
     // layout path, which has no custom watcher and hot reloads normally.
     Layouts({
-      defaultLayout: 'default',
+      defaultLayout: 'landing',
     }),
     Vue({
       template: { transformAssetUrls },

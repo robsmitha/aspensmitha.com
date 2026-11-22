@@ -23,14 +23,12 @@ declare module 'vue' {
     ErrorMessage: typeof import('./src/components/_helpers/ErrorMessage.vue')['default']
     EventsInquiry: typeof import('./src/components/Portfolio/EventsInquiry.vue')['default']
     Features: typeof import('./src/components/Features.vue')['default']
-    FindProduct: typeof import('./src/components/Merchant/FindProduct.vue')['default']
     FormSection: typeof import('./src/components/Contact/FormSection.vue')['default']
     Gallery: typeof import('./src/components/Portfolio/Gallery.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Hero: typeof import('./src/components/About/Hero.vue')['default']
     InstagramFeed: typeof import('./src/components/Landing/InstagramFeed.vue')['default']
     Intro: typeof import('./src/components/Landing/Intro.vue')['default']
-    OAuthCallback: typeof import('./src/components/OAuthCallback.vue')['default']
     PhotoLightbox: typeof import('./src/components/Photo/PhotoLightbox.vue')['default']
     PhotoManager: typeof import('./src/components/Admin/PhotoManager.vue')['default']
     PlacementMap: typeof import('./src/components/Admin/PlacementMap.vue')['default']
@@ -59,6 +57,5 @@ declare module 'vue' {
     TurnstileWidget: typeof import('./src/components/_helpers/TurnstileWidget.vue')['default']
     UnDraw: typeof import('./src/components/_helpers/UnDraw/UnDraw.vue')['default']
     UserList: typeof import('./src/components/Merchant/UserList.vue')['default']
-    ViewProduct: typeof import('./src/components/Merchant/ViewProduct.vue')['default']
   }
 }

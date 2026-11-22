@@ -40,7 +40,6 @@ import type {
 declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/about': RouteRecordInfo<'/about', '/about', Record<never, never>, Record<never, never>>,
     '/about-me': RouteRecordInfo<'/about-me', '/about-me', Record<never, never>, Record<never, never>>,
     '/admin.calendar': RouteRecordInfo<'/admin.calendar', '/admin/calendar', Record<never, never>, Record<never, never>>,
     '/admin.instagram': RouteRecordInfo<'/admin.instagram', '/admin/instagram', Record<never, never>, Record<never, never>>,
@@ -54,12 +53,10 @@ declare module 'vue-router/auto/routes' {
     '/booking.[slug]': RouteRecordInfo<'/booking.[slug]', '/booking/:slug', { slug: ParamValue<true> }, { slug: ParamValue<false> }>,
     '/contact': RouteRecordInfo<'/contact', '/contact', Record<never, never>, Record<never, never>>,
     '/investment': RouteRecordInfo<'/investment', '/investment', Record<never, never>, Record<never, never>>,
-    '/oauth': RouteRecordInfo<'/oauth', '/oauth', Record<never, never>, Record<never, never>>,
     '/portfolio': RouteRecordInfo<'/portfolio', '/portfolio', Record<never, never>, Record<never, never>>,
     '/portfolio.[category]': RouteRecordInfo<'/portfolio.[category]', '/portfolio/:category', { category: ParamValue<true> }, { category: ParamValue<false> }>,
     '/portfolio.[category].[slug]': RouteRecordInfo<'/portfolio.[category].[slug]', '/portfolio/:category/:slug', { category: ParamValue<true>, slug: ParamValue<true> }, { category: ParamValue<false>, slug: ParamValue<false> }>,
     '/products': RouteRecordInfo<'/products', '/products', Record<never, never>, Record<never, never>>,
-    '/search': RouteRecordInfo<'/search', '/search', Record<never, never>, Record<never, never>>,
     '/users': RouteRecordInfo<'/users', '/users', Record<never, never>, Record<never, never>>,
   }
 }
