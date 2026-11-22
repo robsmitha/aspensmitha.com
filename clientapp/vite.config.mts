@@ -16,6 +16,7 @@ import { INDEXABLE_PATHS, renderSeoBody, renderSeoHead, renderSitemap } from './
 import { PLACEMENT_SLOTS, SITE_DEFAULT_PLACEMENT, placementPreloadTag, placementSlot } from './src/utils/placementImages'
 import { HERO_PRELOAD, HERO_SHOWCASE_PLACEMENTS, SITE_PLACEMENTS } from './src/utils/sitePlacements'
 import { PHOTO_SIZES } from './src/utils/photoUrls'
+import { buildSiteManifest, checkSiteLayouts } from './src/utils/siteManifest'
 
 /**
  * Fills index.html's <!--seo-head--> / <!--seo-body--> placeholders from
@@ -57,6 +58,7 @@ function seoPages(): Plugin {
     configResolved (config) {
       outDir = path.resolve(config.root, config.build.outDir)
       checkPlacementSlots()
+      checkSiteLayouts()
       heroPreload = heroPreloadTags(config.env)
     },
     transformIndexHtml (html) {
@@ -80,6 +82,11 @@ function seoPages(): Plugin {
         fs.writeFileSync(target, fill(index, page))
       }
       fs.writeFileSync(path.join(outDir, 'sitemap.xml'), renderSitemap())
+
+      // What this site says about itself, for the shared admin app and the image publisher. The backend keeps
+      // a copy; no page reads this file.
+      fs.mkdirSync(path.join(outDir, '_site'), { recursive: true })
+      fs.writeFileSync(path.join(outDir, '_site', 'manifest.json'), JSON.stringify(buildSiteManifest(), null, 2))
     },
   }
 }
