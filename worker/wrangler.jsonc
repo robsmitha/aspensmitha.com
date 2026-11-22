@@ -1,11 +1,17 @@
 {
-  // The Worker for Aspen's site. Until cutover it is only reachable at
-  // https://site-aspensmitha.smithadigital.workers.dev; the live site stays on Static Web Apps.
+  // The Worker for Aspen's site. It answers at https://site-aspensmitha.smithadigital.workers.dev (testing)
+  // and, through the route below, at www.aspensmitha.com.
   "name": "site-aspensmitha",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-01",
   "workers_dev": true,
   "preview_urls": false,
+
+  // A route only takes effect while the www DNS record is proxied (orange cloud). With the record set to
+  // DNS only (grey cloud) it does nothing and www goes wherever the record points, so that one toggle is
+  // both the cutover and the rollback. The bare domain and aspensmithaphotography.com redirect to www with
+  // Cloudflare redirect rules and never reach this Worker.
+  "routes": [{ "pattern": "www.aspensmitha.com/*", "zone_name": "aspensmitha.com" }],
 
   "assets": {
     // Built by: yarn --cwd ../clientapp build:worker
