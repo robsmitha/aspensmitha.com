@@ -26,16 +26,30 @@ meta:
         :subtitle="statusLine"
       >
         <template #actions>
+          <!-- A draft isn't public, so its preview opens through a short-lived link asked for on click -->
           <v-btn
+            v-if="saved.status === 'Draft'"
             variant="text"
             color="sage"
             rounded="0"
             class="font-nav tracking-wide text-caption"
             prepend-icon="mdi-open-in-new"
-            :href="previewHref"
+            :loading="openingPreview"
+            @click="openPreview"
+          >
+            Preview
+          </v-btn>
+          <v-btn
+            v-else
+            variant="text"
+            color="sage"
+            rounded="0"
+            class="font-nav tracking-wide text-caption"
+            prepend-icon="mdi-open-in-new"
+            :href="publicHref"
             target="_blank"
           >
-            {{ saved.status === 'Draft' ? 'Preview' : 'View' }}
+            View
           </v-btn>
         </template>
       </AdminPageHeader>
@@ -285,7 +299,7 @@ meta:
           :label="saved.title"
           :refresh="reload"
           previewable
-          :story="{ title: saved.title, heroPhotoId: saved.heroPhotoId, href: previewHref }"
+          :story="{ title: saved.title, heroPhotoId: saved.heroPhotoId, href: saved.status === 'Draft' ? undefined : publicHref }"
           @replace="replacePhoto"
           @remove="removePhoto"
           @set-hero="setHero"
@@ -431,11 +445,38 @@ const heroPhoto = computed(() => {
 
 const defaultAltCount = computed(() => photos.value.filter(p => !p.altText?.trim()).length)
 
-const previewHref = computed(() => {
-  if (!saved.value) return undefined
-  const path = storyPath(saved.value)
-  return saved.value.status === 'Draft' ? `${path}?preview=${saved.value.id}` : path
-})
+const publicHref = computed(() => (saved.value ? storyPath(saved.value) : undefined))
+
+const openingPreview = ref(false)
+
+/**
+ * Opens a draft's public page through a preview link from the backend that works for an hour. The token
+ * rides after the "#", which browsers never send to a server.
+ */
+async function openPreview() {
+  const path = publicHref.value
+  if (!path || !saved.value || openingPreview.value) return
+
+  // Opened now, while the click still counts as the reason, and pointed at the story once the link arrives.
+  // A tab opened after waiting would be blocked as a pop-up.
+  const tab = window.open('', '_blank')
+  if (!tab) {
+    showError('Your browser blocked the preview tab. Allow pop-ups for this site and try again.')
+    return
+  }
+  tab.opener = null
+
+  openingPreview.value = true
+  const response = await apiClient.postData('/api/manage/stories/preview-link', { storyId: saved.value.id })
+  openingPreview.value = false
+
+  if (!response.success || !response.data?.token) {
+    tab.close()
+    showError(response.errorMessage)
+    return
+  }
+  tab.location.replace(`${path}#preview=${encodeURIComponent(response.data.token)}`)
+}
 
 const statusLine = computed(() => {
   if (!saved.value) return undefined

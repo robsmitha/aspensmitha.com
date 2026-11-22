@@ -9,6 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { applySeo } from '@/utils/seo'
 import { AUTH_MODE, currentUser, requiresSignIn } from '@/auth'
+import { previewTokenFrom, rememberPreviewToken } from '@/utils/storyPreview'
 
 import { RouteLocationNormalized } from 'vue-router';
 const router = createRouter({
@@ -19,6 +20,15 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
+})
+
+// A draft preview arrives as "#preview=<token>". Keep the token for this tab and take it out of the address
+// before the page shows, so it isn't left in the address bar, in history, or in what analytics records.
+router.beforeEach(to => {
+  const token = previewTokenFrom(to.hash)
+  if (!token) return true
+  rememberPreviewToken(to.path, token)
+  return { path: to.path, query: to.query, hash: '', replace: true }
 })
 
 // Static Web Apps guards the signed-in pages itself (staticwebapp.config.json). Behind a Worker nothing does,

@@ -6,7 +6,7 @@ meta:
 <template>
   <template v-if="story && copy">
     <div v-if="previewing" class="preview-banner font-nav tracking-wide text-caption text-center py-2">
-      Preview &middot; {{ story.status === 'Draft' ? 'This draft is only visible to you' : `${story.status} story` }}
+      Preview &middot; {{ story.status === 'Draft' ? 'This draft is not public' : `${story.status} story` }}
     </div>
 
     <StoryHero
@@ -63,9 +63,9 @@ import StoryCallToAction from '@/components/Stories/StoryCallToAction.vue'
 import apiClient from '@/api/elysianClient'
 import { useStoryStore } from '@/store/stories'
 import { getPortfolioCategory } from '@/utils/portfolioCategories'
-import type { PortfolioPhoto } from '@/utils/photoUrls'
 import { applyPageSeo, storySeo } from '@/utils/seo'
 import { storyPath, storyPhotoAlt, type Story } from '@/utils/stories'
+import { forgetPreviewToken, previewTokenFor } from '@/utils/storyPreview'
 
 const route = useRoute()
 const router = useRouter()
@@ -73,9 +73,12 @@ const stories = useStoryStore()
 
 const params = computed(() => route.params as Record<string, string>)
 const category = computed(() => getPortfolioCategory(params.value.category))
-/** /admin/stories links here with ?preview=<storyId> so drafts can be checked before publishing */
-const previewId = computed(() => (typeof route.query.preview === 'string' ? route.query.preview : null))
-const previewing = computed(() => !!previewId.value && !!story.value)
+/**
+ * The admin app opens this page with a short-lived preview token so a draft can be checked before publishing.
+ * The router has already taken it out of the address and kept it for this tab (utils/storyPreview.ts).
+ */
+const previewToken = ref<string | null>(null)
+const previewing = computed(() => !!previewToken.value && !!story.value)
 
 /** undefined while loading, null when not found */
 const story = ref<Story | null | undefined>()
@@ -87,10 +90,21 @@ const heroAlt = computed(() => {
   return storyPhotoAlt(s, s.hero, Math.max(0, index), s.photos.length)
 })
 
-watch([() => params.value.slug, previewId], async ([slug, preview]) => {
+watch(() => params.value.slug, async slug => {
+  const path = route.path
+  let preview = previewTokenFor(path)
+  previewToken.value = preview
   story.value = preview ? undefined : stories.pages[slug]
-  const loaded = preview ? await loadPreview(preview) : await stories.loadPage(slug)
+
+  let loaded = preview ? await loadPreview(preview) : await stories.loadPage(slug)
+  if (preview && !loaded) {
+    // The link has expired. Show what the public sees: the story if it has been published, else not found.
+    forgetPreviewToken(path)
+    preview = null
+    loaded = await stories.loadPage(slug)
+  }
   if (params.value.slug !== slug) return
+  previewToken.value = preview
 
   // The URL's category is cosmetic; send old links to the story's current one
   if (loaded && loaded.category !== params.value.category && !preview) {
@@ -106,26 +120,10 @@ watch(story, s => {
   applyPageSeo(route.path, { page: previewing.value ? { ...page, noindex: true } : page })
 })
 
-interface ManagedStoryPhoto extends Omit<PortfolioPhoto, 'srcBase' | 'width' | 'height'> {
-  srcBase: string | null
-  width: number | null
-  height: number | null
-  status: string
-}
-
-/** Signed-in preview of any status, shaped like the public story */
-async function loadPreview(storyId: string): Promise<Story | null> {
-  const response = await apiClient.getData(`/api/manage/stories/${encodeURIComponent(storyId)}`)
-  if (!response.success) return null
-  const data = response.data
-  const photos = (data.photos as ManagedStoryPhoto[])
-    .filter(p => p.status === 'Ready' && p.srcBase)
-    .map(p => ({ ...p, srcBase: p.srcBase!, width: p.width ?? 0, height: p.height ?? 0 }))
-  return {
-    ...data,
-    hero: photos.find(p => p.id === data.heroPhotoId) ?? photos[0] ?? null,
-    photos,
-  }
+/** The story in any status, for whoever holds an unexpired preview token. Shaped like the public story. */
+async function loadPreview(token: string): Promise<Story | null> {
+  const response = await apiClient.postData('/api/story-preview', { token })
+  return response.success ? response.data : null
 }
 </script>
 
