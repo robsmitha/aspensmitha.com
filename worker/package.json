@@ -4,7 +4,7 @@
   "type": "module",
   "description": "The Cloudflare Worker that serves aspensmithaphotography.com: static pages from ../clientapp/dist, /api forwarded to the shared backend.",
   "scripts": {
-    "build:site": "yarn --cwd ../clientapp build:worker && node -e \"require('fs').copyFileSync('_headers','../clientapp/dist/_headers')\"",
+    "build:site": "yarn --cwd ../clientapp build:worker && node -e \"for (const f of ['_headers','_redirects']) require('fs').copyFileSync(f,'../clientapp/dist/'+f)\"",
     "deploy": "npm run build:site && wrangler deploy",
     "dev": "wrangler dev"
   },

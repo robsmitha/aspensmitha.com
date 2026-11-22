@@ -1,0 +1,34 @@
+# Old addresses from the previous site, kept so links and search results still land somewhere.
+# Ported from clientapp/staticwebapp.config.json; keep the two in step until the Static Web App is retired.
+# Each address is listed with and without a trailing slash; a rule matches one exact path.
+# Copied into ../clientapp/dist by "npm run build:site".
+
+/weddings            /portfolio/weddings     301
+/weddings/           /portfolio/weddings     301
+/family              /portfolio/family       301
+/family/             /portfolio/family       301
+/maternity           /portfolio/maternity    301
+/maternity/          /portfolio/maternity    301
+/seniors             /portfolio/seniors      301
+/seniors/            /portfolio/seniors      301
+/grads               /portfolio/grads        301
+/grads/              /portfolio/grads        301
+/events              /portfolio/events       301
+/events/             /portfolio/events       301
+/couples             /portfolio/couples      301
+/couples/            /portfolio/couples      301
+/couples-1           /portfolio/couples      301
+/couples-1/          /portfolio/couples      301
+/couples-portfolio   /portfolio/engagements  301
+/couples-portfolio/  /portfolio/engagements  301
+/blank-2             /contact                301
+/blank-2/            /contact                301
+/blank-3             /investment             301
+/blank-3/            /investment             301
+/blog                /                       301
+/blog/               /                       301
+/about               /about-me               301
+/about/              /about-me               301
+/portfolio-4         /portfolio              301
+/portfolio-4/        /portfolio              301
+/portfolio-4/*       /portfolio              301
