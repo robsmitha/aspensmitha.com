@@ -33,7 +33,7 @@ export interface PageSeo {
 }
 
 /** How people search for each category, e.g. "Tallahassee wedding photographer" */
-const CATEGORY_SEARCH_TERMS: Record<string, string> = {
+export const CATEGORY_SEARCH_TERMS: Record<string, string> = {
   couples: 'Couples',
   engagements: 'Engagement',
   weddings: 'Wedding',

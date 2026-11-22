@@ -9,8 +9,8 @@
  * Keep this file free of `@/` imports and `import.meta.env`: vite.config.mts imports it.
  */
 import catalog from '../content/placementSlots.json'
-import { PORTFOLIO_CATEGORIES } from './portfolioCategories'
-import { SITE_NAME, SITE_URL } from './seo'
+import { PORTFOLIO_CATEGORIES, SITE_ONLY_CATEGORY } from './portfolioCategories'
+import { CATEGORY_SEARCH_TERMS, SITE_NAME, SITE_URL } from './seo'
 import { HERO_SHOWCASE_PLACEMENTS, SITE_PAGES, SITE_PLACEMENTS, portfolioCoverKey, type SitePage } from './sitePlacements'
 
 /**
@@ -74,13 +74,27 @@ export const SITE_LAYOUTS: Partial<Record<SitePage, LayoutBlock[]>> = {
 export function buildSiteManifest() {
   return {
     version: 1,
-    site: { name: SITE_NAME, publicUrl: SITE_URL },
+    site: {
+      name: SITE_NAME,
+      publicUrl: SITE_URL,
+      // Where a category's gallery and a story's page live, for the admin app's "View" links
+      categoryPath: '/portfolio/{category}',
+      storyPath: '/portfolio/{category}/{slug}',
+      // How generated descriptions credit the photos (matches storySeo in seo.ts)
+      credit: 'Aspen Smitha, a Tallahassee, Florida photographer',
+    },
     categories: PORTFOLIO_CATEGORIES.map(c => ({
       slug: c.slug,
       name: c.name,
       hasGallery: c.hasGallery,
       hasStories: !!c.stories,
+      description: c.description,
+      // The word search titles use: "Wedding" for Weddings
+      ...(CATEGORY_SEARCH_TERMS[c.slug] ? { searchTerm: CATEGORY_SEARCH_TERMS[c.slug] } : {}),
+      ...(c.stories ? { storyEyebrow: c.stories.eyebrow } : {}),
     })),
+    // Photos used only in featured spots, never in a gallery
+    siteOnlyCategory: { slug: SITE_ONLY_CATEGORY.slug, name: SITE_ONLY_CATEGORY.name },
     pages: (Object.keys(SITE_PAGES) as SitePage[]).map(key => ({
       key,
       name: SITE_PAGES[key].name,
