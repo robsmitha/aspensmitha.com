@@ -38,16 +38,6 @@
               CONTACT
             </router-link>
 
-            <!-- Only Aspen (signed in) ever sees this -->
-            <span v-if="signedIn" class="nav-divider d-none d-md-inline" aria-hidden="true"></span>
-            <router-link
-              v-if="signedIn"
-              :to="ADMIN_HOME"
-              class="font-nav tracking-wide text-caption text-sage nav-link d-none d-md-inline-flex align-center"
-            >
-              <v-icon size="12" class="mr-1">mdi-lock-outline</v-icon>
-              ADMIN
-            </router-link>
 
             <!-- Phones: hamburger that opens the full list of pages -->
             <v-btn
@@ -101,19 +91,6 @@
             </v-list-item-title>
           </v-list-item>
 
-          <!-- Only Aspen (signed in) ever sees this -->
-          <v-list-item
-            v-if="signedIn"
-            :to="ADMIN_HOME"
-            rounded="0"
-            class="drawer-link"
-            @click="menuOpen = false"
-          >
-            <v-list-item-title class="font-nav tracking-wide text-sage drawer-link__title">
-              <v-icon size="14" class="mr-1">mdi-lock-outline</v-icon>
-              ADMIN
-            </v-list-item-title>
-          </v-list-item>
         </v-list>
       </nav>
     </v-navigation-drawer>
@@ -124,10 +101,8 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import logo from '@/assets/aspen-smitha-logo.png'
-import { ADMIN_HOME, useSignedInUser } from '@/utils/signedInUser'
 
 const route = useRoute()
-const { signedIn } = useSignedInUser()
 
 const menuOpen = ref(false)
 // Close after any navigation (including the browser back button)

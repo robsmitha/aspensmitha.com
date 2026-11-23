@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AboutMe: typeof import('./src/components/AboutMe.vue')['default']
-    AdminPageHeader: typeof import('./src/components/Admin/AdminPageHeader.vue')['default']
     BookingCalendar: typeof import('./src/components/Booking/BookingCalendar.vue')['default']
     BookingConfirmation: typeof import('./src/components/Booking/BookingConfirmation.vue')['default']
     BookingCta: typeof import('./src/components/Portfolio/BookingCta.vue')['default']
@@ -18,7 +17,6 @@ declare module 'vue' {
     CallToAction: typeof import('./src/components/Landing/CallToAction.vue')['default']
     CategoryHero: typeof import('./src/components/Portfolio/CategoryHero.vue')['default']
     CategoryTiles: typeof import('./src/components/Portfolio/CategoryTiles.vue')['default']
-    CoverPhotoPicker: typeof import('./src/components/Admin/CoverPhotoPicker.vue')['default']
     Cta: typeof import('./src/components/About/Cta.vue')['default']
     ErrorMessage: typeof import('./src/components/_helpers/ErrorMessage.vue')['default']
     EventsInquiry: typeof import('./src/components/Portfolio/EventsInquiry.vue')['default']
@@ -30,18 +28,13 @@ declare module 'vue' {
     InstagramFeed: typeof import('./src/components/Landing/InstagramFeed.vue')['default']
     Intro: typeof import('./src/components/Landing/Intro.vue')['default']
     PhotoLightbox: typeof import('./src/components/Photo/PhotoLightbox.vue')['default']
-    PhotoManager: typeof import('./src/components/Admin/PhotoManager.vue')['default']
-    PlacementMap: typeof import('./src/components/Admin/PlacementMap.vue')['default']
     PlacementPhoto: typeof import('./src/components/Photo/PlacementPhoto.vue')['default']
-    PlacementPublishStatus: typeof import('./src/components/Admin/PlacementPublishStatus.vue')['default']
     Portfolio: typeof import('./src/components/Landing/Portfolio.vue')['default']
     PricingSection: typeof import('./src/components/Investment/PricingSection.vue')['default']
-    ProductList: typeof import('./src/components/Merchant/ProductList.vue')['default']
     QuickFacts: typeof import('./src/components/About/QuickFacts.vue')['default']
     ResponsivePhoto: typeof import('./src/components/Photo/ResponsivePhoto.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SaveProductDialog: typeof import('./src/components/Merchant/SaveProductDialog.vue')['default']
     SectionHeading: typeof import('./src/components/Landing/SectionHeading.vue')['default']
     SessionCard: typeof import('./src/components/Booking/SessionCard.vue')['default']
     SessionMeta: typeof import('./src/components/Booking/SessionMeta.vue')['default']
@@ -56,6 +49,5 @@ declare module 'vue' {
     TimeSlots: typeof import('./src/components/Booking/TimeSlots.vue')['default']
     TurnstileWidget: typeof import('./src/components/_helpers/TurnstileWidget.vue')['default']
     UnDraw: typeof import('./src/components/_helpers/UnDraw/UnDraw.vue')['default']
-    UserList: typeof import('./src/components/Merchant/UserList.vue')['default']
   }
 }

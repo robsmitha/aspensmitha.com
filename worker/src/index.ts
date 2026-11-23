@@ -1,4 +1,5 @@
 import { createSiteWorker } from '@robsmitha/site-edge'
+import { adminRedirect } from './adminRedirect'
 
 // This Worker serves one tenant, and says so itself. The browser never chooses.
 const site = createSiteWorker({ tenant: 'aspensmitha' })
@@ -29,7 +30,13 @@ export default {
       return notFound()
     }
 
-    // An app route (a story, an admin page): serve the app and let it route
+    // An old management address: the admin app has it now. Not cached, so it can change without waiting.
+    const moved = adminRedirect(pathname)
+    if (moved) {
+      return new Response(null, { status: 302, headers: { location: moved, 'cache-control': 'no-store' } })
+    }
+
+    // An app route (a story, a booking page): serve the app and let it route
     return env.ASSETS.fetch(new Request(new URL('/', request.url), { method: request.method, headers: request.headers }))
   },
 }

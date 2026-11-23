@@ -40,12 +40,8 @@
 
           <span class="text-stone-light" aria-hidden="true">&middot;</span>
 
-          <template v-if="signedIn">
-            <router-link :to="ADMIN_HOME" class="font-nav text-caption text-sage footer-utility">Admin</router-link>
-            <span class="text-stone-light" aria-hidden="true">&middot;</span>
-            <a :href="SIGN_OUT_URL" class="font-nav text-caption text-sage footer-utility">Sign out</a>
-          </template>
-          <a v-else :href="SIGN_IN_URL" class="font-nav text-caption text-sage footer-utility">Sign in</a>
+          <!-- Managing the site happens in the admin app, which has its own sign-in -->
+          <a :href="ADMIN_URL" rel="nofollow" class="font-nav text-caption text-sage footer-utility">Sign in</a>
         </div>
       </div>
     </v-container>
@@ -53,9 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ADMIN_HOME, SIGN_IN_URL, SIGN_OUT_URL, useSignedInUser } from '@/utils/signedInUser'
-
-const { signedIn } = useSignedInUser()
+import { ADMIN_URL } from '@/utils/adminApp'
 
 const navLinks = [
   { title: 'Home', to: '/' },
