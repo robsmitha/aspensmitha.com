@@ -1,9 +1,51 @@
 # Phase 5: cloud-photography
 
-Status: written 2026-11-22. Decisions 2, 3 and 4 were agreed the same day, and the brand domain is
-`framenice.com`, bought through Cloudflare Registrar. Step 1 is under way; nothing else is built.
-Parent plan: `elysian-sites-platform.md`. Other recommendations are marked **Recommended** and become
-decisions when you agree them.
+Status: written 2026-11-22, updated 2026-11-23. Every build step except own domains (step 13) is built and
+live; no tenant who isn't a test has gone live yet (step 12). "Where it stands" below is the summary, the
+build order has a status for each step, and each decision that was built differently from how it was
+written has an **As built** note saying how.
+Parent plan: `elysian-sites-platform.md`.
+
+## Where it stands (2026-11-23)
+
+**Live:**
+
+- Cloud sites are served by the `cloud-photography` Worker at `{tenant}.framenice.com`. A new cloud site
+  gets that address, answering and primary, the moment it is created.
+- Two templates, `classic@1` and `gallery@1`, with the same pages, wording, categories and photo spots. An
+  owner changes template from the admin app; a platform admin picks one when creating a site.
+- Images come from `images.smithadigital.com` (the `elysian-images` Worker), purged from the
+  `smithadigital.com` zone after a placement is republished.
+- The admin's "Look and wording" screen edits a site page by page, with a preview of the draft beside it.
+  The same preview link opens the whole draft site in a tab.
+- Contact form and online booking on cloud sites, with mail sent as the site from `send.framenice.com` to
+  a contact address the owner has confirmed by code.
+- Platform screens: list, create, suspend and restore sites; addresses; the Booking add-on; download a
+  copy of a site; delete a suspended site for good.
+
+**Not built:**
+
+- Own domains (step 13). It needs a Cloudflare token allowed to attach Worker domains, which is the most
+  powerful credential in the system, and that is to be agreed before any code.
+- From the decisions below: a logo image, per-page SEO text and a share image (decision 3); going back to
+  an earlier published version (decision 8); a Cloudflare rate-limit rule on form endpoints (decision 9);
+  an edge-clients screen and a storage quota (decision 10); web vitals from the templates ("Measuring
+  speed"); the deploy hook for Aspen's manifest.
+- Seeing a template's crops before changing to it (decision 2).
+
+**Known gaps in what is built:**
+
+- The home page's "A recent story" links to the portfolio, not to a story.
+- Session lists have no cover photos.
+- A cloud site can set its booking time zone but not its hours.
+- Links a page builds with script (a story in a gallery, "book this session") do nothing inside a preview.
+- A site on `framenice.com` is indexable from the moment it exists, test sites included.
+- The images Worker still keeps a placement at the edge for only a minute (`PLACEMENT_EDGE_SECONDS`), a
+  safety net from before purging worked. It can come out.
+- A story page's first photo waits on an API call (decision 5).
+
+**Test sites:** `cloud-site` is the only one left. `address-test` was created and deleted on 2026-11-23,
+which is the one real run of delete so far.
 
 ## Goal
 
@@ -15,7 +57,9 @@ Done when: a new tenant goes live at `{tenant}.{brand domain}` from the admin ap
 largest image is on screen without any call to the Function App, and nobody touched Azure or Cloudflare by
 hand to make it happen.
 
-## What exists today
+## What existed when this was written (2026-11-22)
+
+Kept for the record. Everything in the "Not built" table has since been built.
 
 **Already built and live:**
 
@@ -31,7 +75,7 @@ hand to make it happen.
 - The shared UI library (`packages/ui`): API client, sign-in, photo and placement helpers, `ResponsivePhoto`,
   `PlacementImage`, `StoryHero`.
 
-**Not built:**
+**Not built then:**
 
 | Missing | Why Phase 5 needs it |
 |---|---|
@@ -58,6 +102,10 @@ For a cloud tenant the site manifest is the template's, stored when the tenant i
 the tenant moves to a new template version. The owner never edits structure. This keeps every guard Phase 4
 put on the manifest (a slot's public name never changes, a publish never starts from an empty catalogue).
 
+**As built:** a cloud tenant stores no manifest. Its manifest is its template's, made out for the site each
+time it is read (its name, its primary address, the owner's category names), so nothing is copied and
+nothing goes stale. Moving to another template is a change to the tenant's `TemplateKey`.
+
 ### 2. Two templates, one at a time: `classic` first, `gallery` second
 
 Agreed 2026-11-22, from three looks on a design canvas (https://claude.ai/artifact/CmkRteYqj6HcFPu91QR2gC).
@@ -79,6 +127,20 @@ Agreed 2026-11-22, from three looks on a design canvas (https://claude.ai/artifa
   finishes. The owner's photo picks carry over; the admin shows the new crops before the switch goes live.
 - The template owns the list of categories on offer. An owner switches categories on or off and renames
   them; the slug is fixed, because it is in public addresses and storage paths.
+
+**As built:**
+
+- Both templates are built. What they share (the forms, the booking calendar, the gallery and story
+  scripts, and the renderer) is in `templates/photography/shared`; each template has its own page, stylesheet,
+  schema and manifest. A test holds `gallery` to `classic`'s fields, pages, categories and spots.
+- The two templates have the same spot keys, so picks carry over, but each stores its images under its own
+  file names (`home-hero-…` and `g-home-hero-…`). Both sets can exist for one site, which is what lets the
+  old look keep serving while the new one's images are rendered.
+- Changing template: the request is recorded in the tenant's settings and carried by the placement-publish
+  queue message. That job renders the new template's images, then moves the draft, the tenant's record and
+  the edge, in that order. Colours and fonts belong to a template, so they fall back to the new template's
+  own where it has no palette or font of the same name; wording, links and category names are kept.
+- Not built: showing the new crops before the switch. The owner sees them afterwards and can change back.
 
 ### 3. What the owner can change, and what is fixed
 
@@ -103,6 +165,12 @@ The fields live in `template.schema.json`, shipped with each template version. E
 against the schema for the tenant's pinned version; the admin app builds its editing screen from the same
 file. Adding a field is a schema change, not an admin app change.
 
+**As built:** palettes with an optional accent (contrast-checked), font pairings, wording, links, the
+contact email, categories, and a site title and description for search. The schema also lays its fields
+out by page and section (`pages`, and `section` and `help` on each field), which is what the editing screen
+is drawn from. Added since: payment and gallery policies, which make a Policies page when written. Not
+built: a logo image, a description per page, a share image.
+
 ### 4. Shared components take everything they need as props. They hold no site's data.
 
 **Recommended.** Contact and booking components move from Aspen's repo into `packages/ui` with these rules:
@@ -121,6 +189,11 @@ file. Adding a field is a schema change, not an admin app change.
 The extraction changes nothing on Aspen's live site. Her site moves onto the library versions after the
 watch ends (about 6 December), a few components at a time with LCP checked, as Phase 4 step 9 says.
 
+**As built:** the templates don't use Vue components in the browser at all (decision 5). What they take
+from `packages/ui` is the rules and wording: `forms`, `booking`, `stories` and `placements`. The forms
+themselves are finished HTML with a small script each, shared by both templates. Aspen's move onto the
+library is still to come (branch `feature/site-on-ui-library`).
+
 ### 5. How a cloud page is served
 
 As the parent plan's section 4, made concrete:
@@ -137,6 +210,14 @@ As the parent plan's section 4, made concrete:
 5. Scripts, styles and fonts are the template's static assets: the same files for every tenant, cached
    forever.
 
+**As built:** there is no prerendered HTML and no `HTMLRewriter`. The Worker draws each page with Vue's
+server renderer from the content and the template, and the result is finished HTML: the wording is in the
+markup, not in inline JSON, and no app starts in the browser. Most pages carry no script at all and are
+served with `script-src 'none'`. A gallery, a story, the session lists and the two forms each load one
+small script of the template's own. A page is cached per host, path, content version, template, deploy of
+the Worker and whether the site has Booking, so a publish, a template change or a deploy is seen at once
+and nothing is purged.
+
 **Rules for anything injected.** Text is escaped for where it lands (element text, attribute, or JSON inside
 a script tag, where `<` is written as an escape so content can never close the tag). Theme values are never
 copied from the content as strings: the Worker writes variables only from values that parse as a colour or
@@ -150,6 +231,9 @@ times, as on Aspen's site today. None of them is needed to show the first image:
   largest image depends on a call. **Recommended:** publish each story's hero address and size into the
   content snapshot when the story is published, so the Worker can preload it. Galleries stay on the API for
   now; move their first row into the snapshot only if the numbers ask for it.
+
+  **As built:** not done. A story page keeps room for its first photo, so nothing shifts, but the photo
+  itself waits on the API call. Accepted for now.
 
 **Failure modes**
 
@@ -174,6 +258,18 @@ times, as on Aspen's site today. None of them is needed to show the first image:
 - The placement `<img>` rules in `CLAUDE.md` apply to the template unchanged: plain `<img>`, `width` and
   `height`, `srcset` and an honest `sizes`, eager and high priority for the hero only, preload on `/` only.
 
+**As built:**
+
+- Which host a tenant's images are on is decided by its runtime, not a tenant setting: a cloud tenant gets
+  `PlatformImages:PublicOrigin`, a custom one keeps the host's own setting. The purger sends each address
+  to the zone it is in (`PlatformImages:CloudflareZoneId` and its own token for the platform's host).
+- Two things about caching that were learned the hard way on 2026-11-23. A `workers.dev` address can't be
+  purged, so the images Worker must be on its own domain before placements are cached for long. And a
+  Worker's request to storage is itself cached by Cloudflare for as long as storage says a browser may keep
+  the answer, under the storage address, so the Worker asks for placements with `no-store`.
+- A preview page asks for its placement images afresh each minute, so an owner who has just changed a photo
+  sees it without a hard reload. Visitors' pages keep the five-minute browser life.
+
 ### 7. Domains: subdomains first, own domains second
 
 - **The brand domain is `framenice.com`**, registered through Cloudflare, so its DNS is already where the
@@ -193,6 +289,11 @@ times, as on Aspen's site today. None of them is needed to show the first image:
 Until the brand domain exists, the Worker is built and tested on its `workers.dev` address with a fixed test
 tenant, the way Aspen's Worker was.
 
+**As built:** the wildcard record and route are live. The domain a platform's sites go under is a setting
+(`PlatformDomains:Domains:photography`), and creating a cloud site records `{identifier}.framenice.com` as
+its primary address and tells the edge. The preview is a `?preview=` parameter on any page, not a path, so
+no identifier had to be reserved for it. Own domains are not built.
+
 ### 8. Editing, preview and publish
 
 - **Draft and published are separate.** The owner edits a draft in SQL. Publish validates it, writes
@@ -204,6 +305,18 @@ tenant, the way Aspen's Worker was.
   A custom tenant like Aspen never sees it.
 - Publishing content and publishing placements stay separate actions with separate status, as now.
 - Published versions are kept, so "go back to the previous version" is repointing the host entry.
+
+**As built:**
+
+- The area is one screen, "Look and wording". It lists the site's pages and, under "Whole site", the
+  template, colours and fonts, name and footer, social links and search results. Each page shows its
+  sections in the order they appear, and a preview of the draft sits beside them with the open section
+  outlined. Chosen on 2026-11-23 from three mock-ups (https://claude.ai/artifact/YCDD6h4vPRgxb2YJXw9RzX).
+- The draft saves itself about a second after typing stops, because the preview shows the saved draft.
+  There is no "Save draft" button; Publish is the only one.
+- A preview page may be framed by the admin app and nowhere else, offers no form, and keeps links to the
+  site's other pages inside the preview.
+- Not built: going back to an earlier version.
 
 ### 9. Email and forms
 
@@ -217,6 +330,10 @@ tenant, the way Aspen's Worker was.
   per-tenant settings, so a tenant can be moved to another widget without a deploy.
 - Form endpoints get a coarse Cloudflare rate-limit rule, because the in-memory limiters multiply with
   instances (parent plan, review finding 8).
+
+**As built:** the sending domain is `send.framenice.com`; the daily cap is 200 messages a tenant; cloud
+sites share one Turnstile widget, whose secret is `Turnstile:CloudSecretKey`. Phone is required on both
+forms. Booking mail falls back to the confirmed contact email. Not done: the Cloudflare rate-limit rule.
 
 ### 10. Platform admin screens
 
@@ -232,11 +349,27 @@ Creating a tenant becomes one action that does, in order: tenant row and include
 site manifest, default content, tenant settings, placements published, content published, host entry
 written, owner invite sent. Each step is safe to run again, so a failure partway is finished by retrying.
 
+**As built:** the Sites screen lists every site and creates one (with a template chosen from a list), and
+a site's panel has its status, the Booking add-on, its addresses, a copy to download and delete. Creating a
+site makes the tenant, its modules, its address and its owner's invite in one save, then queues its
+placements; the invite is a code shown once, not an email. Not built: an edge-clients screen (they are
+still made with SQL), billing references in the screen, and a storage quota.
+
+**Deleting a site** (step 14) is for a suspended site drawn with a template, with its name typed again.
+The site is marked as being deleted and stops answering at once; a queued job then removes what the edge
+holds, its files and their cached copies, and every row it has, the tenant's own last. The job refuses any
+site not marked as being deleted. Rows come out of every table row-level security protects, so a table
+added later is covered. The copy is one JSON document with a day-long signed link to each uploaded photo;
+bookings and visitors' messages are not in it, because they are in the owner's calendar and inbox. There is
+no grace period: suspended-then-deleted is two steps and the copy is the safety net. Add one before there
+are paying sites.
+
 ### 11. What Phase 5 does not include
 
 Self-serve signup and payment. Customer-owned domains through Cloudflare for SaaS. Tooling to move a cloud
-tenant to a custom site. A second template. Per-platform branding of the admin app. Each is left possible
-by the model, and none is needed for the first tenants.
+tenant to a custom site. Per-platform branding of the admin app. Each is left possible by the model, and
+none is needed for the first tenants. (A second template was on this list and has since been built, as
+step 15.)
 
 ## Measuring speed
 
@@ -245,25 +378,29 @@ one platform-owned property with the tenant as a dimension, and nothing else: no
 identifiers. An owner's own analytics id can be a content field later. Phase 5 is not done on a tenant
 until its home page LCP p75 is at or under Aspen's.
 
+**As built:** not done. The templates send no measurements, and most of their pages forbid scripts
+outright, so this needs either a small script allowed on every page or numbers from Cloudflare's own
+analytics. Decide which before the first real tenant, since "done" above depends on it.
+
 ## Build order
 
-| Step | Work | Where | Needs from you |
-|---|---|---|---|
-| 1 | Contact and booking components into the library, to the rules in decision 4. Library tests. | `packages/ui` | Tag a `ui-v*` release |
-| 2 | Tenant model: `TemplateKey`, `TemplateVersion`, `ContentVersion`; `TenantDomain`; expand-only migration | Elysian | Run the migration; tag a release |
-| 3 | Site content: schema registry, draft and published storage, validation (lengths, contrast, links), preview token | Elysian | |
-| 4 | Edge store: `IEdgeConfigStore` over Cloudflare KV; `PublishSiteContentCommand`; host map written from `TenantDomain` | Elysian | Create the KV namespace and a token limited to it; store the token in Key Vault |
-| 5 | Shared images Worker at `images.smithadigital.com` | `elysian-platform/images` | Approve the Worker and its domain; a purge token for that zone |
-| 6 | The `classic@1` template: pages, prerender, web vitals. Its `template.schema.json` is written. | `elysian-platform/templates/photography/classic` | Look chosen (option B) |
-| 7 | The `cloud-photography` Worker: host lookup, injection, caching, preview, suspended and unknown hosts | `elysian-platform/cloud-photography` | A platform-scope edge client (SQL); approve the Worker on `workers.dev` |
-| 8 | Admin app "Site" area: theme, wording, SEO, preview, publish | `elysian-platform/admin` | |
-| 9 | Platform screens and the one-step tenant creation | `elysian-platform/admin`, Elysian | |
-| 10 | Email: sending identity per tenant, contact email verification, daily cap | Elysian | Verify `send.{brand}` in Resend |
-| 11 | `framenice.com`: wildcard record and route; Turnstile widget | Cloudflare | Approve the record and the route |
-| 12 | First tenant, end to end, from the admin app only | | Be the first owner, or name one |
-| 13 | Own domains: `AttachTenantDomainCommand` and the Domain screen | Elysian, admin | A Cloudflare token allowed to attach Worker domains |
-| 14 | Leaving: export and delete a tenant (rows, blob prefixes, KV entries, domains) | Elysian | Before the first tenant who isn't a friend |
-| 15 | The `gallery@1` template, a template picker in the Site area, and the change-of-template operation | `elysian-platform/templates/photography/gallery`, admin, Elysian | After the first tenant is live on classic |
+| Step | Work | Where | Needs from you | Status |
+|---|---|---|---|---|
+| 1 | Contact and booking components into the library, to the rules in decision 4. Library tests. | `packages/ui` | Tag a `ui-v*` release | Done, as shared rules and wording rather than components (decision 4) |
+| 2 | Tenant model: `TemplateKey`, `TemplateVersion`, `ContentVersion`; `TenantDomain`; expand-only migration | Elysian | Run the migration; tag a release | Done |
+| 3 | Site content: schema registry, draft and published storage, validation (lengths, contrast, links), preview token | Elysian | | Done |
+| 4 | Edge store: `IEdgeConfigStore` over Cloudflare KV; `PublishSiteContentCommand`; host map written from `TenantDomain` | Elysian | Create the KV namespace and a token limited to it; store the token in Key Vault | Done |
+| 5 | Shared images Worker at `images.smithadigital.com` | `elysian-platform/images` | Approve the Worker and its domain; a purge token for that zone | Done 2026-11-23 |
+| 6 | The `classic@1` template: pages, prerender, web vitals. Its `template.schema.json` is written. | `elysian-platform/templates/photography/classic` | Look chosen (option B) | Done |
+| 7 | The `cloud-photography` Worker: host lookup, injection, caching, preview, suspended and unknown hosts | `elysian-platform/cloud-photography` | A platform-scope edge client (SQL); approve the Worker on `workers.dev` | Done |
+| 8 | Admin app "Site" area: theme, wording, SEO, preview, publish | `elysian-platform/admin` | | Done; rebuilt page by page with a preview 2026-11-23 |
+| 9 | Platform screens and the one-step tenant creation | `elysian-platform/admin`, Elysian | | Done, bar the edge-clients screen |
+| 10 | Email: sending identity per tenant, contact email verification, daily cap | Elysian | Verify `send.{brand}` in Resend | Done |
+| 11 | `framenice.com`: wildcard record and route; Turnstile widget | Cloudflare | Approve the record and the route | Done 2026-11-23 |
+| 12 | First tenant, end to end, from the admin app only | | Be the first owner, or name one | Not yet: test sites only |
+| 13 | Own domains: `AttachTenantDomainCommand` and the Domain screen | Elysian, admin | A Cloudflare token allowed to attach Worker domains | Not started |
+| 14 | Leaving: export and delete a tenant (rows, blob prefixes, KV entries, domains) | Elysian | Before the first tenant who isn't a friend | Done 2026-11-23 |
+| 15 | The `gallery@1` template, a template picker in the Site area, and the change-of-template operation | `elysian-platform/templates/photography/gallery`, admin, Elysian | After the first tenant is live on classic | Done 2026-11-23 |
 
 Steps 1, 2 and 5 are independent and can start together. Step 6 needs 1. Step 7 needs 4 and 6. Nothing
 before step 11 needs the brand domain, and nothing in this phase changes `www.aspensmitha.com`.
@@ -271,7 +408,14 @@ before step 11 needs the brand domain, and nothing in this phase changes `www.as
 **Also in this phase, small and separate:** the deploy hook Phase 4 promised. After Aspen's site deploys,
 its workflow tells Elysian, which fetches `/_site/manifest.json` from her stored primary host and stores it.
 That retires `scripts/elysian-seed-aspen-site-manifest.sql`, which had to be regenerated and rerun by hand
-when the session address was added. It needs `TenantDomain` (step 2), so it follows that step.
+when the session address was added. It needs `TenantDomain` (step 2), so it follows that step. Not built yet.
+
+## What is left
+
+1. **Own domains** (step 13), after the token is agreed.
+2. **The first real tenant** (step 12), and before it: how speed is measured, whether test sites should be
+   kept out of search results, and a grace period on delete.
+3. The smaller items under "Where it stands".
 
 ## Risks and open questions
 
