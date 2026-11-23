@@ -25,7 +25,11 @@ meta:
     <!-- 2 × 2: two cards per row from tablet up, centered so they don't stretch on wide screens -->
     <v-row v-else class="session-grid">
       <v-col v-for="session in sessions.sessions" :key="session.slug" cols="12" sm="6">
-        <SessionCard :session="session" />
+        <SessionCard
+          :session="session"
+          :to="`/booking/${session.slug}`"
+          :fallback-cover="session.portfolioCategory ? photos.coverFor(session.portfolioCategory) : undefined"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -33,11 +37,17 @@ meta:
 
 <script lang="ts" setup>
 import Hero from '@/components/Booking/Hero.vue'
-import SessionCard from '@/components/Booking/SessionCard.vue'
+import SessionCard from '@robsmitha/elysian-ui/components/SessionCard.vue'
+import { usePhotoStore } from '@/store/photos'
 import { useSessionStore } from '@/store/sessions'
 
 const sessions = useSessionStore()
 sessions.load()
+
+// A session with no cover of its own shows its category's. Not a reserved CDN placement, so this reads
+// /api/portfolio (load() shares one request).
+const photos = usePhotoStore()
+photos.load()
 </script>
 
 <style scoped>
