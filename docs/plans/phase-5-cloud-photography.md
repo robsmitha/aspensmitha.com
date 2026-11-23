@@ -58,18 +58,27 @@ For a cloud tenant the site manifest is the template's, stored when the tenant i
 the tenant moves to a new template version. The owner never edits structure. This keeps every guard Phase 4
 put on the manifest (a slot's public name never changes, a publish never starts from an empty catalogue).
 
-### 2. One template first: `classic@1`, a restyled version of the structure Aspen's site already proves
+### 2. Two templates, one at a time: `classic` first, `gallery` second
 
-**Recommended.** Pages: Home, Portfolio, a gallery per category, a story page, About, Contact; Investment
-and Booking when the tenant has the Booking module. It is a Vue app in `elysian-platform/templates/photography`,
-prerendered at build time, built on `packages/ui`.
+Agreed 2026-11-22, from three looks on a design canvas (https://claude.ai/artifact/CmkRteYqj6HcFPu91QR2gC).
 
-- The template owns the list of categories on offer. An owner switches categories on or off and renames them;
-  the slug is fixed, because it is in public addresses and storage paths.
-- The template owns the slot catalogue. Every cloud tenant on `classic@1` has the same slots, ratios and
-  widths, so the page knows every reserved image's address and size with no call.
-- A second template is a later decision. Nothing here assumes there is only one: the tenant row carries
-  `TemplateKey` and `TemplateVersion`, and the Worker serves the build that matches.
+- **`classic@1` is built first, end to end:** large serif headings, a centred layout, square-cornered photos
+  (the canvas's option B). The first tenant goes live on it.
+- **`gallery@1` follows on the same foundations:** white, a bold modern sans, rounded photo frames (option A).
+- **Both have the same pages and the same categories.** Pages: Home, Portfolio, a gallery per category, a
+  story page, About, Contact; Investment and Booking when the tenant has the Booking module. Each is a Vue
+  app under `elysian-platform/templates/photography/`, prerendered at build time, built on `packages/ui`.
+- **Wording that means the same has the same field key in both** (`home.heading`, `about.body`,
+  `footer.line`), so a change of template keeps what the owner wrote. A host test holds every template to
+  the shared keys.
+- **Each template owns its own slot catalogue.** The two crop photos differently (classic's hero is a wide
+  strip, gallery's a portrait), so every tenant on one template has the same slots, ratios and widths, and
+  the page knows every reserved image's address and size with no call.
+- **Changing template is one operation:** store the new template's site manifest, re-render the reserved
+  images to its crops, and only then point the site at the new look. The old look keeps serving until that
+  finishes. The owner's photo picks carry over; the admin shows the new crops before the switch goes live.
+- The template owns the list of categories on offer. An owner switches categories on or off and renames
+  them; the slug is fixed, because it is in public addresses and storage paths.
 
 ### 3. What the owner can change, and what is fixed
 
@@ -245,7 +254,7 @@ until its home page LCP p75 is at or under Aspen's.
 | 3 | Site content: schema registry, draft and published storage, validation (lengths, contrast, links), preview token | Elysian | |
 | 4 | Edge store: `IEdgeConfigStore` over Cloudflare KV; `PublishSiteContentCommand`; host map written from `TenantDomain` | Elysian | Create the KV namespace and a token limited to it; store the token in Key Vault |
 | 5 | Shared images Worker at `images.smithadigital.com` | `elysian-platform/images` | Approve the Worker and its domain; a purge token for that zone |
-| 6 | The `classic@1` template: pages, `template.schema.json`, prerender, web vitals | `elysian-platform/templates/photography` | Review the design before it is built out (three options as an artifact, as with the admin) |
+| 6 | The `classic@1` template: pages, prerender, web vitals. Its `template.schema.json` is written. | `elysian-platform/templates/photography/classic` | Look chosen (option B) |
 | 7 | The `cloud-photography` Worker: host lookup, injection, caching, preview, suspended and unknown hosts | `elysian-platform/cloud-photography` | A platform-scope edge client (SQL); approve the Worker on `workers.dev` |
 | 8 | Admin app "Site" area: theme, wording, SEO, preview, publish | `elysian-platform/admin` | |
 | 9 | Platform screens and the one-step tenant creation | `elysian-platform/admin`, Elysian | |
@@ -254,6 +263,7 @@ until its home page LCP p75 is at or under Aspen's.
 | 12 | First tenant, end to end, from the admin app only | | Be the first owner, or name one |
 | 13 | Own domains: `AttachTenantDomainCommand` and the Domain screen | Elysian, admin | A Cloudflare token allowed to attach Worker domains |
 | 14 | Leaving: export and delete a tenant (rows, blob prefixes, KV entries, domains) | Elysian | Before the first tenant who isn't a friend |
+| 15 | The `gallery@1` template, a template picker in the Site area, and the change-of-template operation | `elysian-platform/templates/photography/gallery`, admin, Elysian | After the first tenant is live on classic |
 
 Steps 1, 2 and 5 are independent and can start together. Step 6 needs 1. Step 7 needs 4 and 6. Nothing
 before step 11 needs the brand domain, and nothing in this phase changes `www.aspensmitha.com`.
