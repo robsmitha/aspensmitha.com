@@ -179,8 +179,9 @@ Steps 1, 2 and 3 are independent and can go in parallel. Nothing before step 8 c
 - **Public address per tenant.** The manifest needs each tenant's primary address for the "view site" link
   and for image addresses. Elysian has no tenant domain table yet. For Phase 4 the seeded manifest holds the
   address as plain data; the domain model comes with Phase 5.
-- **Legacy pages.** `users.vue` and `products.vue` use the admin layout but are not part of the photography
-  admin. They are left behind and deleted with the old pages.
+- **Legacy pages.** `users.vue` is replaced by People in the admin app. `products.vue` turned out not to be
+  legacy: it is the Sessions editor (session types, prices, online booking), so step 8 adds a Sessions page
+  to the admin app before the old pages are deleted.
 - **Per-tenant catalogue is the largest piece.** It touches publishing, which serves the live home page
   images. Fixed addresses must never 404, and the guards in decision 2 need tests before release.
 - **Library changes reach every site.** A breaking change in `packages/ui` affects each site at its next

@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { accessToken } from '@/auth';
 
 type ApiResponse = {
   data: any | undefined,
@@ -22,19 +21,14 @@ class ApiClient {
 
   /**
    * The tenant header is for the Static Web Apps build; behind a Worker it is dropped and the Worker says
-   * which tenant this is. The sign-in token is only present in the Worker build, for a signed-in person.
+   * which tenant this is. Nobody signs in to this site (managing it happens in the admin app), so no call
+   * carries a sign-in token.
    */
-  private async getHeaders(): Promise<{ [key: string]: string }> {
-    const headers: { [key: string]: string } = {
+  private getHeaders(): { [key: string]: string } {
+    return {
       '___tenant___': this.tenant,
       'Content-Type': 'application/json',
     };
-
-    const token = await accessToken();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-    return headers;
   }
 
   private createErrorMap(key: string, messages: string[]): Map<string, string[]> {
@@ -100,7 +94,7 @@ class ApiClient {
 
   async getData(endpoint: string): Promise<ApiResponse> {
     try {
-      const response = await axios.get(endpoint, { headers: await this.getHeaders() });
+      const response = await axios.get(endpoint, { headers: this.getHeaders() });
       return this.handleAxiosResponse(response);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -110,7 +104,7 @@ class ApiClient {
 
   async postData(endpoint: string, data: any): Promise<ApiResponse> {
     try {
-      const response = await axios.post(endpoint, data, { headers: await this.getHeaders() });
+      const response = await axios.post(endpoint, data, { headers: this.getHeaders() });
       return this.handleAxiosResponse(response);
     } catch (error) {
       console.error('Error posting data:', error);

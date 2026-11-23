@@ -30,7 +30,7 @@ import Cta from '@/components/Investment/Cta.vue'
 import { useSessionStore, type BookingSession } from '@/store/sessions'
 import { formatPrice, paragraphs } from '@/utils/bookingFormat'
 
-// Sessions are edited on the admin Products page (Sessions tab) and shared with the booking pages
+// Sessions are edited in the admin app (Sessions) and shared with the booking pages
 const sessions = useSessionStore()
 sessions.load()
 

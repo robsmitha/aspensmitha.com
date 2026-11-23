@@ -210,21 +210,18 @@
         },
         {
             "route": "/users",
-            "allowedRoles": [
-                "authenticated"
-            ]
+            "redirect": "https://manage.smithadigital.com/s/aspensmitha/people",
+            "statusCode": 302
         },
         {
             "route": "/products",
-            "allowedRoles": [
-                "authenticated"
-            ]
+            "redirect": "https://manage.smithadigital.com/s/aspensmitha/sessions",
+            "statusCode": 302
         },
         {
             "route": "/admin/*",
-            "allowedRoles": [
-                "authenticated"
-            ]
+            "redirect": "https://manage.smithadigital.com/s/aspensmitha",
+            "statusCode": 302
         },
         {
             "route": "/api/manage/*",

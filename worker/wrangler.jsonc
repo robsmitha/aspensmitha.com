@@ -22,8 +22,8 @@
     "run_worker_first": ["/api/*"],
     // /contact serves contact.html, /portfolio/weddings serves portfolio/weddings.html: the prerendered pages
     "html_handling": "auto-trailing-slash",
-    // A path with no file behind it goes to the Worker, which serves the app for app routes (a story, an
-    // admin page) and a 404 for a missing file under /assets. The built-in single-page fallback can't tell
+    // A path with no file behind it goes to the Worker, which serves the app for app routes (a story, a
+    // booking page), redirects the old /admin addresses and answers 404 for a missing file under /assets. The built-in single-page fallback can't tell
     // those apart: it answers a missing script with the app's HTML.
     "not_found_handling": "none"
   },

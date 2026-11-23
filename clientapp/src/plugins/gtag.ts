@@ -1,8 +1,7 @@
 /**
  * plugins/gtag.ts
  *
- * Google Analytics 4 via vue-gtag. Page views are sent on every route change;
- * the admin area is excluded so Aspen's own visits don't skew the numbers.
+ * Google Analytics 4 via vue-gtag. Page views are sent on every route change.
  */
 
 import { createGtag } from 'vue-gtag'
@@ -14,7 +13,6 @@ export default createGtag({
   tagId: GA_MEASUREMENT_ID,
   pageTracker: {
     router,
-    exclude: route => route.path.startsWith('/admin'),
     // vue-gtag defaults page_title to the route name (e.g. "/portfolio/[category]");
     // applySeo has already set the real <title> by the time this runs
     template: route => ({

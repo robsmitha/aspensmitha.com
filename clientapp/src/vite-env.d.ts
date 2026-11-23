@@ -12,12 +12,6 @@ interface ImportMetaEnv {
   readonly VITE_PLACEMENT_IMAGE_BASE?: string
   /** "cdn" (fixed CDN URLs) or "api" (rollback: /api/portfolio as before) */
   readonly VITE_PLACEMENT_SOURCE?: 'cdn' | 'api'
-  /** "swa" (default: Static Web Apps signs people in) or "external" (Entra External ID, behind a Worker) */
-  readonly VITE_AUTH_MODE?: 'swa' | 'external'
-  /** "external" mode only: the sign-in tenant, the app's client id, and the API scope to ask for */
-  readonly VITE_AUTH_AUTHORITY?: string
-  readonly VITE_AUTH_CLIENT_ID?: string
-  readonly VITE_AUTH_SCOPE?: string
 }
 
 interface ImportMeta {

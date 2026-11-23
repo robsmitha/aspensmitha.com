@@ -77,9 +77,10 @@ export function buildSiteManifest() {
     site: {
       name: SITE_NAME,
       publicUrl: SITE_URL,
-      // Where a category's gallery and a story's page live, for the admin app's "View" links
+      // Where a category's gallery, a story's page and a session's page live, for the admin app's "View" links
       categoryPath: '/portfolio/{category}',
       storyPath: '/portfolio/{category}/{slug}',
+      sessionPath: '/booking/{slug}',
       // How generated descriptions credit the photos (matches storySeo in seo.ts)
       credit: 'Aspen Smitha, a Tallahassee, Florida photographer',
     },
