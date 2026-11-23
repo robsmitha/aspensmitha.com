@@ -1,33 +1,11 @@
 // Utilities
 import { defineStore } from 'pinia'
 import apiClient from '@/api/elysianClient'
-import type { PortfolioPhoto } from '@/utils/photoUrls'
+import { sessionsByCollection, type BookingSession } from '@robsmitha/elysian-ui/booking'
 
-/**
- * A session product (edited in the admin app, under Sessions). The
- * Investment page and both booking pages read the same list.
- */
-export type BookingSession = {
-  productId: number
-  /** URL segment: /booking/{slug} */
-  slug: string
-  title: string
-  /** Paragraphs separated by blank lines; the first is the short summary */
-  description: string | null
-  durationMinutes: number
-  price: number | null
-  /** Variable pricing: shown as a starting price, e.g. "$400+" */
-  isPriceFrom: boolean
-  location: string | null
-  /** Investment page section, e.g. "Portraits" */
-  collection: string
-  features: string[]
-  /** Portfolio category slug, used for the fallback cover and the Contact form */
-  portfolioCategory: string | null
-  isBookable: boolean
-  sortOrder: number
-  coverPhoto: PortfolioPhoto | null
-}
+// A session product (edited in the admin app, under Sessions). The Investment page and both booking pages read
+// the same list.
+export type { BookingSession }
 
 type State = {
   sessions: BookingSession[]
@@ -47,13 +25,7 @@ export const useSessionStore = defineStore('sessions', {
   getters: {
     bySlug: (state: State) => (slug: string): BookingSession | undefined => state.sessions.find(s => s.slug === slug),
     /** Sessions grouped by collection, in the order collections first appear */
-    collections: (state: State): { name: string, sessions: BookingSession[] }[] => {
-      const groups = new Map<string, BookingSession[]>()
-      for (const session of state.sessions) {
-        groups.set(session.collection, [...(groups.get(session.collection) ?? []), session])
-      }
-      return Array.from(groups, ([name, sessions]) => ({ name, sessions }))
-    },
+    collections: (state: State) => sessionsByCollection(state.sessions),
   },
   actions: {
     load(): Promise<void> {

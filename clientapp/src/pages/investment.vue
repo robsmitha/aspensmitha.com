@@ -27,8 +27,8 @@ meta:
 import Hero from '@/components/Investment/Hero.vue'
 import PricingSection, { type PricingTier } from '@/components/Investment/PricingSection.vue'
 import Cta from '@/components/Investment/Cta.vue'
-import { useSessionStore, type BookingSession } from '@/store/sessions'
-import { formatPrice, paragraphs } from '@/utils/bookingFormat'
+import { formatPrice, paragraphs, type BookingSession } from '@robsmitha/elysian-ui/booking'
+import { useSessionStore } from '@/store/sessions'
 
 // Sessions are edited in the admin app (Sessions) and shared with the booking pages
 const sessions = useSessionStore()
