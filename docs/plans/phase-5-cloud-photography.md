@@ -25,8 +25,10 @@ Parent plan: `elysian-sites-platform.md`.
 
 **Not built:**
 
-- Own domains (step 13). It needs a Cloudflare token allowed to attach Worker domains, which is the most
-  powerful credential in the system, and that is to be agreed before any code.
+- Own domains attached by the platform itself (step 13). It needs a Cloudflare token allowed to attach
+  Worker domains, which is the most powerful credential in the system, and that is to be agreed before any
+  code. Until then an own domain is attached by hand, which works and was proven on 2026-11-23 with
+  `smithaconsulting.com` on `cloud-site`: see "Attaching an own domain by hand" under decision 7.
 - From the decisions below: a logo image, per-page SEO text and a share image (decision 3); going back to
   an earlier published version (decision 8); a Cloudflare rate-limit rule on form endpoints (decision 9);
   an edge-clients screen and a storage quota (decision 10); web vitals from the templates ("Measuring
@@ -292,7 +294,32 @@ tenant, the way Aspen's Worker was.
 **As built:** the wildcard record and route are live. The domain a platform's sites go under is a setting
 (`PlatformDomains:Domains:photography`), and creating a cloud site records `{identifier}.framenice.com` as
 its primary address and tells the edge. The preview is a `?preview=` parameter on any page, not a path, so
-no identifier had to be reserved for it. Own domains are not built.
+no identifier had to be reserved for it. Attaching an own domain from the admin is not built; it is done
+by hand.
+
+#### Attaching an own domain by hand
+
+The domain has to be in the operator's Cloudflare account. It need not be registered there: adding it to
+Cloudflare and pointing its nameservers at the two Cloudflare gives is enough.
+
+1. **DNS.** In the domain's DNS records, delete anything on the bare name and on `www` (a registrar's
+   parking records, usually two `A` records and a `www` CNAME). A domain can't be attached to a Worker
+   while a record sits on the name. Leave mail records alone.
+2. **Worker.** Workers & Pages, `cloud-photography`, Settings, Domains & Routes, Add, Custom domain. Pick
+   the domain from the list rather than typing a full name, add it with the subdomain empty, then again
+   with `www`. Typing `www.example.com` in full finds no match and offers to onboard it as a new domain,
+   which is wrong. Cloudflare makes the DNS records and certificates.
+3. **HTTPS.** In the domain's SSL/TLS settings, Edge Certificates, turn on Always Use HTTPS. A new domain
+   has it off, and the page then also answers over plain http.
+4. **Turnstile.** Add the bare domain to the widget's hostnames; it covers `www`. Without it the contact
+   form's check fails on the new address.
+5. **Admin.** Sites, Manage, Addresses: add `www.example.com` and `example.com`, each ticked as already
+   answering, and make one primary. Within a minute the other and the `framenice.com` subdomain 301 to it.
+   Browsers keep that redirect for an hour.
+6. **Check.** The primary answers 200 with itself as the canonical address, the others 301 to it, images
+   load, and the contact form sends.
+
+To take a domain away, remove the address in the admin first, then the custom domain in Cloudflare.
 
 ### 8. Editing, preview and publish
 
@@ -398,7 +425,7 @@ analytics. Decide which before the first real tenant, since "done" above depends
 | 10 | Email: sending identity per tenant, contact email verification, daily cap | Elysian | Verify `send.{brand}` in Resend | Done |
 | 11 | `framenice.com`: wildcard record and route; Turnstile widget | Cloudflare | Approve the record and the route | Done 2026-11-23 |
 | 12 | First tenant, end to end, from the admin app only | | Be the first owner, or name one | Not yet: test sites only |
-| 13 | Own domains: `AttachTenantDomainCommand` and the Domain screen | Elysian, admin | A Cloudflare token allowed to attach Worker domains | Not started |
+| 13 | Own domains: `AttachTenantDomainCommand` and the Domain screen | Elysian, admin | A Cloudflare token allowed to attach Worker domains | By hand only; proven 2026-11-23 |
 | 14 | Leaving: export and delete a tenant (rows, blob prefixes, KV entries, domains) | Elysian | Before the first tenant who isn't a friend | Done 2026-11-23 |
 | 15 | The `gallery@1` template, a template picker in the Site area, and the change-of-template operation | `elysian-platform/templates/photography/gallery`, admin, Elysian | After the first tenant is live on classic | Done 2026-11-23 |
 
@@ -412,7 +439,7 @@ when the session address was added. It needs `TenantDomain` (step 2), so it foll
 
 ## What is left
 
-1. **Own domains** (step 13), after the token is agreed.
+1. **Own domains from the admin** (step 13), after the token is agreed. By hand works today.
 2. **The first real tenant** (step 12), and before it: how speed is measured, whether test sites should be
    kept out of search results, and a grace period on delete.
 3. The smaller items under "Where it stands".
