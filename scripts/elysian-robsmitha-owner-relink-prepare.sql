@@ -70,6 +70,12 @@ IF (SELECT COUNT(*) FROM @Users WHERE ISNULL([IdentityProvider], N'') <> N'exter
 IF EXISTS (SELECT 1 FROM @Users WHERE [IdentityProvider] = N'externalid' AND [Rows] > 0)
     THROW 50000, 'A user made by the new sign-in already has data. Nothing was changed; this needs a look before going on.', 1;
 
+-- KEEP THIS OUTPUT. It is the original user's sign-in id on the old site, which
+-- elysian-robsmitha-owner-relink-rollback.sql needs if the move ever has to be undone.
+SELECT u.[UserId], u.[ExternalUserId] AS [OldExternalUserId]
+FROM [User] u JOIN @Users x ON x.[UserId] = u.[UserId]
+WHERE ISNULL(x.[IdentityProvider], N'') <> N'externalid';
+
 BEGIN TRANSACTION;
 
 DELETE u

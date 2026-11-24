@@ -91,18 +91,40 @@ Needs from the owner: `https://robsmitha.com` added as a redirect URI on the Ent
 
 **Recommended.** It is the only sign-in the shared backend accepts.
 
-### 3. Existing users are linked by email, tested with a second account first
+### 3. The owner's existing user is linked by email, at the cutover, with a check either side
 
-Bank connections, budgets and saved bills hang off `User` rows found by `ExternalUserId`, which changes
-with the sign-in provider. The membership backfill gives each existing admin a membership keyed by email;
-their first sign-in with the new provider claims it and moves their existing user and data across.
+Bank connections hang off the `User` row; everything else that is the owner's (budgets and their months,
+categories, rules, income, debts, goals, saved bills, the assistant's history) names its owner by
+`ExternalUserId`, which changes with the sign-in provider. A membership keyed by the owner's email is
+claimed by their first sign-in with the new provider, which finds the one existing user with that address
+and moves it and its data to the new sign-in id.
 
-Before the owner's own account is touched, the whole path is run with a second, throwaway account that
-has a little finance data: sign in the old way, back-fill, sign in the new way, confirm the data is
-there. If it is not, nothing of the owner's has changed.
+**As it turned out (2026-11-24).** Two things were found before the owner's account was touched:
 
-**Recommended.** This is the step that can lose access to data, so it is proven on an account that
-doesn't matter.
+- The move brought across only budgets, saved bills and the GitHub token. Monthly budgets, categories,
+  rules, income, debts, goals and assistant history would have been left on the old id: still in the
+  database, but the app would have shown them as empty. Fixed in Elysian 0.0.86, which reads the list of
+  tables from the model (`IdentityService.UserOwnedEntityTypes`) so a later table is covered too, with a
+  test that puts a row in each.
+- The tenant had a second, empty user with the owner's address, made on 2026-11-22 when the owner acted in
+  it as a platform admin. It already carried the new sign-in id, and while it existed the backend would
+  have treated the owner as already moved and brought nothing across.
+
+**Decided:** no throwaway-account test. What it would have shown is known another way (the empty user
+shows the new sign-in presents the owner's exact address; the original user's name matches it; the table
+coverage is tested), and the move is reversible: it only changes which sign-in id rows carry. In its
+place, at the cutover:
+
+1. `scripts/elysian-robsmitha-users-check.sql` (the counts before).
+2. `scripts/elysian-robsmitha-owner-relink-prepare.sql`: removes the empty user and adds the membership
+   in one transaction, and prints the old sign-in id to keep.
+3. The owner signs in on the new site.
+4. The check again (the counts after). They must match the first run, on one user, now `externalid`.
+5. If they don't: `scripts/elysian-robsmitha-owner-relink-rollback.sql` puts everything back on the old id.
+
+It happens at the cutover and not before, because from the owner's first new sign-in the old site no
+longer finds their data. Until then the tenant is not opened from the admin app, which would make the
+empty user again.
 
 ### 4. Its timers run for the tenants that have the module, through the job queue
 
@@ -151,8 +173,8 @@ mode stays, as it did for the photography tables.
 | 6 | Secrets into Key Vault (decision 6) | Azure | Sets each value |
 | 7 | `worker/` in the robsmitha.com repo: `createSiteWorker`, static assets, deploy workflow | `robsmitha.com` | Cloudflare token for the workflow |
 | 8 | Sign-in in the Vue app, route guard, `/.auth` removed (decision 2) | `robsmitha.com` | Redirect URI in Entra |
-| 9 | Membership backfill, then the second-account test (decision 3) | SQL, browser | Signs in as the test account |
-| 10 | Everything checked on the Worker's `workers.dev` address against the shared backend, while the live site is untouched | Browser | Looks it over |
+| 9 | The owner's membership and move (decision 3) | SQL, browser | At the cutover, not before |
+| 10 | What needs no sign-in checked on the Worker's `workers.dev` address against the shared backend, while the live site is untouched | Browser | Done 2026-11-24: health, Congress, and 401 for signed-out finance calls |
 | 11 | Cutover (below) | Cloudflare, Azure | Does the switches |
 | 12 | 14 days clean, then retire the old apps and go strict (decision 7) | Azure, SQL | Does it |
 
@@ -167,11 +189,12 @@ One sitting, in this order, and each line can be undone:
    `disabledBackgroundFunctions` so they turn **on** in `elysian-sites`. Each app has its own queue, so
    they can't sync the same bank twice; the wait is so no queued sync is left behind.
 3. Point `robsmitha.com` at the Worker: the route goes live and the Static Web App records come out.
-4. Sign in, open the dashboard, run one manual bank sync, and confirm a Plaid webhook arrives (Plaid's
-   dashboard can send a test one).
+4. The owner's move, with its check either side (decision 3, steps 1 to 5).
+5. Open the dashboard, run one manual bank sync, and confirm a Plaid webhook arrives (Plaid's dashboard
+   can send a test one). This is the first time anything behind the sign-in runs on the new side.
 
-**Rollback** is the same lines in reverse: restore the Static Web App records, turn the triggers off in
-the shared app and on in the old one. The old apps stay deployed, untouched, for the 14 days.
+**Rollback** is the same lines in reverse: the owner's move undone with its rollback script, the Static
+Web App records restored, the triggers off in the shared app and on in the old one. The old apps stay deployed, untouched, for the 14 days.
 
 ## Risks
 
