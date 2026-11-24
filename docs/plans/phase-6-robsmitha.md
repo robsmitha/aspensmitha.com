@@ -188,7 +188,9 @@ One sitting, in this order, and each line can be undone:
 2. Wait for the old app's `plaid-sync` queue to empty, then take the three off
    `disabledBackgroundFunctions` so they turn **on** in `elysian-sites`. Each app has its own queue, so
    they can't sync the same bank twice; the wait is so no queued sync is left behind.
-3. Point `robsmitha.com` at the Worker: the route goes live and the Static Web App records come out.
+3. Point `robsmitha.com` at the Worker: switch the apex and `www` DNS records from "DNS only" to
+   "Proxied". The Worker's routes are deployed beforehand and only take effect on a proxied record, so the
+   records keep their old targets and "DNS only" puts the old site back.
 4. The owner's move, with its check either side (decision 3, steps 1 to 5).
 5. Open the dashboard, run one manual bank sync, and confirm a Plaid webhook arrives (Plaid's dashboard
    can send a test one). This is the first time anything behind the sign-in runs on the new side.
