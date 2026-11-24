@@ -173,10 +173,10 @@ mode stays, as it did for the photography tables.
 | 6 | Secrets into Key Vault (decision 6) | Azure | Sets each value |
 | 7 | `worker/` in the robsmitha.com repo: `createSiteWorker`, static assets, deploy workflow | `robsmitha.com` | Cloudflare token for the workflow |
 | 8 | Sign-in in the Vue app, route guard, `/.auth` removed (decision 2) | `robsmitha.com` | Redirect URI in Entra |
-| 9 | The owner's membership and move (decision 3) | SQL, browser | At the cutover, not before |
+| 9 | The owner's membership and move (decision 3) | SQL, browser | Done 2026-11-24: same counts before and after, on one user |
 | 10 | What needs no sign-in checked on the Worker's `workers.dev` address against the shared backend, while the live site is untouched | Browser | Done 2026-11-24: health, Congress, and 401 for signed-out finance calls |
-| 11 | Cutover (below) | Cloudflare, Azure | Does the switches |
-| 12 | 14 days clean, then retire the old apps and go strict (decision 7) | Azure, SQL | Does it |
+| 11 | Cutover (below) | Cloudflare, Azure | Done 2026-11-24 |
+| 12 | 14 days clean (to 2026-12-08), then retire the old apps and go strict (decision 7) | Azure, SQL | Does it |
 
 Steps 3, 7 and 8 are the code. Steps 3 to 10 change nothing a visitor or the live site can see.
 
@@ -194,6 +194,20 @@ One sitting, in this order, and each line can be undone:
 4. The owner's move, with its check either side (decision 3, steps 1 to 5).
 5. Open the dashboard, run one manual bank sync, and confirm a Plaid webhook arrives (Plaid's dashboard
    can send a test one). This is the first time anything behind the sign-in runs on the new side.
+
+**Done on 2026-11-24.** `robsmitha.com` is served by the `site-robsmitha` Worker and the shared backend.
+
+- The old app's three triggers are off (`AzureWebJobs.<name>.Disabled=true` on the `robsmitha` Function
+  App) and its `plaid-sync` queue was empty; the shared backend's are on.
+- The owner's user moved to the new sign-in with every count unchanged. The old sign-in id is kept by the
+  owner for the rollback script.
+- A manual bank sync ran end to end on the shared backend (queued, picked up, Plaid answered 200), which
+  also proves the copied token encryption key.
+- The robsmitha.com repository's `main` now deploys only the Worker; the Static Web App and old Function
+  App workflows are removed. Both old apps stay deployed, untouched, as the rollback. `server/` stays in
+  the repository until they are retired.
+- Not yet seen: a real Plaid webhook arriving (Plaid has no test webhook in production), and the first
+  nightly sync (09:00 UTC).
 
 **Rollback** is the same lines in reverse: the owner's move undone with its rollback script, the Static
 Web App records restored, the triggers off in the shared app and on in the old one. The old apps stay deployed, untouched, for the 14 days.
