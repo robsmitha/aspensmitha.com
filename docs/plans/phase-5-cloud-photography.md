@@ -29,10 +29,7 @@ Parent plan: `elysian-sites-platform.md`.
   Worker domains, which is the most powerful credential in the system, and that is to be agreed before any
   code. Until then an own domain is attached by hand, which works and was proven on 2026-11-23 with
   `smithaconsulting.com` on `cloud-site`: see "Attaching an own domain by hand" under decision 7.
-- From the decisions below: a logo image, per-page SEO text and a share image (decision 3); going back to
-  an earlier published version (decision 8); a Cloudflare rate-limit rule on form endpoints (decision 9);
-  an edge-clients screen and a storage quota (decision 10); web vitals from the templates ("Measuring
-  speed"); the deploy hook for Aspen's manifest.
+- From the decisions below: an edge-clients screen (decision 10), and the deploy hook for Aspen's manifest.
 - Seeing a template's crops before changing to it (decision 2).
 
 **Known gaps in what is built:**
@@ -406,6 +403,35 @@ Self-serve signup and payment. Customer-owned domains through Cloudflare for Saa
 tenant to a custom site. Per-platform branding of the admin app. Each is left possible by the model, and
 none is needed for the first tenants. (A second template was on this list and has since been built, as
 step 15.)
+
+## Built after the first pass (Elysian 0.0.82)
+
+- **Logo.** An owner uploads a PNG, JPEG or WebP (never SVG, up to 2 MB) under "Name, logo and footer".
+  Elysian draws it again as two lossless WebP files, at most 160 px tall and half that, and never serves
+  the upload itself. They are `placements/{tenant}/logo-{version}-{height}.webp`: a new upload is a new
+  name, so a file never changes, the draft can show a new logo while visitors keep the old one, and going
+  back to an earlier version brings its logo back. The content document carries which upload and its size,
+  so the header knows the image's width and height and never moves. The logo takes the place of the name;
+  the name is its alt text and stays in titles. Saving the draft never changes the logo: only uploading or
+  removing does.
+- **Each page's own search words.** Portfolio, About, Investment, Booking, Contact and Policies each have a
+  "Search results" part with a title and a description. Empty, a page uses its heading with the site's name,
+  and the site's description. They are ordinary fields in the template's schema.
+- **Share image.** A reserved slot, `share-image` (1200 by 630), picked like any other spot under "Whole
+  site". Every page names it as `og:image`, with its size, `og:url` and a large Twitter card. Like every
+  slot it is never empty. A site made before the slot existed needs its placements republished once.
+- **Going back.** "Earlier versions" lists what has been published. Going back to one makes it the draft;
+  visitors see nothing until it is published, which is a new version. Only a version made with the
+  template the site is on now can be gone back to.
+- **Forms are limited at the edge.** The cloud Worker counts messages and bookings per visitor per site
+  with a Workers rate limit binding (ten a minute, per Cloudflare location) and answers 429 without asking
+  the backend. It is in the Worker and not a dashboard rule so that it covers own domains, which are each
+  their own zone. It lets a form through when the counter can't be reached. The backend's own limit stays.
+- **Storage limit.** A cloud site may hold 25 GB of uploaded photos (`PlatformStorage:DefaultQuotaGb`), or
+  a limit of its own set from the Sites screen (`TenantInfo.StorageQuotaGb`). What counts is the uploaded
+  files at the size they were uploaded. An upload that would go over is refused before anything is
+  recorded. The Photos screen says how much is used and warns from nine tenths. A site with its own code
+  has no limit.
 
 ## Measuring speed
 
