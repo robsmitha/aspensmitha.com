@@ -433,6 +433,29 @@ step 15.)
   recorded. The Photos screen says how much is used and warns from nine tenths. A site with its own code
   has no limit.
 
+## Seven templates (Elysian 0.0.84)
+
+Five were added to `classic` and `gallery`: `editorial` (a magazine masthead and a numbered index of
+galleries), `cinema` (dark, a full-width 2.39:1 photo), `mosaic` (a side menu and a wall of covers in
+mixed shapes), `journal` (serif text at a reading width, the latest story before the galleries) and
+`split` (half photo, half words, galleries as cards). **`journal` is what a new cloud site starts on**
+(`PlatformCatalog.Photography.DefaultTemplate`); a host without it falls back to `classic`.
+
+How the five are built, so the next one is cheap:
+
+- They share one page, `templates/photography/shared/Page.vue`, and one base stylesheet,
+  `shared/base.css`. A template is its schema (name, palettes, fonts), its manifest (slot names and
+  ratios), `src/hero.ts` (how wide each photo renders in its layout) and `src/styles.css` (how it
+  differs from the base). `classic` and `gallery` keep their own page and stylesheet as before.
+- The layouts differ by CSS alone, including the order of the home page's sections (`journal` and
+  `mosaic` move sections with `order`; a browser without `:has` shows them in the usual order).
+- Every template has the same fields, pages, categories and spots, so a change of template keeps the
+  owner's wording and photo picks. Slot names carry a prefix per template (`e-`, `c-`, `m-`, `j-`, `s-`).
+  `mosaic` gives each category's cover its own ratio, which is what makes its wall.
+- A new template is registered in five places: the Worker's `package.json` (dependency and
+  `build:templates`), `scripts/copy-template-assets.mjs`, `src/index.ts`, the two workflows, and two
+  embedded resources in `functions/ElysianFunctions.csproj`.
+
 ## Measuring speed
 
 Aspen's site reports LCP, CLS and INP to GA4. **Recommended:** the template sends the same three numbers to
