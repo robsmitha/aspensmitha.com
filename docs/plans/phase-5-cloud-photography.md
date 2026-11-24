@@ -41,7 +41,10 @@ Parent plan: `elysian-sites-platform.md`.
 - Session lists have no cover photos.
 - A cloud site can set its booking time zone but not its hours.
 - Links a page builds with script (a story in a gallery, "book this session") do nothing inside a preview.
-- A site on `framenice.com` is indexable from the moment it exists, test sites included.
+- A site is kept out of search results until its owner first publishes: every page says `noindex` and
+  there is no sitemap. From the first publish its pages are indexable, `/robots.txt` names the sitemap, and
+  `/sitemap.xml` lists its pages and published stories (kept an hour at the edge; the backend is asked for
+  the stories and the pages are listed without them when it can't answer).
 - The images Worker still keeps a placement at the edge for only a minute (`PLACEMENT_EDGE_SECONDS`), a
   safety net from before purging worked. It can come out.
 - A story page's first photo waits on an API call (decision 5).
@@ -387,9 +390,15 @@ The site is marked as being deleted and stops answering at once; a queued job th
 holds, its files and their cached copies, and every row it has, the tenant's own last. The job refuses any
 site not marked as being deleted. Rows come out of every table row-level security protects, so a table
 added later is covered. The copy is one JSON document with a day-long signed link to each uploaded photo;
-bookings and visitors' messages are not in it, because they are in the owner's calendar and inbox. There is
-no grace period: suspended-then-deleted is two steps and the copy is the safety net. Add one before there
-are paying sites.
+bookings and visitors' messages are not in it, because they are in the owner's calendar and inbox.
+
+**A deleted site is kept for 14 days** (Elysian 0.0.81; `PlatformDeletion:GraceDays`, 0 to 90, 0 for none).
+Deleting marks the site and takes it off the web at once, and records the day its photos and data go
+(`TenantInfo.DeleteAfter`). Nothing is removed before that day, and until then "Bring the site back" in its
+panel returns it whole, suspended. A daily timer queues the removal of every site whose day has come, and
+queues it again each day until the site is gone, so a removal that failed partway finishes by itself. The
+job refuses a site that can still be brought back. "Remove everything now" skips the wait, for test sites.
+The identifier stays taken until the site is gone.
 
 ### 11. What Phase 5 does not include
 
@@ -405,9 +414,11 @@ one platform-owned property with the tenant as a dimension, and nothing else: no
 identifiers. An owner's own analytics id can be a content field later. Phase 5 is not done on a tenant
 until its home page LCP p75 is at or under Aspen's.
 
-**As built:** not done. The templates send no measurements, and most of their pages forbid scripts
-outright, so this needs either a small script allowed on every page or numbers from Cloudflare's own
-analytics. Decide which before the first real tenant, since "done" above depends on it.
+**As built:** not GA4. Each page carries one small script of the template's own that reports the three
+numbers to the site's own Worker (`/api/vitals`), which keeps them in a Workers Analytics Engine dataset
+(`site_vitals`) by site, template, kind of page and kind of device: no cookie, no address, nothing about
+the visitor. `npm run vitals -w @robsmitha/cloud-photography` prints the 75th percentiles; it needs a
+token with Account Analytics: Read. No reading has been taken yet.
 
 ## Build order
 
@@ -440,8 +451,8 @@ when the session address was added. It needs `TenantDomain` (step 2), so it foll
 ## What is left
 
 1. **Own domains from the admin** (step 13), after the token is agreed. By hand works today.
-2. **The first real tenant** (step 12), and before it: how speed is measured, whether test sites should be
-   kept out of search results, and a grace period on delete.
+2. **The first real tenant** (step 12), and before it: a first speed reading. How speed is measured,
+   keeping unpublished sites out of search results, a sitemap and a grace period on delete are all built.
 3. The smaller items under "Where it stands".
 
 ## Risks and open questions
