@@ -1,7 +1,8 @@
 # Connecting a photographer's calendar
 
-Status: the code (build order steps 2 to 4) is written on `feature/google-calendar-connect` branches in
-Elysian and elysian-platform, 2026-11-26, not merged or released. Nothing is live.
+Status: the code (build order steps 2 to 4a) was released 2026-11-26 in Elysian 0.0.87 and deployed with
+elysian-platform. The Connect button is off until the return address is set at the switch (step 5a), and the
+backend still uses the old Google client, so nothing has changed for a photographer yet.
 
 ## Goal
 
