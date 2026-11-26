@@ -1,8 +1,34 @@
 # Connecting a photographer's calendar
 
-Status: the code (build order steps 2 to 4a) was released 2026-11-26 in Elysian 0.0.87 and deployed with
-elysian-platform. The Connect button is off until the return address is set at the switch (step 5a), and the
-backend still uses the old Google client, so nothing has changed for a photographer yet.
+Status: live since 2026-11-26. The Connect button is on, the backend uses the platform's own Google app
+(project `smithadigital`, published, not yet verified), and Aspen reconnected through it the same day. What
+remains is Google's verification (build order step 8) and the checks under "Done, and what is left".
+
+## Done, and what is left
+
+Done 2026-11-26:
+
+- Elysian 0.0.87 and elysian-platform released with the Connect flow (steps 2 to 4a).
+- Google Cloud project `smithadigital` set up: consent screen named Smitha Digital, scopes `calendar.events`,
+  `openid` and `email`, a Web client with the admin app's return address, published "In production" (step 5).
+- `smithadigital.com` put up with a homepage and a privacy policy at `/privacy/` (step 7). Google would not
+  publish the app without both links, so this came before the switch could finish. It is a plain Worker in
+  `elysian-platform/www`; when it becomes a full marketing site it can move to its own repo, but the privacy
+  policy's address is on file with Google and must not change.
+- The switch (step 5a): new client ID, return address and secret applied; Aspen reconnected at 22:06 UTC and
+  her booking page kept answering throughout, on the access token issued before the switch.
+- A fault found on the day: the Integrations page was blank on returning from Google. Fixed and deployed.
+
+Left:
+
+- **Verification** (step 8): demo video, scope explanations, submit. Until then new photographers see Google's
+  warning screen, and at most 100 Google accounts can connect over the life of the project.
+- **Not yet seen working:** the daily health check on the new code; Disconnect; a first-time connection by a
+  new photographer; a booking written through the narrower permission (reading is proven, writing is not).
+- **Cleanup:** delete the old client in the old project (number 605120805188) and the vault's
+  `google-client-secret-old`, once the new connection has run for a few days.
+- **The old `aspensmitha` Function App,** kept as a rollback, still has the old client. If it is ever switched
+  back on, Aspen's token (issued to the new client) will not work there.
 
 ## Goal
 
