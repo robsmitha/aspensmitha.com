@@ -1,6 +1,7 @@
 # Connecting a photographer's calendar
 
-Status: proposed 2026-11-26. Nothing here is built.
+Status: the code (build order steps 2 to 4) is written on `feature/google-calendar-connect` branches in
+Elysian and elysian-platform, 2026-11-26, not merged or released. Nothing is live.
 
 ## Goal
 
@@ -163,6 +164,16 @@ Enough to read every event (availability) and write bookings; no access to shari
 calendars. Whether a still narrower pair would pass review more easily isn't worth the lost all-day
 blocking. **Recommended.**
 
+Found while building, 2026-11-26:
+
+- **`openid` and `email` are asked for too.** With `calendar.events` alone Google won't say whose calendar it
+  is: the call the code used for that (reading the calendar itself) needs a broader grant. The address is
+  only shown in the admin app as the connected account. Both are non-sensitive and add nothing to the review.
+- **Access is proved by reading the events list**, for the same reason. Aspen's older, broader grant passes
+  the same check.
+- **A person can untick the calendar permission on Google's screen.** The connection is then refused with a
+  plain message, the unusable grant is withdrawn, and any working connection is kept.
+
 ### 3. The return address is on the admin app
 
 `https://manage.smithadigital.com/integrations/google/callback`, one address for every tenant, with the
@@ -203,8 +214,9 @@ Her token belongs to the old project's client and stops working when the backend
 | 2 | Start and finish the connection: the address to send the person to, and the exchange of the returned code, ending in the existing check-and-store | Elysian | Nothing |
 | 3 | Two endpoints | `elysian-platform/functions` | Nothing |
 | 4 | Connect button, return page, disconnect; token box for platform admins only | `elysian-platform/admin` | Nothing |
-| 5 | In the new project: consent screen (name, support email, External), scope `calendar.events`, a Web client with the return address, app "In production" | Google Cloud console | Does it |
-| 5a | The switch: `GoogleCalendar__ClientId` and the `google-client-secret` secret changed to the new client, then Aspen reconnects with the button, in one sitting | Azure, admin app | Sets the secret; Aspen clicks Connect |
+| 4a | Released: Elysian tagged and published, the host's package reference bumped, both merged | Elysian, elysian-platform | Publishes |
+| 5 | In the new project: consent screen (name, support email, External), scopes `calendar.events`, `openid` and `email`, a Web client with the return address, app "In production" | Google Cloud console | Does it |
+| 5a | The switch: `googleCalendarClientId` and `googleCalendarRedirectUri` in `infra/main.bicep` and the `google-client-secret` secret changed to the new client (the Connect button stays off while the return address is empty), then Aspen reconnects with the button, in one sitting | Azure, admin app | Sets the secret; Aspen clicks Connect |
 | 6 | Tried end to end with the owner's own Google account, on a test site, before 5a if a test backend is available and straight after it if not | Admin app | Connects a test site |
 | 7 | Homepage and privacy policy for the brand, saying what calendar data is read and that it is used only for booking | `smithadigital.com` | Approves the wording |
 | 8 | Demo video and the scope explanation; submit for verification | Google Cloud console | Records and submits |
