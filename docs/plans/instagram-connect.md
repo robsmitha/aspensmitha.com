@@ -1,6 +1,8 @@
 # Connecting a photographer's Instagram
 
-Status: proposed 2026-11-26. Nothing here is built.
+Status: the code is written (2026-11-26) on `feature/instagram-connect` branches in Elysian and
+elysian-platform, not yet committed, released or tried against Instagram. The Meta app is ready (build order
+steps 1 and 2). What is left is the secret in Key Vault, the release, and trying it (steps 4, 6 and 7).
 
 ## Goal
 
@@ -60,10 +62,11 @@ The operator's work per photographer drops from "invite, generate a token, paste
 
 ### 1. One Meta app for the whole platform, owned by Smitha Digital
 
-Not Aspen's or a personal one, for the same reasons the Google project moved. If today's app is someone
-else's, tokens made with it keep working until each account reconnects with the button. Whether the app
-needs a Meta business portfolio at this stage was not confirmed. **Recommended; who owns today's app is the
-owner's to check.**
+**Decided 2026-11-26: the existing app was renamed and reused.** It was called aspensmitha.com and is now
+Smitha Digital, with Instagram business login added and the return address listed. Its Instagram app ID is
+`1639292734580056` (not a secret; it is in `infra/main.bicep`). Because it is the app that made Aspen's
+current token, that token keeps working and she is already a tester on it. Whether the app needs a Meta
+business portfolio at this stage was not confirmed.
 
 ### 2. The permission is `instagram_business_basic` only
 
@@ -76,18 +79,20 @@ site named in the same single-use `state` the Google flow uses. **Recommended.**
 
 ### 4. Three new platform settings
 
-`Instagram:AppId`, `Instagram:AppSecret` (Key Vault) and `Instagram:RedirectUri`, all platform-only. The
-button stays off until the return address is set, as with Google. **Recommended.**
+`Instagram:AppId`, `Instagram:AppSecret` (Key Vault secret `instagram-app-secret`) and
+`Instagram:RedirectUri`, all platform-only. The button stays off until all three are set. The secret must be
+in Key Vault before the Bicep file is applied: an app setting that points at a missing secret is not empty,
+so the button would show and then fail. **Built.**
 
 ### 5. The token box stays for platform admins only
 
-As the way to repair a connection by hand. **Recommended.**
+As the way to repair a connection by hand. **Built.**
 
 ### 6. Disconnect forgets the token and the mirrored posts
 
 The home page goes back to the "Follow along on Instagram" link. Whether Meta offers a call to withdraw the
-grant from the platform's side was not confirmed; if not, Disconnect says how to remove the app inside
-Instagram. **Recommended.**
+grant from the platform's side was not confirmed, so none is made: the Disconnect dialog says how to remove
+the app inside Instagram. **Built.**
 
 ### 7. The Connect panel says what is needed first
 
@@ -99,15 +104,17 @@ Instagram app. Accept the invitation from Smitha Digital in Instagram before you
 
 | # | Step | Where | Needs from the owner |
 |---|---|---|---|
-| 1 | Find which Meta app and account made today's tokens | Meta developer dashboard | Does it |
-| 2 | A Meta app for Smitha Digital with the Instagram product; the return address added; app ID sent, secret kept | Meta | Does it |
-| 3 | Start, complete and disconnect, ending in the existing store-and-sync | Elysian | Nothing |
-| 4 | Three endpoints; the settings | `elysian-platform/functions`, `infra/main.bicep` | Sets the secret in Key Vault |
-| 5 | Connect button, return page (shared with Google's), Disconnect; token box for platform admins only | `elysian-platform/admin` | Nothing |
+| 1 | Find which Meta app and account made today's tokens | Meta developer dashboard | Done |
+| 2 | The app renamed to Smitha Digital; Instagram business login added; the return address listed; app ID sent, secret kept | Meta | Done |
+| 3 | Start, complete and disconnect, ending in the existing store-and-sync | Elysian | Written; needs releasing as 0.0.88 |
+| 4 | Three endpoints; the settings | `elysian-platform/functions`, `infra/main.bicep` | Written; sets `instagram-app-secret` in Key Vault, then applies the Bicep file |
+| 5 | Connect button, return page (shared with Google's), Disconnect; token box for platform admins only | `elysian-platform/admin` | Written |
 | 6 | Released; settings applied; tried with the owner's own Instagram account as a tester | Azure, admin app | Publishes, connects |
 | 7 | Aspen accepts a tester invitation on the new app and reconnects | Admin app | Invites her |
 
-Steps 3 to 5 are the code, a day or two given the Google work.
+One choice made while building: the address sent to Instagram carries `force_reauth=true`, so Instagram asks
+who is signing in even when the browser already has a session. A photographer whose browser is signed in to a
+personal account would otherwise connect the wrong one.
 
 ## Risks
 
