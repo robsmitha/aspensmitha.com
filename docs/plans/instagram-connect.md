@@ -1,8 +1,35 @@
 # Connecting a photographer's Instagram
 
-Status: the code is written (2026-11-26) on `feature/instagram-connect` branches in Elysian and
-elysian-platform, not yet committed, released or tried against Instagram. The Meta app is ready (build order
-steps 1 and 2). What is left is the secret in Key Vault, the release, and trying it (steps 4, 6 and 7).
+Status: live since 2026-11-27 (UTC). The Connect button is on, released in Elysian 0.0.88 and
+elysian-platform, and a first account was connected through it on the test site `cloud-site`. What remains is
+Aspen reconnecting (step 7) and the items under "Done, and what is left".
+
+## Done, and what is left
+
+Done:
+
+- The existing Meta app renamed to Smitha Digital, with Instagram business login and the return address. Its
+  Instagram app name was synced too, so Instagram's approval screen says "Smitha Digital-IG". Meta adds the
+  "-IG" itself.
+- Elysian 0.0.88 and elysian-platform released; `instagram-app-secret` set in Key Vault; the Bicep file
+  applied.
+- A switch for the Instagram add-on on the Platform screen. Only Online booking had one, so the add-on
+  could not be turned on for a cloud site.
+- Tried on `cloud-site` with the account `smithaconsulting` at 03:59 UTC on 2026-11-27: connected, the
+  token stored with its expiry, the first sync run (the account has no posts, so none were mirrored), and
+  the scheduled sync picked the site up.
+
+Left:
+
+- **Aspen reconnects** with the button. Her pasted token keeps refreshing until she does, so there is no
+  hurry. She is already a tester on the app.
+- **Not yet seen working:** a sync that mirrors posts for an account connected with the button; the weekly
+  refresh of a button-issued token (due a week after connecting); Disconnect; the Cancel path on Instagram's
+  screen; Reconnect Google Calendar through the return page the two services now share.
+- **The shared templates don't draw the feed.** Only Aspen's own site shows it. On a cloud site, connecting
+  mirrors the posts but nothing appears on the site. That is separate work, not started.
+- **Don't try the button on Aspen's site with another account:** a successful connection replaces hers and
+  the sync would swap her home page feed.
 
 ## Goal
 
@@ -106,11 +133,11 @@ Instagram app. Accept the invitation from Smitha Digital in Instagram before you
 |---|---|---|---|
 | 1 | Find which Meta app and account made today's tokens | Meta developer dashboard | Done |
 | 2 | The app renamed to Smitha Digital; Instagram business login added; the return address listed; app ID sent, secret kept | Meta | Done |
-| 3 | Start, complete and disconnect, ending in the existing store-and-sync | Elysian | Written; needs releasing as 0.0.88 |
-| 4 | Three endpoints; the settings | `elysian-platform/functions`, `infra/main.bicep` | Written; sets `instagram-app-secret` in Key Vault, then applies the Bicep file |
-| 5 | Connect button, return page (shared with Google's), Disconnect; token box for platform admins only | `elysian-platform/admin` | Written |
-| 6 | Released; settings applied; tried with the owner's own Instagram account as a tester | Azure, admin app | Publishes, connects |
-| 7 | Aspen accepts a tester invitation on the new app and reconnects | Admin app | Invites her |
+| 3 | Start, complete and disconnect, ending in the existing store-and-sync | Elysian | Done, in 0.0.88 |
+| 4 | Three endpoints; the settings | `elysian-platform/functions`, `infra/main.bicep` | Done |
+| 5 | Connect button, return page (shared with Google's), Disconnect; token box for platform admins only | `elysian-platform/admin` | Done |
+| 6 | Released; settings applied; tried with the owner's own Instagram account as a tester | Azure, admin app | Done on `cloud-site` |
+| 7 | Aspen reconnects (she is already a tester on the app) | Admin app | Asks her |
 
 One choice made while building: the address sent to Instagram carries `force_reauth=true`, so Instagram asks
 who is signing in even when the browser already has a session. A photographer whose browser is signed in to a
