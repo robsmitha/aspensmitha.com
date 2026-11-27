@@ -1,6 +1,36 @@
 # Drawing the Instagram feed in the shared templates
 
-Status: proposed 2026-11-27. Nothing here is built.
+Status: live since 2026-11-27. The section and its script are on the home page of every cloud site with the
+Instagram add-on, in all seven templates. Not yet seen: tiles drawn from real posts, because the only account
+connected to a cloud site has none.
+
+## Done, and what is left
+
+Done 2026-11-27:
+
+- Built as planned and deployed with elysian-platform. No template version changed.
+- Checked on the test site (`cloud-site`, at `www.smithaconsulting.com`): the hidden section and the script
+  are in the home page, the script loads, the page is served with scripts and requests limited to the site
+  itself, and the posts endpoint answers. A site without the add-on (`address-test`) has neither.
+- The Platform screen and the Integrations panel no longer say the templates don't draw the feed.
+
+Found on the way, and fixed the same day:
+
+- **The Function App had lost its `EdgeStore` settings.** They were set by hand and never in
+  `infra/main.bicep`, and applying that file replaces the whole list. From some apply after 2026-11-24,
+  publishing a cloud site failed and add-on switches (Instagram, Online booking) never reached the site
+  Worker, with no error logged. The three settings are now in the file. Any new Function App setting must go
+  into the file, never only by hand.
+- **Instances went from 512 to 2048 MB.** A photo resize ran the worker out of memory (exit code 137) and
+  failed the requests it was answering. At this usage the larger size stays inside the monthly free grant.
+
+Left:
+
+- **Tiles from real posts**, and how the row looks at phone, tablet and desktop widths. Nothing in the repo
+  tests the script in a browser.
+- **Layout shift** (decision 4): to be read from the per-site Web Vitals once a site with posts has visitors.
+- **Publishing a cloud site** after the settings came back: the same write path was seen working for the
+  add-on switch, but a publish itself was not tried.
 
 ## Goal
 
@@ -118,9 +148,10 @@ show, and a heading the owner can edit.
 
 ## Not confirmed
 
-- That adding a script entry needs no template version change. I expect not, because the schema doesn't
-  change and pages are cached per deploy, but I haven't traced the build.
 - What the posts endpoint answers for a site without the add-on. It doesn't matter for this design, since
   such a site never asks.
 - That Instagram thumbnails sit under `/photos/` on the images host for cloud sites, which the existing
-  image helper requires. It is where the sync writes them, but I haven't loaded one from a cloud site.
+  image helper requires. The same code gives gallery photos their addresses, and those load, but no Instagram
+  thumbnail has been loaded from a cloud site yet.
+
+Settled since: adding the script needed no template version change.

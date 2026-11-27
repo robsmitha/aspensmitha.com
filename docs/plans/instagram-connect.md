@@ -26,8 +26,8 @@ Left:
 - **Not yet seen working:** a sync that mirrors posts for an account connected with the button; the weekly
   refresh of a button-issued token (due a week after connecting); Disconnect; the Cancel path on Instagram's
   screen; Reconnect Google Calendar through the return page the two services now share.
-- **The shared templates don't draw the feed.** Only Aspen's own site shows it. On a cloud site, connecting
-  mirrors the posts but nothing appears on the site. That is separate work, not started.
+- **The shared templates draw the feed** since 2026-11-27, for a site with the Instagram add-on. See
+  `instagram-feed-templates.md`.
 - **Don't try the button on Aspen's site with another account:** a successful connection replaces hers and
   the sync would swap her home page feed.
 
@@ -41,7 +41,7 @@ token. No review or verification by Meta is needed for this version.
 
 How the feed works today (Elysian, `Features/Instagram`):
 
-- The site mirrors the account's latest 12 posts: a daily sync copies them, makes small thumbnails, and the
+- The site mirrors the account's latest 12 posts: a sync every half hour copies them, makes small thumbnails, and the
   home page serves them from the platform's own storage. Instagram is never called while a visitor waits.
 - It uses Meta's "Instagram API with Instagram Login" (`graph.instagram.com`), with a long-lived token per
   tenant in `OAuthToken`. A weekly job refreshes the token, which otherwise dies after 60 days.
